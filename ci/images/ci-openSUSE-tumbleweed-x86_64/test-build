@@ -9,8 +9,9 @@ url="${urlbase}/${branch}.tar.gz"
 
 shift
 
+# Last version available must be installed, update the version
 for i in gcc gcc-nm cc cpp gcc-ar gcc-ranlib lto-dump; do
-	ln -sf /usr/bin/${i}-13 /usr/bin/${i}
+	ln -sf /usr/bin/${i}-16 /usr/bin/${i}
 done
 gcc --version
 

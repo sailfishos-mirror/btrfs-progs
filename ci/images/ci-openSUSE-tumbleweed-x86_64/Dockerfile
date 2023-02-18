@@ -27,7 +27,9 @@ RUN zypper install -y --no-recommends glibc-devel-static libblkid-devel-static \
 
 RUN zypper install -y --no-recommends libgcrypt-devel libsodium-devel libkcapi-devel \
 	   libbotan-devel libopenssl-3-devel
-RUN zypper install -y --no-recommends gcc15
+
+# Force the version, sync with script test-build to create the symlinks
+RUN zypper install -y --no-recommends gcc16
 
 COPY ./test-build .
 COPY ./run-tests .
