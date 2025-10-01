@@ -21,6 +21,7 @@
 #include "crypto/xxh_x86dispatch.h"
 #include "crypto/sha.h"
 #include "crypto/blake2.h"
+#include "crypto/blake3.h"
 
 void hash_init_crc32c(void)
 {
@@ -56,6 +57,17 @@ int hash_xxh3(const u8 *buf, size_t length, u8 *out)
 
 	hash = XXH3_64bits(buf, length);
 	put_unaligned_le64(hash, out);
+
+	return 0;
+}
+
+int hash_blake3(const u8 *buf, size_t len, u8 *out)
+{
+	blake3_hasher S;
+
+	blake3_hasher_init(&S);
+	blake3_hasher_update(&S, buf, len);
+	blake3_hasher_finalize(&S, out,CRYPTO_HASH_SIZE_MAX);
 
 	return 0;
 }
