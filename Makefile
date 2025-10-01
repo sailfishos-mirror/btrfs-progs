@@ -155,15 +155,22 @@ CRYPTO_OBJECTS =
 
 ifeq ($(HAVE_CFLAG_msse2),1)
 crypto_blake2b_sse2_cflags = -msse2
+crypto_blake3_sse2_clfags = -msse2
 endif
 ifeq ($(HAVE_CFLAG_msse41),1)
 crypto_blake2b_sse41_cflags = -msse4.1
+crypto_blake3_sse41_cflags = -msse4.1
 endif
 ifeq ($(HAVE_CFLAG_mavx2),1)
 crypto_blake2b_avx2_cflags = -mavx2
+crypto_blake3_avx2_cflags = -mavx2
 endif
 ifeq ($(HAVE_CFLAG_msha),1)
 crypto_sha256_x86_cflags = -msse4.1 -msha
+endif
+
+ifeq ($(HAVE_CFLAG_mavx512_f_vl),1)
+crypto_blake3_avx512_cflags = -mavx512f -mavx512vl
 endif
 
 LIBS = $(LIBS_BASE) $(LIBS_CRYPTO)
@@ -248,6 +255,9 @@ objects = \
 	crypto/crc32c.o	\
 	crypto/hash.o	\
 	crypto/xxhash.o	\
+	crypto/blake3.o crypto/blake3_portable.o crypto/blake3_dispatch.o \
+	crypto/blake3_avx2.o crypto/blake3_avx512.o crypto/blake3_sse2.o \
+	crypto/blake3_sse41.o	\
 	$(CRYPTO_OBJECTS)	\
 	libbtrfsutil/stubs.o	\
 	libbtrfsutil/subvolume.o
