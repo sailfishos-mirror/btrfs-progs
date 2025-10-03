@@ -233,6 +233,8 @@ int main(int argc, char **argv) {
 	cpu_print_flags();
 	hash_init_accel();
 
+	hash_describe_auto_select();
+
 	optind = 0;
 	while (1) {
 		static const struct option long_options[] = {

@@ -31,5 +31,6 @@ int hash_blake3(const u8 *buf, size_t length, u8 *out);
 
 void hash_init_accel(void);
 void hash_init_crc32c(void);
+void hash_describe_auto_select(void);
 
 #endif
