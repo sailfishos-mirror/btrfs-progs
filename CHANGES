@@ -32,6 +32,18 @@ btrfs-progs-6.19 (2025-02-13)
       * code cleanups and refactoring
       * documentation updates
 
+btrfs-progs-6.19.1 (2026-03-18)
+"""""""""""""""""""""""""""""""
+   * fix balance filter 'usage' that was incorrectly used for ranged usage
+   * core:
+      * fix tree-checker vararg format print
+      * stability fixes
+      * compiler warning fixes
+   * other:
+      * CI updates, action version updates, more build targets
+      * cleanups, refactoring
+      * minor documentation updates
+
 btrfs-progs-6.18 (skipped)
 --------------------------
 
