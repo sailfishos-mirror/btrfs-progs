@@ -73,6 +73,7 @@ barrier, nobarrier
 clear_cache
         Force clearing and rebuilding of the free space cache if something
         has gone wrong.
+        This option only takes effect on the first read-write mount.
 
         For free space cache *v1*, this only clears (and, unless *nospace_cache* is
         used, rebuilds) the free space cache for block groups that are modified while
