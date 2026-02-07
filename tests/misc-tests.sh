@@ -82,7 +82,7 @@ do
 		fi
 		check_test_results "$RESULTS" "$name"
 	else
-		_fail "custom test script not found or lacks execution permission"
+		_fail "custom test script not found or lacks execution permission (\"$i\")"
 	fi
 	cd "$TEST_TOP"
 done
