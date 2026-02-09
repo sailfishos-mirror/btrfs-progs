@@ -9,6 +9,39 @@ kernel. It does not tell anything about at which kernel version it is
 considered mature enough for production use. For an estimation on stability of
 features see :doc:`Status<Status>` page.
 
+7.x (latest)
+------------
+
+7.0 - blocksize > page size, enable direct IO
+
+7.0 - direct IO fallback to buffered with duplication
+        Fallback to buffered IO if the data profile has duplication, workaround
+        to avoid checksum mismatches on block group profiles with redundancy,
+        real direct IO is possible on single or RAID0.
+
+7.0 - zone statistics in /proc
+        Per-zone statistics are available in the filesystem entry in
+        :file:`/proc/PID/mountstats`
+
+7.0 - *(experimental)* checksum offloading tunable removed from sysfs
+        Tunable to select if checksums are calculated synchronously or
+        asynchronously at IO submission time, to find the best option. Removed
+        because it's been offloaded to worker threads.
+
+7.0 - *(experimental*) remap tree
+        Initial support for remap-tree feature, a translation layer of logical
+        block addresses that allow changes without moving/rewriting blocks to
+        do e.g. relocation, or other changes that require COW. Feature carved
+        out of the *extent tree v2* set.
+
+7.0 - trim continues after first error
+        A fix that also affects behaviour of trim. On first error the rest of
+        the device was not processed.
+
+7.0 - switch to non-module crypto API
+        Due to internal changes the hash and checksum API is not provided by
+        other kernel modules, reducing dependencies of :file:`btrfs.ko`.
+
 6.x
 ---
 
@@ -269,12 +302,12 @@ features see :doc:`Status<Status>` page.
         A debugging feature to track references (now implemented for delayed
         refs) and report leaks eventually.
 
+6.18 (stable)
+-------------
+
 6.18 - *(experimental)* enable block size > page size support
         Initial support for *bs > ps* with limitations (no direct IO, raid56,
         encoded read/write).
-
-6.19 (latest)
--------------
 
 6.19 - *(experimental)* shutdown ioctl
         Support ioctl to forcibly shut down filesystem operation
