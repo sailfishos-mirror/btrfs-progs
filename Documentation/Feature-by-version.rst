@@ -9,7 +9,7 @@ kernel. It does not tell anything about at which kernel version it is
 considered mature enough for production use. For an estimation on stability of
 features see :doc:`Status<Status>` page.
 
-7.x (latest)
+7.1 (latest)
 ------------
 
 7.0 - blocksize > page size, enable direct IO
@@ -28,7 +28,7 @@ features see :doc:`Status<Status>` page.
         asynchronously at IO submission time, to find the best option. Removed
         because it's been offloaded to worker threads.
 
-7.0 - *(experimental*) remap tree
+7.0 - *(experimental)* remap tree
         Initial support for remap-tree feature, a translation layer of logical
         block addresses that allow changes without moving/rewriting blocks to
         do e.g. relocation, or other changes that require COW. Feature carved
@@ -41,6 +41,14 @@ features see :doc:`Status<Status>` page.
 7.0 - switch to non-module crypto API
         Due to internal changes the hash and checksum API is not provided by
         other kernel modules, reducing dependencies of :file:`btrfs.ko`.
+
+7.1 - shutodown ioctl
+        Force the filesystem to stop all IO and other active operations until
+        the nex unmount. Additionally there's a super block operation to
+        forcibly remove a device from under the filesystem that could lead to a
+        shutdown or not if the redundancy allows that.
+
+7.1 - report filesystem shutdown using fserror mechanism
 
 6.x
 ---
@@ -294,7 +302,7 @@ features see :doc:`Status<Status>` page.
         File holes, ranges not representing data, were emulated by a zero
         filled data. This is less efficient than punching holes.
 
-6.18 - *move rev-verify feature under CONFIG_BTRFS_DEBUG*
+6.18 - *move ref-verify feature under CONFIG_BTRFS_DEBUG*
         Config option CONFIG_BTRFS_FS_REF_VERIFY has been removed and the
         debugging functionality of *ref-verify* moved under CONFIG_BTRFS_DEBUG.
 
