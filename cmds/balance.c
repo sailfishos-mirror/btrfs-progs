@@ -90,6 +90,119 @@ static void print_range_u32(u32 start, u32 end)
 		printf("%u", end);
 }
 
+static int parse_one_filter(char *name, char *value, struct btrfs_balance_args *args)
+{
+	if (strcmp(name, "profiles") == 0) {
+		if (!value || !*value) {
+			error("the profiles filter requires an argument");
+			return 1;
+		}
+		if (parse_profiles(value, &args->profiles)) {
+			error("invalid profiles argument");
+			return 1;
+		}
+		args->flags |= BTRFS_BALANCE_ARGS_PROFILES;
+	} else if (strcmp(name, "usage") == 0) {
+		if (!value || !*value) {
+			error("the usage filter requires an argument");
+			return 1;
+		}
+		if (parse_u64(value, &args->usage)) {
+			if (parse_range_u32(value, &args->usage_min, &args->usage_max)) {
+				error("invalid usage argument: %s", value);
+				return 1;
+			}
+			if (args->usage_max > 100) {
+				error("invalid usage argument: %s", value);
+				return 1;
+			}
+			args->flags &= ~BTRFS_BALANCE_ARGS_USAGE;
+			args->flags |= BTRFS_BALANCE_ARGS_USAGE_RANGE;
+		} else {
+			if (args->usage > 100) {
+				error("invalid usage argument: %s", value);
+				return 1;
+			}
+			args->flags &= ~BTRFS_BALANCE_ARGS_USAGE_RANGE;
+			args->flags |= BTRFS_BALANCE_ARGS_USAGE;
+		}
+	} else if (strcmp(name, "devid") == 0) {
+		if (!value || !*value) {
+			error("the devid filter requires an argument");
+			return 1;
+		}
+		if (parse_u64(value, &args->devid) || args->devid == 0) {
+			error("invalid devid argument: %s", value);
+			return 1;
+		}
+		args->flags |= BTRFS_BALANCE_ARGS_DEVID;
+	} else if (strcmp(name, "drange") == 0) {
+		if (!value || !*value) {
+			error("the drange filter requires an argument");
+			return 1;
+		}
+		if (parse_range_strict(value, &args->pstart, &args->pend)) {
+			error("invalid drange argument");
+			return 1;
+		}
+		args->flags |= BTRFS_BALANCE_ARGS_DRANGE;
+	} else if (strcmp(name, "vrange") == 0) {
+		if (!value || !*value) {
+			error("the vrange filter requires an argument");
+			return 1;
+		}
+		if (parse_range_strict(value, &args->vstart, &args->vend)) {
+			error("invalid vrange argument");
+			return 1;
+		}
+		args->flags |= BTRFS_BALANCE_ARGS_VRANGE;
+	} else if (strcmp(name, "convert") == 0) {
+		if (!value || !*value) {
+			error("the convert option requires an argument");
+			return 1;
+		}
+		if (parse_one_profile(value, &args->target)) {
+			error("invalid convert argument");
+			return 1;
+		}
+		args->flags |= BTRFS_BALANCE_ARGS_CONVERT;
+	} else if (strcmp(name, "soft") == 0) {
+		args->flags |= BTRFS_BALANCE_ARGS_SOFT;
+	} else if (strcmp(name, "limit") == 0) {
+		if (!value || !*value) {
+			error("the limit filter requires an argument");
+			return 1;
+		}
+		if (parse_u64(value, &args->limit)) {
+			if (parse_range_u32(value, &args->limit_min, &args->limit_max)) {
+				error("Invalid limit argument: %s", value);
+				return 1;
+			}
+			args->flags &= ~BTRFS_BALANCE_ARGS_LIMIT;
+			args->flags |= BTRFS_BALANCE_ARGS_LIMIT_RANGE;
+		} else {
+			args->flags &= ~BTRFS_BALANCE_ARGS_LIMIT_RANGE;
+			args->flags |= BTRFS_BALANCE_ARGS_LIMIT;
+		}
+	} else if (strcmp(name, "stripes") == 0) {
+		if (!value || !*value) {
+			error("the stripes filter requires an argument");
+			return 1;
+		}
+		if (parse_range_u32(value, &args->stripes_min,
+				    &args->stripes_max)) {
+			error("invalid stripes argument");
+			return 1;
+		}
+		args->flags |= BTRFS_BALANCE_ARGS_STRIPES_RANGE;
+	} else {
+		error("unrecognized balance filter: %s", name);
+		return 1;
+	}
+
+	return 0;
+}
+
 static int parse_filters(char *filters, struct btrfs_balance_args *args)
 {
 	char *this_char;
@@ -104,118 +217,9 @@ static int parse_filters(char *filters, struct btrfs_balance_args *args)
 	     this_char = strtok_r(NULL, ",", &save_ptr)) {
 		if ((value = strchr(this_char, '=')) != NULL)
 			*value++ = 0;
-		if (strcmp(this_char, "profiles") == 0) {
-			if (!value || !*value) {
-				error("the profiles filter requires an argument");
-				return 1;
-			}
-			if (parse_profiles(value, &args->profiles)) {
-				error("invalid profiles argument");
-				return 1;
-			}
-			args->flags |= BTRFS_BALANCE_ARGS_PROFILES;
-		} else if (strcmp(this_char, "usage") == 0) {
-			if (!value || !*value) {
-				error("the usage filter requires an argument");
-				return 1;
-			}
-			if (parse_u64(value, &args->usage)) {
-				if (parse_range_u32(value, &args->usage_min,
-							&args->usage_max)) {
-					error("invalid usage argument: %s",
-						value);
-					return 1;
-				}
-				if (args->usage_max > 100) {
-					error("invalid usage argument: %s",
-						value);
-				}
-				args->flags &= ~BTRFS_BALANCE_ARGS_USAGE;
-				args->flags |= BTRFS_BALANCE_ARGS_USAGE_RANGE;
-			} else {
-				if (args->usage > 100) {
-					error("invalid usage argument: %s",
-						value);
-					return 1;
-				}
-				args->flags &= ~BTRFS_BALANCE_ARGS_USAGE_RANGE;
-				args->flags |= BTRFS_BALANCE_ARGS_USAGE;
-			}
-		} else if (strcmp(this_char, "devid") == 0) {
-			if (!value || !*value) {
-				error("the devid filter requires an argument");
-				return 1;
-			}
-			if (parse_u64(value, &args->devid) || args->devid == 0) {
-				error("invalid devid argument: %s", value);
-				return 1;
-			}
-			args->flags |= BTRFS_BALANCE_ARGS_DEVID;
-		} else if (strcmp(this_char, "drange") == 0) {
-			if (!value || !*value) {
-				error("the drange filter requires an argument");
-				return 1;
-			}
-			if (parse_range_strict(value, &args->pstart, &args->pend)) {
-				error("invalid drange argument");
-				return 1;
-			}
-			args->flags |= BTRFS_BALANCE_ARGS_DRANGE;
-		} else if (strcmp(this_char, "vrange") == 0) {
-			if (!value || !*value) {
-				error("the vrange filter requires an argument");
-				return 1;
-			}
-			if (parse_range_strict(value, &args->vstart, &args->vend)) {
-				error("invalid vrange argument");
-				return 1;
-			}
-			args->flags |= BTRFS_BALANCE_ARGS_VRANGE;
-		} else if (strcmp(this_char, "convert") == 0) {
-			if (!value || !*value) {
-				error("the convert option requires an argument");
-				return 1;
-			}
-			if (parse_one_profile(value, &args->target)) {
-				error("invalid convert argument");
-				return 1;
-			}
-			args->flags |= BTRFS_BALANCE_ARGS_CONVERT;
-		} else if (strcmp(this_char, "soft") == 0) {
-			args->flags |= BTRFS_BALANCE_ARGS_SOFT;
-		} else if (strcmp(this_char, "limit") == 0) {
-			if (!value || !*value) {
-				error("the limit filter requires an argument");
-				return 1;
-			}
-			if (parse_u64(value, &args->limit)) {
-				if (parse_range_u32(value, &args->limit_min,
-							&args->limit_max)) {
-					error("Invalid limit argument: %s",
-					       value);
-					return 1;
-				}
-				args->flags &= ~BTRFS_BALANCE_ARGS_LIMIT;
-				args->flags |= BTRFS_BALANCE_ARGS_LIMIT_RANGE;
-			} else {
-				args->flags &= ~BTRFS_BALANCE_ARGS_LIMIT_RANGE;
-				args->flags |= BTRFS_BALANCE_ARGS_LIMIT;
-			}
-		} else if (strcmp(this_char, "stripes") == 0) {
-			if (!value || !*value) {
-				error("the stripes filter requires an argument");
-				return 1;
-			}
-			if (parse_range_u32(value, &args->stripes_min,
-					    &args->stripes_max)) {
-				error("invalid stripes argument");
-				return 1;
-			}
-			args->flags |= BTRFS_BALANCE_ARGS_STRIPES_RANGE;
-		} else {
-			error("unrecognized balance option: %s", this_char);
+
+		if (parse_one_filter(this_char, value, args))
 			return 1;
-		}
 	}
 
 	return 0;
