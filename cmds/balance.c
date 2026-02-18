@@ -141,7 +141,6 @@ static int parse_filters(char *filters, struct btrfs_balance_args *args)
 				args->flags &= ~BTRFS_BALANCE_ARGS_USAGE_RANGE;
 				args->flags |= BTRFS_BALANCE_ARGS_USAGE;
 			}
-			args->flags |= BTRFS_BALANCE_ARGS_USAGE;
 		} else if (strcmp(this_char, "devid") == 0) {
 			if (!value || !*value) {
 				error("the devid filter requires an argument");
