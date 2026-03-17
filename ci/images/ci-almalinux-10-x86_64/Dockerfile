@@ -20,8 +20,6 @@ RUN yum -y install wget
 RUN yum -y install util-linux e2fsprogs findutils grep
 RUN yum -y install udev systemd-devel device-mapper acl attr xz
 
-RUN yum -y install libsodium-devel
-
 # For debugging
 RUN yum -y install less vim
 
