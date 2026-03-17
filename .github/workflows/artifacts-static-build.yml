@@ -23,16 +23,16 @@ jobs:
       - name: Configure
         run: ./autogen.sh && ./configure --disable-documentation
       - name: "Make static (x86_64)"
-        if: "${{ matrix.os }}" == ""
+        if: "x${{ matrix.os }}" == "x"
         run: make V=1 EXTRA_CFLAGS='-march=x86-64' static
       - name: "Make static (ARM64)"
-        if: "${{ matrix.os }}" == "-arm"
+        if: "x${{ matrix.os }}" == "x-arm"
         run: make V=1 EXTRA_CFLAGS='-march=armv8-a' static
       - name: "Make box.static (x86_64)"
-        if: "${{ matrix.os }}" == ""
+        if: "x${{ matrix.os }}" == "x"
         run: make V=1 EXTRA_CFLAGS='-march=x86-64' btrfs.box.static
       - name: "Make box.static (ARM64)"
-        if: "${{ matrix.os }}" == "-arm"
+        if: "x${{ matrix.os }}" == "x-arm"
         run: make V=1 EXTRA_CFLAGS='-march=armv8-a' btrfs.box.static
       - name: Strip binaries
         run: strip btrfs.static btrfs.box.static
