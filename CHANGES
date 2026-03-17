@@ -3,8 +3,8 @@ btrfs-progs-6.19 (2025-02-13)
    * mkfs:
       * make block-group-tree default (support since linux 6.1), use -O ^bgt to
       * unset it for backward compatibility
-      * speed up initial device discard by procesing the ranges in order
-      * disable block-grooup-tree feature if a dependent feature is explicitly
+      * speed up initial device discard by processing the ranges in order
+      * disable block-group-tree feature if a dependent feature is explicitly
         unselected (like disabling no-holes), instead of erroring out
    * check:
       * add ability to detect and fix missing orphan items in deleted subvolumes
