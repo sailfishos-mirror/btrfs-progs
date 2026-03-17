@@ -28,12 +28,18 @@ Tested branches:
 - devel - regularly pushed during development, basic build and functionality test
 - release-test - pushed before a release to verify more build targets (for backward
   compatibility)
+- coverage-test - pushed before release and also run periodically, code
+  coverage after running the testsuite, results available at
+  https://codecov.io/gh/kdave/btrfs-progs/branch/coverage-test
 - devel-ci - for testing and development of the CI itself
+- pull request - subset of development tests is run on pull requests, first
+  time contributors may need manual approval to start the workflows
 
 References:
 
 - Documentation: https://docs.github.com/en/actions
 - Details about image package versions, updates: https://github.com/actions/runner-images
+- https://rhysd.github.io/actionlint/ - syntax check of GH actions .yml file
 
 ### Requirements for hosted infrastructure
 
