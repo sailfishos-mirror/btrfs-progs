@@ -1,10 +1,10 @@
-FROM opensuse/leap:15.6
+FROM opensuse/leap:16.0
 
 WORKDIR /tmp
 
 RUN zypper install -y --no-recommends autoconf automake pkg-config
 RUN zypper install -y --no-recommends libattr-devel libblkid-devel libuuid-devel
-RUN zypper install -y --no-recommends libext2fs-devel libreiserfscore-devel
+RUN zypper install -y --no-recommends libext2fs-devel
 RUN zypper install -y --no-recommends zlib-devel lzo-devel libzstd-devel
 RUN zypper install -y --no-recommends make gcc tar gzip clang dwarves
 RUN zypper install -y --no-recommends python3 python3-devel python3-setuptools
