@@ -17,7 +17,7 @@ jobs:
   build-ubsan:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: uname -a
       - run: sudo modprobe btrfs
       - run: sudo apt-get update -qqq
@@ -58,7 +58,7 @@ jobs:
   build-asan:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: uname -a
       - run: sudo modprobe btrfs
       - run: sudo apt-get update -qqq
@@ -100,7 +100,7 @@ jobs:
   build-tsan:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: uname -a
       - run: sudo modprobe btrfs
       - run: sudo apt-get update -qqq
