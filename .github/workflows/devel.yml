@@ -27,7 +27,7 @@ jobs:
       - name: Configure
         run: ./autogen.sh && CC=${{ matrix.compiler }} ./configure --enable-experimental
       - name: Documentation
-        run: make V=1 -C Documentation
+        run: make -j $(nproc) V=1 -C Documentation
       - name: Generate manual pages preview (html)
         if: ${{ matrix.compiler == 'gcc' }}
         env:
@@ -48,9 +48,9 @@ jobs:
             Documentation/man-preview.sh "$file" >> $GITHUB_STEP_SUMMARY
           done
       - name: Make static
-        run: make V=1 EXTRA_CFLAGS='-march=x86-64' static
+        run: make -j $(nproc) V=1 EXTRA_CFLAGS='-march=x86-64' static
       - name: Make box.static
-        run: make V=1 EXTRA_CFLAGS='-march=x86-64' btrfs.box.static
+        run: make -j $(nproc) V=1 EXTRA_CFLAGS='-march=x86-64' btrfs.box.static
   build-musl:
     name: Build test on musl
     runs-on: ubuntu-24.04
@@ -71,7 +71,7 @@ jobs:
       - name: Configure
         run: ./autogen.sh && CC=${{ matrix.compiler }} ./configure --disable-documentation --enable-experimental
       - name: Make
-        run: make V=1
+        run: make -j $(nproc) V=1
       - name: Test internal APIs
         run: make test-api
       - name: Libbtrfsutil test
@@ -97,7 +97,7 @@ jobs:
       - name: Configure
         run: ./autogen.sh && ./configure --disable-documentation --enable-experimental
       - name: Make
-        run: make V=1
+        run: make -j $(nproc) V=1
       - name: Tests mkfs
         run: sudo make TEST_LOG=dump test-mkfs
       - name: Save logs to artifacts
@@ -118,7 +118,7 @@ jobs:
       - name: Configure
         run: ./autogen.sh && ./configure --disable-documentation --enable-experimental
       - name: Make
-        run: make V=1
+        run: make -j $(nproc) V=1
       - name: Tests check
         run: sudo make TEST_LOG=dump test-check
       - name: Tests check (lowmem)
@@ -141,7 +141,7 @@ jobs:
       - name: Configure
         run: ./autogen.sh && ./configure --disable-documentation --enable-experimental
       - name: Make
-        run: make V=1
+        run: make -j $(nproc) V=1
       - name: Tests misc
         run: sudo make TEST_LOG=dump test-misc
       - name: Save logs to artifacts
@@ -162,7 +162,7 @@ jobs:
       - name: Configure
         run: ./autogen.sh && ./configure --disable-documentation --enable-experimental
       - name: Make
-        run: make V=1
+        run: make -j $(nproc) V=1
       - name: Tests convert
         run: sudo make TEST_LOG=dump test-convert
       - name: Save logs to artifacts
@@ -183,7 +183,7 @@ jobs:
       - name: Configure
         run: ./autogen.sh && ./configure --disable-documentation --enable-experimental
       - name: Make
-        run: make V=1
+        run: make -j $(nproc) V=1
       - name: Tests cli
         run: sudo make TEST_LOG=dump test-cli
       - name: Save logs to artifacts

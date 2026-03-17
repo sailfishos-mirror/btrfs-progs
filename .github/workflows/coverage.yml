@@ -22,7 +22,7 @@ jobs:
       - name: Configure
         run: ./autogen.sh && ./configure --disable-documentation
       - name: Make
-        run: make V=1 D=gcov
+        run: make -j $(nproc) V=1 D=gcov
       - name: Tests cli
         run: sudo make D=gcov TEST_LOG=dump test-cli
       - name: Tests mkfs

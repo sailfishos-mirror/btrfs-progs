@@ -62,7 +62,7 @@ jobs:
       run: |
         ./autogen.sh
         ./configure --disable-documentation --enable-experimental
-        make -j 4
+        make -j $(nproc)
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4

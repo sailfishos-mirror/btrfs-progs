@@ -25,7 +25,7 @@ jobs:
       - name: Configure
         run: ./autogen.sh && ./configure --disable-documentation --enable-experimental
       - name: Make
-        run: make V=1 D=ubsan
+        run: make -j $(nproc) V=1 D=ubsan
       - name: Tests cli
         run: sudo make D=ubsan TEST_LOG=dump test-cli
       - name: Tests mkfs
@@ -66,7 +66,7 @@ jobs:
       - name: Configure
         run: ./autogen.sh && ./configure --disable-documentation --enable-experimental
       - name: Make
-        run: make V=1 D=asan
+        run: make -j $(nproc) V=1 D=asan
       - name: Tests cli
         run: sudo make D=asan TEST_LOG=dump test-cli
       - name: Tests mkfs
@@ -108,7 +108,7 @@ jobs:
       - name: Configure
         run: ./autogen.sh && ./configure --disable-documentation --enable-experimental
       - name: Make
-        run: make V=1 D=tsan
+        run: make -j $(nproc) V=1 D=tsan
       - name: Tests cli
         run: sudo make D=tsan TEST_LOG=dump test-cli
       - name: Tests mkfs
