@@ -24,17 +24,18 @@ jobs:
         run: ./autogen.sh && ./configure --disable-documentation
       - name: Make static
         run: |
-          if [ "x${{ matrix.os }}" = "x" ]; then            \
-            make V=1 EXTRA_CFLAGS='-march=x86-64' static    \
-          elif [ "x${{ matrix.os }}" = "x-arm" ]; then      \
-            make V=1 EXTRA_CFLAGS='-march=armv8-a' static   \
+          if [ "x${{ matrix.os }}" = "x" ]; then             \
+            make V=1 EXTRA_CFLAGS='-march=x86-64' static;    \
+          elif [ "x${{ matrix.os }}" = "x-arm" ]; then       \
+            make V=1 EXTRA_CFLAGS='-march=armv8-a' static;   \
           fi
-      - name: "Make box.static (x86_64)"
-        if: "x${{ matrix.os }}" == "x"
-        run: make V=1 EXTRA_CFLAGS='-march=x86-64' btrfs.box.static
-      - name: "Make box.static (ARM64)"
-        if: "x${{ matrix.os }}" == "x-arm"
-        run: make V=1 EXTRA_CFLAGS='-march=armv8-a' btrfs.box.static
+      - name: Make box.static
+        run: |
+          if [ "x${{ matrix.os }}" = "x" ]; then                      \
+            make V=1 EXTRA_CFLAGS='-march=x86-64' btrfs.box.static;   \
+          elif [ "x${{ matrix.os }}" = "x-arm" ]; then                \
+            make V=1 EXTRA_CFLAGS='-march=armv8-a' btrfs.box.static;  \
+          fi
       - name: Strip binaries
         run: strip btrfs.static btrfs.box.static
       - name: Calculate SHA256 checksums
