@@ -1702,6 +1702,6 @@ int repair_subvol_orphan_item(struct btrfs_fs_info *fs_info, u64 rootid)
 		error_msg(ERROR_MSG_COMMIT_TRANS, "%m");
 		return ret;
 	}
-	pr_verbose(LOG_DEFAULT, "Added back missing orphan item for subvolume %llu\n", rootid);
+	pr_default("Added back missing orphan item for subvolume %llu\n", rootid);
 	return 0;
 }

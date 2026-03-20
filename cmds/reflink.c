@@ -144,8 +144,8 @@ static int cmd_reflink_clone(const struct cmd_struct *cmd, int argc, char **argv
 
 	source = argv[optind];
 	target = argv[optind + 1];
-	pr_verbose(LOG_DEFAULT, "Source: %s\n", source);
-	pr_verbose(LOG_DEFAULT, "Target: %s\n", target);
+	pr_default("Source: %s\n", source);
+	pr_default("Target: %s\n", target);
 
 	fd_source = open(source, O_RDONLY);
 	if (fd_source == -1) {
@@ -168,14 +168,14 @@ static int cmd_reflink_clone(const struct cmd_struct *cmd, int argc, char **argv
 			goto out;
 		}
 
-		pr_verbose(LOG_DEFAULT, "No ranges, use entire flile\n");
+		pr_default("No ranges, use entire flile\n");
 		whole.from = 0;
 		whole.length = st.st_size;
 		whole.to = 0;
 		ret = reflink_apply_range(fd_source, fd_target, &whole);
 	} else {
 		list_for_each_entry(range, &ranges, list) {
-			pr_verbose(LOG_DEFAULT, "Range: %llu:%llu:%llu\n", range->from, range->length, range->to);
+			pr_default("Range: %llu:%llu:%llu\n", range->from, range->length, range->to);
 			ret = reflink_apply_range(fd_source, fd_target, range);
 		}
 

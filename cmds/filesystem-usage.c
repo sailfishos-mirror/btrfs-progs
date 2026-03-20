@@ -258,7 +258,7 @@ static struct btrfs_ioctl_space_args *load_space_info(int fd, const char *path)
 	}
 	if (!sargs->total_spaces) {
 		free(sargs);
-		pr_verbose(LOG_DEFAULT, "No chunks found\n");
+		pr_default("No chunks found\n");
 		return NULL;
 	}
 
@@ -629,48 +629,48 @@ static int print_filesystem_usage_overall(int fd, const struct array *chunkinfos
 		goto exit;
 	}
 
-	pr_verbose(LOG_DEFAULT, "Overall:\n");
+	pr_default("Overall:\n");
 
-	pr_verbose(LOG_DEFAULT, "    Device size:\t\t%*s\n", width,
+	pr_default("    Device size:\t\t%*s\n", width,
 		pretty_size_mode(r_total_size, unit_mode));
-	pr_verbose(LOG_DEFAULT, "    Device allocated:\t\t%*s\n", width,
+	pr_default("    Device allocated:\t\t%*s\n", width,
 		pretty_size_mode(r_total_chunks, unit_mode));
-	pr_verbose(LOG_DEFAULT, "    Device unallocated:\t\t%*s\n", width,
+	pr_default("    Device unallocated:\t\t%*s\n", width,
 		pretty_size_mode(r_total_unused, unit_mode | UNITS_NEGATIVE));
-	pr_verbose(LOG_DEFAULT, "    Device missing:\t\t%*s\n", width,
+	pr_default("    Device missing:\t\t%*s\n", width,
 		pretty_size_mode(r_total_missing, unit_mode));
-	pr_verbose(LOG_DEFAULT, "    Device slack:\t\t%*s\n", width,
+	pr_default("    Device slack:\t\t%*s\n", width,
 		pretty_size_mode(r_total_slack, unit_mode));
 	ret = ioctl(fd, BTRFS_IOC_GET_FEATURES, &feature_flags);
 	if (ret == 0 && (feature_flags.incompat_flags & BTRFS_FEATURE_INCOMPAT_ZONED)) {
 		u64 zone_size;
 
-		pr_verbose(LOG_DEFAULT, "    Device zone unusable:\t%*s\n", width,
+		pr_default("    Device zone unusable:\t%*s\n", width,
 			pretty_size_mode(zone_unusable, unit_mode));
 		zone_size = get_first_device_zone_size(fd);
-		pr_verbose(LOG_DEFAULT, "    Device zone size:\t\t%*s\n", width,
+		pr_default("    Device zone size:\t\t%*s\n", width,
 			pretty_size_mode(zone_size, unit_mode));
 	}
-	pr_verbose(LOG_DEFAULT, "    Used:\t\t\t%*s\n", width,
+	pr_default("    Used:\t\t\t%*s\n", width,
 		pretty_size_mode(r_total_used, unit_mode));
-	pr_verbose(LOG_DEFAULT, "    Free (estimated):\t\t%*s\t(",
+	pr_default("    Free (estimated):\t\t%*s\t(",
 		width,
 		pretty_size_mode(free_estimated, unit_mode));
-	pr_verbose(LOG_DEFAULT, "min: %s)\n", pretty_size_mode(free_min, unit_mode));
-	pr_verbose(LOG_DEFAULT, "    Free (statfs, df):\t\t%*s\n", width,
+	pr_default("min: %s)\n", pretty_size_mode(free_min, unit_mode));
+	pr_default("    Free (statfs, df):\t\t%*s\n", width,
 		pretty_size_mode(statvfs_buf.f_bavail * statvfs_buf.f_bsize, unit_mode));
-	pr_verbose(LOG_DEFAULT, "    Data ratio:\t\t\t%*.2f\n",
+	pr_default("    Data ratio:\t\t\t%*.2f\n",
 		width, data_ratio);
-	pr_verbose(LOG_DEFAULT, "    Metadata ratio:\t\t%*.2f\n",
+	pr_default("    Metadata ratio:\t\t%*.2f\n",
 		width, metadata_ratio);
-	pr_verbose(LOG_DEFAULT, "    Global reserve:\t\t%*s\t(used: %s)\n", width,
+	pr_default("    Global reserve:\t\t%*s\t(used: %s)\n", width,
 		pretty_size_mode(l_global_reserve, unit_mode),
 		pretty_size_mode(l_global_reserve_used, unit_mode));
 	tmp = btrfs_test_for_multiple_profiles(fd);
 	if (tmp[0])
-		pr_verbose(LOG_DEFAULT, "    Multiple profiles:\t\t%*s\t(%s)\n", width, "yes", tmp);
+		pr_default("    Multiple profiles:\t\t%*s\t(%s)\n", width, "yes", tmp);
 	else
-		pr_verbose(LOG_DEFAULT, "    Multiple profiles:\t\t%*s\n", width, "no");
+		pr_default("    Multiple profiles:\t\t%*s\n", width, "no");
 	free(tmp);
 
 exit:
@@ -1098,7 +1098,7 @@ static void print_unused(const struct array *chunkinfos, const struct array *dev
 				total += calc_chunk_size(chunk);
 		}
 
-		pr_verbose(LOG_DEFAULT, "   %s\t%10s\n",
+		pr_default("   %s\t%10s\n",
 			devinfo->path,
 			pretty_size_mode(devinfo->size - total, unit_mode));
 	}
@@ -1126,7 +1126,7 @@ static void print_chunk_device(u64 chunk_type, const struct array *chunkinfos,
 		}
 
 		if (total > 0)
-			pr_verbose(LOG_DEFAULT, "   %s\t%10s\n", devinfo->path,
+			pr_default("   %s\t%10s\n", devinfo->path,
 				   pretty_size_mode(total, unit_mode));
 	}
 }
@@ -1153,21 +1153,21 @@ static void _cmd_filesystem_usage_linear(unsigned unit_mode,
 		description = btrfs_group_type_str(flags);
 		r_mode = btrfs_group_profile_str(flags);
 
-		pr_verbose(LOG_DEFAULT, "%s,%s: Size:%s, ",
+		pr_default("%s,%s: Size:%s, ",
 			description,
 			r_mode,
 			pretty_size_mode(sargs->spaces[i].total_bytes,
 				unit_mode));
-		pr_verbose(LOG_DEFAULT, "Used:%s (%.2f%%)\n",
+		pr_default("Used:%s (%.2f%%)\n",
 			pretty_size_mode(sargs->spaces[i].used_bytes, unit_mode),
 			100.0f * sargs->spaces[i].used_bytes /
 			(sargs->spaces[i].total_bytes + 1));
 		print_chunk_device(flags, chunkinfos, devinfos, unit_mode);
-		pr_verbose(LOG_DEFAULT, "\n");
+		pr_default("\n");
 	}
 
 	if (chunkinfos->length > 0) {
-		pr_verbose(LOG_DEFAULT, "Unallocated:\n");
+		pr_default("Unallocated:\n");
 		print_unused(chunkinfos, devinfos, unit_mode | UNITS_NEGATIVE);
 	}
 }
@@ -1247,7 +1247,7 @@ static int cmd_filesystem_usage(const struct cmd_struct *cmd,
 			goto out;
 		}
 		if (more_than_one)
-			pr_verbose(LOG_DEFAULT, "\n");
+			pr_default("\n");
 
 		ret = load_chunk_and_device_info(fd, &chunkinfos, &devinfos);
 		if (ret)
@@ -1257,7 +1257,7 @@ static int cmd_filesystem_usage(const struct cmd_struct *cmd,
 				&devinfos, argv[i], unit_mode);
 		if (ret)
 			goto cleanup;
-		pr_verbose(LOG_DEFAULT, "\n");
+		pr_default("\n");
 		ret = print_filesystem_usage_by_chunk(fd, &chunkinfos,
 				&devinfos, argv[i], unit_mode, tabular);
 cleanup:
@@ -1305,7 +1305,7 @@ void print_device_chunks(const struct device_info *devinfo,
 		num_stripes = chunk_info->num_stripes;
 
 		if (btrfs_bg_type_is_stripey(profile)) {
-			pr_verbose(LOG_DEFAULT, "   %s,%s/%llu:%*s%10s\n",
+			pr_default("   %s,%s/%llu:%*s%10s\n",
 				   description,
 				   r_mode,
 				   num_stripes,
@@ -1313,7 +1313,7 @@ void print_device_chunks(const struct device_info *devinfo,
 						 - count_digits(num_stripes) - 1), "",
 				   pretty_size_mode(size, unit_mode));
 		} else {
-			pr_verbose(LOG_DEFAULT, "   %s,%s:%*s%10s\n",
+			pr_default("   %s,%s:%*s%10s\n",
 				   description,
 				   r_mode,
 				   (int)(20 - strlen(description) - strlen(r_mode)), "",
@@ -1329,10 +1329,10 @@ void print_device_chunks(const struct device_info *devinfo,
 	 * don't print incorrect data.
 	 */
 	if (chunkinfos->length == 0)
-		pr_verbose(LOG_DEFAULT, "   Unallocated: %*s%10s\n",
+		pr_default("   Unallocated: %*s%10s\n",
 			   (int)(20 - strlen("Unallocated")), "", "N/A");
 	else
-		pr_verbose(LOG_DEFAULT, "   Unallocated: %*s%10s\n",
+		pr_default("   Unallocated: %*s%10s\n",
 			   (int)(20 - strlen("Unallocated")), "",
 			   pretty_size_mode(devinfo->size - allocated,
 					    unit_mode | UNITS_NEGATIVE));
@@ -1340,10 +1340,10 @@ void print_device_chunks(const struct device_info *devinfo,
 
 void print_device_sizes(const struct device_info *devinfo, unsigned unit_mode)
 {
-	pr_verbose(LOG_DEFAULT, "   Device size: %*s%10s\n",
+	pr_default("   Device size: %*s%10s\n",
 		(int)(20 - strlen("Device size")), "",
 		pretty_size_mode(devinfo->device_size, unit_mode));
-	pr_verbose(LOG_DEFAULT, "   Device slack: %*s%10s\n",
+	pr_default("   Device slack: %*s%10s\n",
 		(int)(20 - strlen("Device slack")), "",
 		pretty_size_mode(calc_slack_size(devinfo), unit_mode));
 }

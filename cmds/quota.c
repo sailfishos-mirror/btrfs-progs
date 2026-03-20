@@ -212,15 +212,15 @@ static int cmd_quota_rescan(const struct cmd_struct *cmd, int argc, char **argv)
 			return 1;
 		}
 		if (!args.flags)
-			pr_verbose(LOG_DEFAULT, "no rescan operation in progress\n");
+			pr_default("no rescan operation in progress\n");
 		else
-			pr_verbose(LOG_DEFAULT, "rescan operation running (current key %lld)\n",
+			pr_default("rescan operation running (current key %lld)\n",
 				args.progress);
 		return 0;
 	}
 
 	if (ioctlnum == BTRFS_IOC_QUOTA_RESCAN && ret == 0) {
-		pr_verbose(LOG_DEFAULT, "quota rescan started\n");
+		pr_default("quota rescan started\n");
 		fflush(stdout);
 	} else if (ret < 0 && (!wait_for_completion || e != EINPROGRESS)) {
 		error("quota rescan failed: %m");
@@ -320,12 +320,12 @@ static int cmd_quota_status(const struct cmd_struct *cmd, int argc, char **argv)
 		return 1;
 
 	dirfd = sysfs_open_fsid_dir(fsfd, "qgroups");
-	pr_verbose(LOG_DEFAULT, "Quotas on %s:\n", argv[1]);
+	pr_default("Quotas on %s:\n", argv[1]);
 	if (dirfd < 0) {
-		pr_verbose(LOG_DEFAULT, "  Enabled: no\n");
+		pr_default("  Enabled: no\n");
 		goto out;
 	}
-	pr_verbose(LOG_DEFAULT, "  Enabled:                 %s\n", "yes");
+	pr_default("  Enabled:                 %s\n", "yes");
 
 	fd = sysfs_open_fsid_file(fsfd, "qgroups/mode");
 	if (fd < 0) {
@@ -339,7 +339,7 @@ static int cmd_quota_status(const struct cmd_struct *cmd, int argc, char **argv)
 	}
 	while (isspace(buf[strlen(buf) - 1]))
 		buf[strlen(buf) - 1] = 0;
-	pr_verbose(LOG_DEFAULT, "  Mode:                    %s (%s)\n", buf, describe_mode(buf));
+	pr_default("  Mode:                    %s (%s)\n", buf, describe_mode(buf));
 	close(fd);
 
 	ret = sysfs_read_fsid_file_u64(fsfd, "qgroups/inconsistent", &num);
@@ -347,7 +347,7 @@ static int cmd_quota_status(const struct cmd_struct *cmd, int argc, char **argv)
 		error("cannot read file qgroups/inconsistent: %m");
 		goto out;
 	}
-	pr_verbose(LOG_DEFAULT, "  Inconsistent:            %s%s\n",
+	pr_default("  Inconsistent:            %s%s\n",
 		   (num ? "yes" : "no"), (num ? " (rescan needed)" : ""));
 
 	ret = sysfs_read_fsid_file_u64(fsfd, "quota_override", &num);
@@ -355,14 +355,14 @@ static int cmd_quota_status(const struct cmd_struct *cmd, int argc, char **argv)
 		error("cannot read file qgroups/quota_override: %m");
 		goto out;
 	}
-	pr_verbose(LOG_DEFAULT, "  Override limits:         %s\n", (num ? "yes" : "no"));
+	pr_default("  Override limits:         %s\n", (num ? "yes" : "no"));
 
 	ret = sysfs_read_fsid_file_u64(fsfd, "qgroups/drop_subtree_threshold", &num);
 	if (ret < 0) {
 		error("cannot read file qgroups/drop_subtree_threshold");
 		goto out;
 	}
-	pr_verbose(LOG_DEFAULT, "  Drop subtree threshold:  %llu\n", num);
+	pr_default("  Drop subtree threshold:  %llu\n", num);
 
 	/* Count */
 	dir = fdopendir(dirfd);
@@ -398,8 +398,8 @@ static int cmd_quota_status(const struct cmd_struct *cmd, int argc, char **argv)
 		if (btrfs_qgroup_level(qgroupid) == 0)
 			num2++;
 	}
-	pr_verbose(LOG_DEFAULT, "  Total count:             %llu\n", num);
-	pr_verbose(LOG_DEFAULT, "  Level 0:                 %llu\n", num2);
+	pr_default("  Total count:             %llu\n", num);
+	pr_default("  Level 0:                 %llu\n", num2);
 
 out:
 	if (dir)

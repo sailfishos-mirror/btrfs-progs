@@ -238,7 +238,7 @@ static void print_seek_histogram(struct root_stats *stat)
 
 	/* Make a tick count as 5% of the total seeks */
 	tick_interval = stat->total_seeks / 20;
-	pr_verbose(LOG_DEFAULT, "\tSeek histogram\n");
+	pr_default("\tSeek histogram\n");
 	for (; n; n = rb_next(n)) {
 		u64 ticks, gticks = 0;
 
@@ -258,14 +258,14 @@ static void print_seek_histogram(struct root_stats *stat)
 		if (group_count) {
 
 			gticks = group_count / tick_interval;
-			pr_verbose(LOG_DEFAULT, "\t\t%*llu - %*llu: %*llu ", digits, group_start,
+			pr_default("\t\t%*llu - %*llu: %*llu ", digits, group_start,
 			       digits, group_end, digits, group_count);
 			if (gticks) {
 				for (i = 0; i < gticks; i++)
-					pr_verbose(LOG_DEFAULT, "#");
-				pr_verbose(LOG_DEFAULT, "\n");
+					pr_default("#");
+				pr_default("\n");
 			} else {
-				pr_verbose(LOG_DEFAULT, "|\n");
+				pr_default("|\n");
 			}
 			group_count = 0;
 		}
@@ -273,24 +273,24 @@ static void print_seek_histogram(struct root_stats *stat)
 		if (ticks <= 2)
 			continue;
 
-		pr_verbose(LOG_DEFAULT, "\t\t%*llu - %*llu: %*llu ", digits, seek->distance,
+		pr_default("\t\t%*llu - %*llu: %*llu ", digits, seek->distance,
 		       digits, seek->distance, digits, seek->count);
 		for (i = 0; i < ticks; i++)
-			pr_verbose(LOG_DEFAULT, "#");
-		pr_verbose(LOG_DEFAULT, "\n");
+			pr_default("#");
+		pr_default("\n");
 	}
 	if (group_count) {
 		u64 gticks;
 
 		gticks = group_count / tick_interval;
-		pr_verbose(LOG_DEFAULT, "\t\t%*llu - %*llu: %*llu ", digits, group_start,
+		pr_default("\t\t%*llu - %*llu: %*llu ", digits, group_start,
 		       digits, group_end, digits, group_count);
 		if (gticks) {
 			for (i = 0; i < gticks; i++)
-				pr_verbose(LOG_DEFAULT, "#");
-			pr_verbose(LOG_DEFAULT, "\n");
+				pr_default("#");
+			pr_default("\n");
 		} else {
-			pr_verbose(LOG_DEFAULT, "|\n");
+			pr_default("|\n");
 		}
 		group_count = 0;
 	}
@@ -367,58 +367,58 @@ out_print:
 	}
 
 	if (unit_mode == UNITS_RAW || size_fail) {
-		pr_verbose(LOG_DEFAULT, "\tTotal size: %llu\n", stat.total_bytes);
-		pr_verbose(LOG_DEFAULT, "\t\tInline data: %llu\n", stat.total_inline);
-		pr_verbose(LOG_DEFAULT, "\tTotal seeks: %llu\n", stat.total_seeks);
-		pr_verbose(LOG_DEFAULT, "\t\tForward seeks: %llu\n", stat.forward_seeks);
-		pr_verbose(LOG_DEFAULT, "\t\tBackward seeks: %llu\n", stat.backward_seeks);
-		pr_verbose(LOG_DEFAULT, "\t\tAvg seek len: %llu\n", stat.total_seeks ?
+		pr_default("\tTotal size: %llu\n", stat.total_bytes);
+		pr_default("\t\tInline data: %llu\n", stat.total_inline);
+		pr_default("\tTotal seeks: %llu\n", stat.total_seeks);
+		pr_default("\t\tForward seeks: %llu\n", stat.forward_seeks);
+		pr_default("\t\tBackward seeks: %llu\n", stat.backward_seeks);
+		pr_default("\t\tAvg seek len: %llu\n", stat.total_seeks ?
 			stat.total_seek_len / stat.total_seeks : 0);
 		print_seek_histogram(&stat);
-		pr_verbose(LOG_DEFAULT, "\tTotal clusters: %llu\n", stat.total_clusters);
-		pr_verbose(LOG_DEFAULT, "\t\tAvg cluster size: %llu\n", stat.total_cluster_size /
+		pr_default("\tTotal clusters: %llu\n", stat.total_clusters);
+		pr_default("\t\tAvg cluster size: %llu\n", stat.total_cluster_size /
 		       stat.total_clusters);
-		pr_verbose(LOG_DEFAULT, "\t\tMin cluster size: %llu\n", stat.min_cluster_size);
-		pr_verbose(LOG_DEFAULT, "\t\tMax cluster size: %llu\n", stat.max_cluster_size);
-		pr_verbose(LOG_DEFAULT, "\tTotal disk spread: %llu\n", stat.highest_bytenr -
+		pr_default("\t\tMin cluster size: %llu\n", stat.min_cluster_size);
+		pr_default("\t\tMax cluster size: %llu\n", stat.max_cluster_size);
+		pr_default("\tTotal disk spread: %llu\n", stat.highest_bytenr -
 		       stat.lowest_bytenr);
-		pr_verbose(LOG_DEFAULT, "\tTotal read time: %d s %d us\n", (int)diff.tv_sec,
+		pr_default("\tTotal read time: %d s %d us\n", (int)diff.tv_sec,
 		       (int)diff.tv_usec);
 	} else {
-		pr_verbose(LOG_DEFAULT, "\tTotal size: %s\n", pretty_size_mode(stat.total_bytes, unit_mode));
-		pr_verbose(LOG_DEFAULT, "\t\tInline data: %s\n", pretty_size_mode(stat.total_inline, unit_mode));
-		pr_verbose(LOG_DEFAULT, "\tTotal seeks: %llu\n", stat.total_seeks);
-		pr_verbose(LOG_DEFAULT, "\t\tForward seeks: %llu\n", stat.forward_seeks);
-		pr_verbose(LOG_DEFAULT, "\t\tBackward seeks: %llu\n", stat.backward_seeks);
-		pr_verbose(LOG_DEFAULT, "\t\tAvg seek len: %s\n", stat.total_seeks ?
+		pr_default("\tTotal size: %s\n", pretty_size_mode(stat.total_bytes, unit_mode));
+		pr_default("\t\tInline data: %s\n", pretty_size_mode(stat.total_inline, unit_mode));
+		pr_default("\tTotal seeks: %llu\n", stat.total_seeks);
+		pr_default("\t\tForward seeks: %llu\n", stat.forward_seeks);
+		pr_default("\t\tBackward seeks: %llu\n", stat.backward_seeks);
+		pr_default("\t\tAvg seek len: %s\n", stat.total_seeks ?
 			pretty_size_mode(stat.total_seek_len / stat.total_seeks, unit_mode) :
 			pretty_size_mode(0, unit_mode));
 		print_seek_histogram(&stat);
-		pr_verbose(LOG_DEFAULT, "\tTotal clusters: %llu\n", stat.total_clusters);
-		pr_verbose(LOG_DEFAULT, "\t\tAvg cluster size: %s\n",
+		pr_default("\tTotal clusters: %llu\n", stat.total_clusters);
+		pr_default("\t\tAvg cluster size: %s\n",
 				pretty_size_mode((stat.total_cluster_size /
 						  stat.total_clusters), unit_mode));
-		pr_verbose(LOG_DEFAULT, "\t\tMin cluster size: %s\n",
+		pr_default("\t\tMin cluster size: %s\n",
 				pretty_size_mode(stat.min_cluster_size, unit_mode));
-		pr_verbose(LOG_DEFAULT, "\t\tMax cluster size: %s\n",
+		pr_default("\t\tMax cluster size: %s\n",
 				pretty_size_mode(stat.max_cluster_size, unit_mode));
-		pr_verbose(LOG_DEFAULT, "\tTotal disk spread: %s\n",
+		pr_default("\tTotal disk spread: %s\n",
 				pretty_size_mode(stat.highest_bytenr - stat.lowest_bytenr, unit_mode));
-		pr_verbose(LOG_DEFAULT, "\tTotal read time: %d s %d us\n", (int)diff.tv_sec,
+		pr_default("\tTotal read time: %d s %d us\n", (int)diff.tv_sec,
 		       (int)diff.tv_usec);
 	}
-	pr_verbose(LOG_DEFAULT, "\tLevels: %d\n", level + 1);
-	pr_verbose(LOG_DEFAULT, "\tTotal nodes: %llu\n", stat.total_nodes);
+	pr_default("\tLevels: %d\n", level + 1);
+	pr_default("\tTotal nodes: %llu\n", stat.total_nodes);
 	for (i = 0; i < level + 1; i++) {
-		pr_verbose(LOG_DEFAULT, "\t\tOn level %d: %8llu", i, stat.node_counts[i]);
+		pr_default("\t\tOn level %d: %8llu", i, stat.node_counts[i]);
 		if (i > 0) {
 			u64 fanout;
 
 			fanout = stat.node_counts[i - 1];
 			fanout /= stat.node_counts[i];
-			pr_verbose(LOG_DEFAULT, "  (avg fanout %llu)", fanout);
+			pr_default("  (avg fanout %llu)", fanout);
 		}
-		pr_verbose(LOG_DEFAULT, "\n");
+		pr_default("\n");
 	}
 out:
 	while ((n = rb_first(&stat.seek_root)) != NULL) {
@@ -499,26 +499,26 @@ static int cmd_inspect_tree_stats(const struct cmd_struct *cmd,
 	}
 
 	if (tree_id) {
-		pr_verbose(LOG_DEFAULT, "Calculating size of tree (%llu)\n", tree_id);
+		pr_default("Calculating size of tree (%llu)\n", tree_id);
 		key.objectid = tree_id;
 		key.offset = (u64)-1;
 		ret = calc_root_size(root, &key, 1, unit_mode);
 		goto out;
 	}
 
-	pr_verbose(LOG_DEFAULT, "Calculating size of root tree\n");
+	pr_default("Calculating size of root tree\n");
 	key.objectid = BTRFS_ROOT_TREE_OBJECTID;
 	ret = calc_root_size(root, &key, 0, unit_mode);
 	if (ret)
 		goto out;
 
-	pr_verbose(LOG_DEFAULT, "Calculating size of extent tree\n");
+	pr_default("Calculating size of extent tree\n");
 	key.objectid = BTRFS_EXTENT_TREE_OBJECTID;
 	ret = calc_root_size(root, &key, 0, unit_mode);
 	if (ret)
 		goto out;
 
-	pr_verbose(LOG_DEFAULT, "Calculating size of csum tree\n");
+	pr_default("Calculating size of csum tree\n");
 	key.objectid = BTRFS_CSUM_TREE_OBJECTID;
 	ret = calc_root_size(root, &key, 0, unit_mode);
 	if (ret)
@@ -526,7 +526,7 @@ static int cmd_inspect_tree_stats(const struct cmd_struct *cmd,
 
 	key.objectid = BTRFS_FS_TREE_OBJECTID;
 	key.offset = (u64)-1;
-	pr_verbose(LOG_DEFAULT, "Calculating size of fs tree\n");
+	pr_default("Calculating size of fs tree\n");
 	ret = calc_root_size(root, &key, 1, unit_mode);
 	if (ret)
 		goto out;

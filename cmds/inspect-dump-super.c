@@ -70,8 +70,8 @@ static int load_and_dump_sb(char *filename, int fd, u64 sb_bytenr, int full,
 		error("error = '%m', errno = %d", errno);
 		return 1;
 	}
-	pr_verbose(LOG_DEFAULT, "superblock: bytenr=%llu, device=%s\n", sb_bytenr, filename);
-	pr_verbose(LOG_DEFAULT, "---------------------------------------------------------\n");
+	pr_default("superblock: bytenr=%llu, device=%s\n", sb_bytenr, filename);
+	pr_default("---------------------------------------------------------\n");
 	if (btrfs_super_magic(&sb) != BTRFS_MAGIC && !force) {
 		error("bad magic on superblock on %s at %llu (use --force to dump it anyway)",
 				filename, sb_bytenr);

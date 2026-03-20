@@ -529,13 +529,13 @@ static int du_add_file(const char *filename, int dirfd,
 			if (is_dir)
 				set_shared = dir_set_shared;
 
-			pr_verbose(LOG_DEFAULT, "%10s  %10s  %10s  %s\n",
+			pr_default("%10s  %10s  %10s  %s\n",
 			       pretty_size_mode(file_total, unit_mode),
 			       pretty_size_mode(excl, unit_mode),
 			       pretty_size_mode(set_shared, unit_mode),
 			       path);
 		} else {
-			pr_verbose(LOG_DEFAULT, "%10s  %10s  %10s  %s\n",
+			pr_default("%10s  %10s  %10s  %s\n",
 			       pretty_size_mode(file_total, unit_mode),
 			       pretty_size_mode(excl, unit_mode),
 			       "-", path);
@@ -612,7 +612,7 @@ static int cmd_filesystem_du(const struct cmd_struct *cmd,
 "due to missing support for FIEMAP_EXTENT_SHARED flag");
 	}
 
-	pr_verbose(LOG_DEFAULT, "%10s  %10s  %10s  %s\n", "Total", "Exclusive", "Set shared",
+	pr_default("%10s  %10s  %10s  %s\n", "Total", "Exclusive", "Set shared",
 			"Filename");
 
 	for (i = optind; i < argc; i++) {

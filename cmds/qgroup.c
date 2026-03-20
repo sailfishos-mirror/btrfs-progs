@@ -349,7 +349,7 @@ static void print_path_column(struct btrfs_qgroup *qgroup)
 {
 	struct btrfs_qgroup_list *list = NULL;
 
-	pr_verbose(LOG_DEFAULT, "  ");
+	pr_default("  ");
 	if (btrfs_qgroup_level(qgroup->qgroupid) > 0) {
 		int count = 0;
 
@@ -360,21 +360,21 @@ static void print_path_column(struct btrfs_qgroup *qgroup)
 			u64 sid = btrfs_qgroup_subvolid(qgroupid);
 
 			if (count)
-				pr_verbose(LOG_DEFAULT, " ");
+				pr_default(" ");
 			if (level == 0) {
-				pr_verbose(LOG_DEFAULT, "%s",
+				pr_default("%s",
 					   get_qgroup_path(qgroup));
 			} else {
-				pr_verbose(LOG_DEFAULT, "%llu/%llu", level, sid);
+				pr_default("%llu/%llu", level, sid);
 			}
 			count++;
 		}
-		pr_verbose(LOG_DEFAULT, "<%u member qgroup%c>", count,
+		pr_default("<%u member qgroup%c>", count,
 			       (count != 1 ? 's' : '\0'));
 	} else if (qgroup->path) {
-		pr_verbose(LOG_DEFAULT, "%s%s", (*qgroup->path ? "" : "<toplevel>"), qgroup->path);
+		pr_default("%s%s", (*qgroup->path ? "" : "<toplevel>"), qgroup->path);
 	} else {
-		pr_verbose(LOG_DEFAULT, "%s", get_qgroup_path(qgroup));
+		pr_default("%s", get_qgroup_path(qgroup));
 	}
 }
 
@@ -2216,11 +2216,11 @@ static int delete_one_stale_qgroup(struct qgroup_lookup *lookup,
 		attempt = true;
 
 	if (attempt)
-		pr_verbose(LOG_DEFAULT,
+		pr_default(
 		"Attempt to delete stale but non-empty qgroup %u/%llu\n",
 			   level, btrfs_qgroup_subvolid(qg->qgroupid));
 	else
-		pr_verbose(LOG_DEFAULT, "Delete stale qgroup %u/%llu\n",
+		pr_default("Delete stale qgroup %u/%llu\n",
 			   level, btrfs_qgroup_subvolid(qg->qgroupid));
 	args.qgroupid = qg->qgroupid;
 	ret = ioctl(fd, BTRFS_IOC_QGROUP_CREATE, &args);

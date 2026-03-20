@@ -5851,8 +5851,7 @@ next:
 out:
 	btrfs_release_path(&path);
 	if (found_free_ino_cache)
-		pr_verbose(LOG_DEFAULT,
-			   "deprecated inode cache can be removed by 'btrfs rescue clear-ino-cache'\n");
+		pr_default("deprecated inode cache can be removed by 'btrfs rescue clear-ino-cache'\n");
 	return err;
 }
 

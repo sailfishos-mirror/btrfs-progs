@@ -780,8 +780,8 @@ static int overwrite_ok(const char * path)
 			return 2;
 
 		if (!warn) {
-			pr_verbose(LOG_DEFAULT, "Skipping existing file %s\n", path);
-			pr_verbose(LOG_DEFAULT, "If you wish to overwrite use -o\n");
+			pr_default("Skipping existing file %s\n", path);
+			pr_default("If you wish to overwrite use -o\n");
 		} else {
 			pr_verbose(LOG_INFO, "Skipping existing file %s\n", path);
 		}

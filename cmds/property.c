@@ -141,7 +141,7 @@ static int prop_read_only(enum prop_object_type type,
 			return -errno;
 		}
 
-		pr_verbose(LOG_DEFAULT, "ro=%s\n", read_only ? "true" : "false");
+		pr_default("ro=%s\n", read_only ? "true" : "false");
 	}
 
 	return 0;
@@ -162,7 +162,7 @@ static int prop_label(enum prop_object_type type,
 
 		ret = get_label((char *) object, label);
 		if (!ret)
-			pr_verbose(LOG_DEFAULT, "label=%s\n", label);
+			pr_default("label=%s\n", label);
 	}
 
 	return ret;
@@ -224,7 +224,7 @@ static int prop_compression(enum prop_object_type type,
 			error("failed to get compression for %s: %m", object);
 			goto out;
 		}
-		pr_verbose(LOG_DEFAULT, "compression=%.*s\n", (int)len, buf);
+		pr_default("compression=%.*s\n", (int)len, buf);
 	}
 
 	ret = 0;
@@ -431,7 +431,7 @@ static int dump_prop(const struct prop_handler *prop,
 		if (!name_and_help)
 			ret = prop->handler(type, object, prop->name, NULL, false);
 		else
-			pr_verbose(LOG_DEFAULT, "%-20s%s\n", prop->name, prop->desc);
+			pr_default("%-20s%s\n", prop->name, prop->desc);
 	}
 	return ret;
 }

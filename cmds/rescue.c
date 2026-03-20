@@ -102,12 +102,12 @@ static int cmd_rescue_chunk_recover(const struct cmd_struct *cmd,
 
 	ret = btrfs_recover_chunk_tree(file, yes);
 	if (!ret) {
-		pr_verbose(LOG_DEFAULT, "Chunk tree recovered successfully\n");
+		pr_default("Chunk tree recovered successfully\n");
 	} else if (ret > 0) {
 		ret = 0;
-		pr_verbose(LOG_DEFAULT, "Chunk tree recovery aborted\n");
+		pr_default("Chunk tree recovery aborted\n");
 	} else {
-		pr_verbose(LOG_DEFAULT, "Chunk tree recovery failed\n");
+		pr_default("Chunk tree recovery failed\n");
 	}
 	return ret;
 }
@@ -212,7 +212,7 @@ static int cmd_rescue_zero_log(const struct cmd_struct *cmd,
 	}
 
 	sb = root->fs_info->super_copy;
-	pr_verbose(LOG_DEFAULT, "Clearing log on %s, previous log_root %llu, level %u\n",
+	pr_default("Clearing log on %s, previous log_root %llu, level %u\n",
 			devname, btrfs_super_log_root(sb),
 			(unsigned)btrfs_super_log_root_level(sb));
 	btrfs_set_super_log_root(sb, 0);
@@ -516,7 +516,7 @@ static int cmd_rescue_clear_ino_cache(const struct cmd_struct *cmd,
 		errno = -ret;
 		error("failed to clear ino cache: %m");
 	} else {
-		pr_verbose(LOG_DEFAULT, "Successfully cleared ino cache\n");
+		pr_default("Successfully cleared ino cache\n");
 	}
 	close_ctree(fs_info->tree_root);
 out:

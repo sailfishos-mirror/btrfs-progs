@@ -147,7 +147,7 @@ iterate_bgs:
 		error_msg(ERROR_MSG_COMMIT_TRANS, "final transaction: %m");
 		return ret;
 	}
-	pr_verbose(LOG_DEFAULT, "Converted the filesystem to block group tree feature\n");
+	pr_default("Converted the filesystem to block group tree feature\n");
 	return 0;
 error:
 	btrfs_abort_transaction(trans, ret);
@@ -269,8 +269,7 @@ iterate_bgs:
 		error_msg(ERROR_MSG_COMMIT_TRANS, "%m");
 		return ret;
 	}
-	pr_verbose(LOG_DEFAULT,
-		"Converted filesystem with block-group-tree to extent tree feature\n");
+	pr_default("Converted filesystem with block-group-tree to extent tree feature\n");
 	return 0;
 
 error:

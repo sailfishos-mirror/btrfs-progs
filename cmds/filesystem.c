@@ -130,7 +130,7 @@ static void print_df_text(int fd, struct btrfs_ioctl_space_args *sargs, unsigned
 		unusable = device_get_zone_unusable(fd, sp->flags);
 		ok = (unusable != DEVICE_ZONE_UNUSABLE_UNKNOWN);
 
-		pr_verbose(LOG_DEFAULT, "%s, %s: total=%s, used=%s%s%s\n",
+		pr_default("%s, %s: total=%s, used=%s%s%s\n",
 			btrfs_group_type_str(sp->flags),
 			btrfs_group_profile_str(sp->flags),
 			pretty_size_mode(sp->total_bytes, unit_mode),
@@ -313,7 +313,7 @@ static void print_devices(struct btrfs_fs_devices *fs_devices,
 
 	list_sort(NULL, all_devices, cmp_device_id);
 	list_for_each_entry(device, all_devices, dev_list) {
-		pr_verbose(LOG_DEFAULT, "\tdevid %4llu size %s used %s path %s\n",
+		pr_default("\tdevid %4llu size %s used %s path %s\n",
 		       device->devid,
 		       pretty_size_mode(device->total_bytes, unit_mode),
 		       pretty_size_mode(device->bytes_used, unit_mode),
@@ -338,19 +338,18 @@ static void print_one_uuid(struct btrfs_fs_devices *fs_devices,
 	device = list_entry(fs_devices->devices.next, struct btrfs_device,
 			    dev_list);
 	if (device->label && device->label[0])
-		pr_verbose(LOG_DEFAULT, "Label: '%s' ", device->label);
+		pr_default("Label: '%s' ", device->label);
 	else
-		pr_verbose(LOG_DEFAULT, "Label: none ");
+		pr_default("Label: none ");
 
 	total = device->total_devs;
-	pr_verbose(LOG_DEFAULT, " uuid: %s\n\tTotal devices %llu FS bytes used %s\n", uuidbuf,
+	pr_default(" uuid: %s\n\tTotal devices %llu FS bytes used %s\n", uuidbuf,
 	       total, pretty_size_mode(device->super_bytes_used, unit_mode));
 
 	print_devices(fs_devices, &devs_found, unit_mode);
 
-	if (devs_found < total) {
-		pr_verbose(LOG_DEFAULT, "\t*** Some devices missing\n");
-	}
+	if (devs_found < total)
+		pr_default("\t*** Some devices missing\n");
 }
 
 /* adds up all the used spaces as reported by the space info ioctl
@@ -383,11 +382,11 @@ static int print_one_fs(struct btrfs_ioctl_fs_info_args *fs_info,
 
 	uuid_unparse(fs_info->fsid, uuidbuf);
 	if (label && *label)
-		pr_verbose(LOG_DEFAULT, "Label: '%s' ", label);
+		pr_default("Label: '%s' ", label);
 	else
-		pr_verbose(LOG_DEFAULT, "Label: none ");
+		pr_default("Label: none ");
 
-	pr_verbose(LOG_DEFAULT, " uuid: %s\n\tTotal devices %llu FS bytes used %s\n", uuidbuf,
+	pr_default(" uuid: %s\n\tTotal devices %llu FS bytes used %s\n", uuidbuf,
 			fs_info->num_devices,
 			pretty_size_mode(calc_used_bytes(space_info),
 					 unit_mode));
@@ -400,14 +399,14 @@ static int print_one_fs(struct btrfs_ioctl_fs_info_args *fs_info,
 		/* Add check for missing devices even mounted */
 		fd = open((char *)tmp_dev_info->path, O_RDONLY);
 		if (fd < 0) {
-			pr_verbose(LOG_DEFAULT, "\tdevid %4llu size 0 used 0 path %s MISSING\n",
+			pr_default("\tdevid %4llu size 0 used 0 path %s MISSING\n",
 					tmp_dev_info->devid, tmp_dev_info->path);
 			continue;
 
 		}
 		close(fd);
 		canonical_path = path_canonicalize((char *)tmp_dev_info->path);
-		pr_verbose(LOG_DEFAULT, "\tdevid %4llu size %s used %s path %s\n",
+		pr_default("\tdevid %4llu size %s used %s path %s\n",
 			tmp_dev_info->devid,
 			pretty_size_mode(tmp_dev_info->total_bytes, unit_mode),
 			pretty_size_mode(tmp_dev_info->bytes_used, unit_mode),
@@ -467,7 +466,7 @@ static int btrfs_scan_kernel(void *search, unsigned unit_mode)
 		if ((fd != -1) && !get_df(fd, &space_info_arg)) {
 			/* Put space between filesystem entries for readability. */
 			if (found != 0)
-				pr_verbose(LOG_DEFAULT, "\n");
+				pr_default("\n");
 
 			print_one_fs(&fs_info_arg, dev_info_arg,
 				     space_info_arg, label, unit_mode);
@@ -880,7 +879,7 @@ devs_only:
 	list_for_each_entry(fs_devices, &all_uuids, fs_list) {
 		/* Put space between filesystem entries for readability. */
 		if (needs_newline)
-			pr_verbose(LOG_DEFAULT, "\n");
+			pr_default("\n");
 
 		print_one_uuid(fs_devices, unit_mode);
 		needs_newline = true;
@@ -1440,7 +1439,7 @@ static bool check_offline_resize_args(const char *path, const char *amount,
 		warning("the new size %lld (%s) is < 256MiB, this may be rejected by kernel",
 			new_size, pretty_size_mode(new_size, UNITS_DEFAULT));
 
-	pr_verbose(LOG_DEFAULT, "Resize from %s to %s\n",
+	pr_default("Resize from %s to %s\n",
 		   pretty_size_mode(old_size, UNITS_DEFAULT),
 		   pretty_size_mode(new_size, UNITS_DEFAULT));
 	return true;
@@ -1540,7 +1539,7 @@ static int check_resize_args(const char *amount, const char *path, u64 *devid_re
 	/* Cancel does not need to determine the device number. */
 	if (args.is_cancel) {
 		/* Different format, print and exit */
-		pr_verbose(LOG_DEFAULT, "Request to cancel resize\n");
+		pr_default("Request to cancel resize\n");
 		goto out;
 	}
 
@@ -1615,7 +1614,7 @@ static int check_resize_args(const char *amount, const char *path, u64 *devid_re
 			new_size, pretty_size_mode(new_size, UNITS_DEFAULT));
 	}
 
-	pr_verbose(LOG_DEFAULT, "Resize device id %llu (%s) from %s to %s\n", args.devid,
+	pr_default("Resize device id %llu (%s) from %s to %s\n", args.devid,
 		di_args[dev_idx].path,
 		pretty_size_mode(di_args[dev_idx].total_bytes, UNITS_DEFAULT),
 		res_str);
@@ -1772,7 +1771,7 @@ static int cmd_filesystem_label(const struct cmd_struct *cmd,
 
 		ret = get_label(argv[optind], label);
 		if (!ret)
-			pr_verbose(LOG_DEFAULT, "%s\n", label);
+			pr_default("%s\n", label);
 
 		return ret;
 	}
@@ -1961,7 +1960,7 @@ static int cmd_filesystem_mkswapfile(const struct cmd_struct *cmd, int argc, cha
 		ret = 1;
 		goto out;
 	}
-	pr_verbose(LOG_DEFAULT, "create swapfile %s size %s (%llu)\n",
+	pr_default("create swapfile %s size %s (%llu)\n",
 			fname, pretty_size_mode(size, UNITS_HUMAN), size);
 out:
 	close(fd);
@@ -2043,10 +2042,10 @@ static int cmd_filesystem_commit_stats(const struct cmd_struct *cmd, int argc, c
 		char fsid_str[BTRFS_UUID_UNPARSED_SIZE];
 
 		uuid_unparse(fsid, fsid_str);
-		pr_verbose(LOG_DEFAULT, "UUID: %s\n", fsid_str);
+		pr_default("UUID: %s\n", fsid_str);
 	}
 	ptr = buf;
-	pr_verbose(LOG_DEFAULT, "Commit stats since mount:\n");
+	pr_default("Commit stats since mount:\n");
 	while (1) {
 		const char *units = NULL;
 
@@ -2063,12 +2062,12 @@ static int cmd_filesystem_commit_stats(const struct cmd_struct *cmd, int argc, c
 			}
 		}
 		/* Print unknown as-is */
-		pr_verbose(LOG_DEFAULT, "  %-28s", tmp);
+		pr_default("  %-28s", tmp);
 
 		tmp = strtok_r(ptr, " \n", &savepos);
 		if (!tmp)
 			break;
-		pr_verbose(LOG_DEFAULT, "%8s%s", tmp, (units ?: ""));
+		pr_default("%8s%s", tmp, (units ?: ""));
 		putchar('\n');
 	}
 
@@ -2078,7 +2077,7 @@ static int cmd_filesystem_commit_stats(const struct cmd_struct *cmd, int argc, c
 		if (ret < 0)
 			warning("cannot reset stats: %m");
 		else
-			pr_verbose(LOG_DEFAULT, "NOTE: Max commit duration has been reset\n");
+			pr_default("NOTE: Max commit duration has been reset\n");
 	}
 
 out:

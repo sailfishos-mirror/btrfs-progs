@@ -238,7 +238,7 @@ static int _cmd_device_remove(const struct cmd_struct *cmd,
 		}
 		if (strcmp("cancel", argv[i]) == 0) {
 			cancel = true;
-			pr_verbose(LOG_DEFAULT, "Request to cancel running device deletion\n");
+			pr_default("Request to cancel running device deletion\n");
 		}
 	}
 
@@ -249,7 +249,7 @@ static int _cmd_device_remove(const struct cmd_struct *cmd,
 			"\t If this is not expected, press Ctrl-C to stop.\n",
 			argc - optind - 1);
 		if (force) {
-			pr_verbose(LOG_DEFAULT, "Safety timeout skipped due to --force\n\n");
+			pr_default("Safety timeout skipped due to --force\n\n");
 		} else {
 			int delay = 10;
 
@@ -470,7 +470,7 @@ static int cmd_device_scan(const struct cmd_struct *cmd, int argc, char **argv)
 				error("cannot unregister devices: %m");
 			}
 		} else {
-			pr_verbose(LOG_DEFAULT, "Scanning for Btrfs filesystems\n");
+			pr_default("Scanning for Btrfs filesystems\n");
 			ret = btrfs_scan_devices(1);
 			error_on(ret, "error %d while scanning", ret);
 			ret = btrfs_register_all_devices();
@@ -502,7 +502,7 @@ static int cmd_device_scan(const struct cmd_struct *cmd, int argc, char **argv)
 				error("cannot unregister device '%s': %m", path);
 			}
 		} else {
-			pr_verbose(LOG_DEFAULT, "Scanning for btrfs filesystems on '%s'\n", path);
+			pr_default("Scanning for btrfs filesystems on '%s'\n", path);
 			if (btrfs_register_one_device(path) != 0) {
 				ret = 1;
 				free(path);
@@ -652,7 +652,7 @@ static int print_device_stat_string(struct format_ctx *fctx,
 		if (json) {
 			fmt_print(fctx, dev_stats[j].name, args->values[stat_idx]);
 		} else {
-			pr_verbose(LOG_DEFAULT, "[%s].%-16s %llu\n", canonical_path, dev_stats[j].name,
+			pr_default("[%s].%-16s %llu\n", canonical_path, dev_stats[j].name,
 					args->values[stat_idx]);
 		}
 		if (check && (args->values[stat_idx] > 0))
@@ -1020,10 +1020,10 @@ static int _cmd_device_usage(int fd, const char *path, unsigned unit_mode)
 	for (int i = 0; i < devinfos.length; i++) {
 		const struct device_info *devinfo = devinfos.data[i];
 
-		pr_verbose(LOG_DEFAULT, "%s, ID: %llu\n", devinfo->path, devinfo->devid);
+		pr_default("%s, ID: %llu\n", devinfo->path, devinfo->devid);
 		print_device_sizes(devinfo, unit_mode);
 		print_device_chunks(devinfo, &chunkinfos, unit_mode);
-		pr_verbose(LOG_DEFAULT, "\n");
+		pr_default("\n");
 	}
 
 out:
@@ -1052,7 +1052,7 @@ static int cmd_device_usage(const struct cmd_struct *cmd, int argc, char **argv)
 		int fd;
 
 		if (i > 1)
-			pr_verbose(LOG_DEFAULT, "\n");
+			pr_default("\n");
 
 		fd = btrfs_open_dir(argv[i]);
 		if (fd < 0) {

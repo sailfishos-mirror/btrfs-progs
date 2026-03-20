@@ -82,7 +82,7 @@ static int wait_for_subvolume_cleaning(int fd, size_t count, uint64_t *ids,
 	size_t done = 0;
 	bool statvfs_warned = false;
 
-	pr_verbose(LOG_DEFAULT, "Waiting for %zu subvolume%s\n", count,
+	pr_default("Waiting for %zu subvolume%s\n", count,
 			(count > 1 ? "s" : ""));
 	while (1) {
 		struct statvfs st;
@@ -95,7 +95,7 @@ static int wait_for_subvolume_cleaning(int fd, size_t count, uint64_t *ids,
 			err = btrfs_util_subvolume_get_info_fd(fd, ids[i], NULL);
 			if (err == BTRFS_UTIL_ERROR_SUBVOLUME_NOT_FOUND) {
 				done++;
-				pr_verbose(LOG_DEFAULT, "Subvolume id %" PRIu64 " is gone (%zu/%zu)\n",
+				pr_default("Subvolume id %" PRIu64 " is gone (%zu/%zu)\n",
 				       ids[i], done, count);
 				ids[i] = 0;
 			} else if (err) {
@@ -194,7 +194,7 @@ static int create_one_subvolume(const char *dst, struct btrfs_util_qgroup_inheri
 		goto out;
 	}
 
-	pr_verbose(LOG_DEFAULT, "Create subvolume '%s/%s'\n", dstdir, newname);
+	pr_default("Create subvolume '%s/%s'\n", dstdir, newname);
 
 	ret = 0;
 
@@ -505,12 +505,12 @@ again:
 			struct btrfs_util_subvolume_info subvol_info;
 
 			while (!(err = btrfs_util_subvolume_iter_next_info(iter, &nested_path, &subvol_info))) {
-				pr_verbose(LOG_DEFAULT, "Delete subvolume %" PRIu64 " (%s): ",
+				pr_default("Delete subvolume %" PRIu64 " (%s): ",
 					   subvol_info.id,
 					   commit_mode == COMMIT_EACH ||
 					   (commit_mode == COMMIT_AFTER && cnt + 1 == argc) ?
 					   "commit" : "no-commit");
-				pr_verbose(LOG_DEFAULT, "'%s/%s/%s'\n", dname, vname, nested_path);
+				pr_default("'%s/%s/%s'\n", dname, vname, nested_path);
 
 				free(nested_path);
 			}
@@ -523,18 +523,18 @@ again:
 		}
 	}
 
-	pr_verbose(LOG_DEFAULT, "Delete subvolume %" PRIu64 " (%s): ",
+	pr_default("Delete subvolume %" PRIu64 " (%s): ",
 		target_subvol_id,
 		commit_mode == COMMIT_EACH ||
 		(commit_mode == COMMIT_AFTER && cnt + 1 == argc) ?
 		"commit" : "no-commit");
 
 	if (subvolid == 0)
-		pr_verbose(LOG_DEFAULT, "'%s/%s'\n", dname, vname);
+		pr_default("'%s/%s'\n", dname, vname);
 	else if (!subvol_path_not_found)
-		pr_verbose(LOG_DEFAULT, "'%s'\n", full_subvolpath);
+		pr_default("'%s'\n", full_subvolpath);
 	else
-		pr_verbose(LOG_DEFAULT, "subvolid=%llu\n", subvolid);
+		pr_default("subvolid=%llu\n", subvolid);
 
 	if (bconf_is_dry_run())
 		goto out;
@@ -737,12 +737,10 @@ static int cmd_subvolume_snapshot(const struct cmd_struct *cmd, int argc, char *
 	retval = 0;	/* success */
 
 	if (flags & BTRFS_UTIL_CREATE_SNAPSHOT_READ_ONLY)
-		pr_verbose(LOG_DEFAULT,
-			   "Create readonly snapshot of '%s' in '%s'\n",
+		pr_default("Create readonly snapshot of '%s' in '%s'\n",
 			   subvol, dstdir);
 	else
-		pr_verbose(LOG_DEFAULT,
-			   "Create snapshot of '%s' in '%s'\n",
+		pr_default("Create snapshot of '%s' in '%s'\n",
 			   subvol, dstdir);
 
 out:
@@ -795,7 +793,7 @@ static int cmd_subvolume_get_default(const struct cmd_struct *cmd, int argc, cha
 			fmt_print(&fctx, "ID", 5);
 			fmt_end(&fctx);
 		} else {
-			pr_verbose(LOG_DEFAULT, "ID 5 (FS_TREE)\n");
+			pr_default("ID 5 (FS_TREE)\n");
 		}
 
 		ret = 0;
@@ -822,7 +820,7 @@ static int cmd_subvolume_get_default(const struct cmd_struct *cmd, int argc, cha
 		fmt_print(&fctx, "path", path);
 		fmt_end(&fctx);
 	} else {
-		pr_verbose(LOG_DEFAULT, "ID %" PRIu64 " gen %" PRIu64 " top level %" PRIu64 " path %s\n",
+		pr_default("ID %" PRIu64 " gen %" PRIu64 " top level %" PRIu64 " path %s\n",
 		       subvol.id, subvol.generation, subvol.parent_id, path);
 	}
 
@@ -1176,27 +1174,26 @@ static int print_one_extent(int fd, struct btrfs_ioctl_search_header *sh,
 
 		return -EIO;
 	}
-	pr_verbose(LOG_DEFAULT, "inode %llu file offset %llu len %llu disk start %llu "
-	       "offset %llu gen %llu flags ",
+	pr_default("inode %llu file offset %llu len %llu disk start %llu offset %llu gen %llu flags ",
 	       btrfs_search_header_objectid(sh), btrfs_search_header_offset(sh),
 	       len, disk_start, disk_offset, found_gen);
 
 	if (compressed) {
-		pr_verbose(LOG_DEFAULT, "COMPRESS");
+		pr_default("COMPRESS");
 		flags++;
 	}
 	if (type == BTRFS_FILE_EXTENT_PREALLOC) {
-		pr_verbose(LOG_DEFAULT, "%sPREALLOC", flags ? "|" : "");
+		pr_default("%sPREALLOC", flags ? "|" : "");
 		flags++;
 	}
 	if (type == BTRFS_FILE_EXTENT_INLINE) {
-		pr_verbose(LOG_DEFAULT, "%sINLINE", flags ? "|" : "");
+		pr_default("%sINLINE", flags ? "|" : "");
 		flags++;
 	}
 	if (!flags)
-		pr_verbose(LOG_DEFAULT, "NONE");
+		pr_default("NONE");
 
-	pr_verbose(LOG_DEFAULT, " %s\n", name);
+	pr_default(" %s\n", name);
 	return 0;
 }
 
@@ -1294,7 +1291,7 @@ static int btrfs_list_find_updated_files(int fd, u64 root_id, u64 oldest_gen)
 	}
 	free(cache_dir_name);
 	free(cache_full_name);
-	pr_verbose(LOG_DEFAULT, "transid marker was %llu\n", max_found);
+	pr_default("transid marker was %llu\n", max_found);
 	return ret;
 }
 
@@ -1353,27 +1350,27 @@ static void print_subvolume_show_text(const struct btrfs_util_subvolume_info *su
 	}
 
 	/* print the info */
-	pr_verbose(LOG_DEFAULT, "%s\n",
+	pr_default("%s\n",
 		   subvol->id == BTRFS_FS_TREE_OBJECTID ? "/" : subvol_path);
-	pr_verbose(LOG_DEFAULT, "\tName: \t\t\t%s\n", subvol_name);
+	pr_default("\tName: \t\t\t%s\n", subvol_name);
 
 	if (uuid_is_null(subvol->uuid))
 		strcpy(uuidparse, "-");
 	else
 		uuid_unparse(subvol->uuid, uuidparse);
-	pr_verbose(LOG_DEFAULT, "\tUUID: \t\t\t%s\n", uuidparse);
+	pr_default("\tUUID: \t\t\t%s\n", uuidparse);
 
 	if (uuid_is_null(subvol->parent_uuid))
 		strcpy(uuidparse, "-");
 	else
 		uuid_unparse(subvol->parent_uuid, uuidparse);
-	pr_verbose(LOG_DEFAULT, "\tParent UUID: \t\t%s\n", uuidparse);
+	pr_default("\tParent UUID: \t\t%s\n", uuidparse);
 
 	if (uuid_is_null(subvol->received_uuid))
 		strcpy(uuidparse, "-");
 	else
 		uuid_unparse(subvol->received_uuid, uuidparse);
-	pr_verbose(LOG_DEFAULT, "\tReceived UUID: \t\t%s\n", uuidparse);
+	pr_default("\tReceived UUID: \t\t%s\n", uuidparse);
 
 	if (subvol->otime.tv_sec) {
 		struct tm tm;
@@ -1382,21 +1379,21 @@ static void print_subvolume_show_text(const struct btrfs_util_subvolume_info *su
 		strftime(tstr, 256, "%Y-%m-%d %X %z", &tm);
 	} else
 		strcpy(tstr, "-");
-	pr_verbose(LOG_DEFAULT, "\tCreation time: \t\t%s\n", tstr);
+	pr_default("\tCreation time: \t\t%s\n", tstr);
 
-	pr_verbose(LOG_DEFAULT, "\tSubvolume ID: \t\t%" PRIu64 "\n", subvol->id);
-	pr_verbose(LOG_DEFAULT, "\tGeneration: \t\t%" PRIu64 "\n", subvol->generation);
-	pr_verbose(LOG_DEFAULT, "\tGen at creation: \t%" PRIu64 "\n", subvol->otransid);
-	pr_verbose(LOG_DEFAULT, "\tParent ID: \t\t%" PRIu64 "\n", subvol->parent_id);
-	pr_verbose(LOG_DEFAULT, "\tTop level ID: \t\t%" PRIu64 "\n", subvol->parent_id);
+	pr_default("\tSubvolume ID: \t\t%" PRIu64 "\n", subvol->id);
+	pr_default("\tGeneration: \t\t%" PRIu64 "\n", subvol->generation);
+	pr_default("\tGen at creation: \t%" PRIu64 "\n", subvol->otransid);
+	pr_default("\tParent ID: \t\t%" PRIu64 "\n", subvol->parent_id);
+	pr_default("\tTop level ID: \t\t%" PRIu64 "\n", subvol->parent_id);
 
 	if (subvol->flags & BTRFS_ROOT_SUBVOL_RDONLY)
-		pr_verbose(LOG_DEFAULT, "\tFlags: \t\t\treadonly\n");
+		pr_default("\tFlags: \t\t\treadonly\n");
 	else
-		pr_verbose(LOG_DEFAULT, "\tFlags: \t\t\t-\n");
+		pr_default("\tFlags: \t\t\t-\n");
 
-	pr_verbose(LOG_DEFAULT, "\tSend transid: \t\t%" PRIu64 "\n", subvol->stransid);
-	pr_verbose(LOG_DEFAULT, "\tSend time: \t\t%s\n", tstr);
+	pr_default("\tSend transid: \t\t%" PRIu64 "\n", subvol->stransid);
+	pr_default("\tSend time: \t\t%s\n", tstr);
 	if (subvol->stime.tv_sec) {
 		struct tm tm;
 
@@ -1405,7 +1402,7 @@ static void print_subvolume_show_text(const struct btrfs_util_subvolume_info *su
 	} else {
 		strcpy(tstr, "-");
 	}
-	pr_verbose(LOG_DEFAULT, "\tReceive transid: \t%" PRIu64 "\n", subvol->rtransid);
+	pr_default("\tReceive transid: \t%" PRIu64 "\n", subvol->rtransid);
 	if (subvol->rtime.tv_sec) {
 		struct tm tm;
 
@@ -1414,25 +1411,25 @@ static void print_subvolume_show_text(const struct btrfs_util_subvolume_info *su
 	} else {
 		strcpy(tstr, "-");
 	}
-	pr_verbose(LOG_DEFAULT, "\tReceive time: \t\t%s\n", tstr);
+	pr_default("\tReceive time: \t\t%s\n", tstr);
 }
 
 static void print_subvolume_show_quota_text(const struct btrfs_util_subvolume_info *subvol,
 					    const struct btrfs_qgroup_stats *stats,
 					    unsigned int unit_mode)
 {
-	pr_verbose(LOG_DEFAULT, "\tQuota group:\t\t0/%" PRIu64 "\n", subvol->id);
+	pr_default("\tQuota group:\t\t0/%" PRIu64 "\n", subvol->id);
 	fflush(stdout);
 
-	pr_verbose(LOG_DEFAULT, "\t  Limit referenced:\t%s\n",
+	pr_default("\t  Limit referenced:\t%s\n",
 			stats->limit.max_referenced == 0 ? "-" :
 			pretty_size_mode(stats->limit.max_referenced, unit_mode));
-	pr_verbose(LOG_DEFAULT, "\t  Limit exclusive:\t%s\n",
+	pr_default("\t  Limit exclusive:\t%s\n",
 			stats->limit.max_exclusive == 0 ? "-" :
 			pretty_size_mode(stats->limit.max_exclusive, unit_mode));
-	pr_verbose(LOG_DEFAULT, "\t  Usage referenced:\t%s\n",
+	pr_default("\t  Usage referenced:\t%s\n",
 			pretty_size_mode(stats->info.referenced, unit_mode));
-	pr_verbose(LOG_DEFAULT, "\t  Usage exclusive:\t%s\n",
+	pr_default("\t  Usage exclusive:\t%s\n",
 			pretty_size_mode(stats->info.exclusive, unit_mode));
 }
 
@@ -1637,7 +1634,7 @@ static int cmd_subvolume_show(const struct cmd_struct *cmd, int argc, char **arg
 	if (bconf.output_format == CMD_FORMAT_JSON)
 		fmt_print_start_group(&fctx, "snapshots", JSON_TYPE_ARRAY);
 	else
-		pr_verbose(LOG_DEFAULT, "\tSnapshot(s):\n");
+		pr_default("\tSnapshot(s):\n");
 
 	err = btrfs_util_subvolume_iter_create_fd(fd, BTRFS_FS_TREE_OBJECTID, 0, &iter);
 
@@ -1658,7 +1655,7 @@ static int cmd_subvolume_show(const struct cmd_struct *cmd, int argc, char **arg
 			if (bconf.output_format == CMD_FORMAT_JSON)
 				fmt_print(&fctx, "snapshot-list-item", path);
 			else
-				pr_verbose(LOG_DEFAULT, "\t\t\t\t%s\n", path);
+				pr_default("\t\t\t\t%s\n", path);
 		}
 
 		free(path);
@@ -1673,7 +1670,7 @@ static int cmd_subvolume_show(const struct cmd_struct *cmd, int argc, char **arg
 	if (ret == -ENOTTY) {
 		/* Quota information not available, not fatal */
 		if (bconf.output_format == CMD_FORMAT_TEXT)
-			pr_verbose(LOG_DEFAULT, "\tQuota group:\t\tn/a\n");
+			pr_default("\tQuota group:\t\tn/a\n");
 		ret = 0;
 		goto out2;
 	}

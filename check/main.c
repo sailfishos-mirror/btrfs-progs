@@ -10854,7 +10854,7 @@ static int cmd_check(const struct cmd_struct *cmd, int argc, char **argv)
 			err |= !!ret;
 			goto close_out;
 		}
-		pr_verbose(LOG_DEFAULT, "Clearing tree-log\n");
+		pr_default("Clearing tree-log\n");
 		ret = zero_log_tree(root);
 		err |= !!ret;
 		if (ret) {
@@ -10921,7 +10921,7 @@ static int cmd_check(const struct cmd_struct *cmd, int argc, char **argv)
 				goto close_out;
 			}
 
-			pr_verbose(LOG_DEFAULT, "Fill checksum tree\n");
+			pr_default("Fill checksum tree\n");
 			ret = fill_csum_tree(trans, init_extent_tree);
 			err |= !!ret;
 			if (ret) {
@@ -11048,8 +11048,7 @@ static int cmd_check(const struct cmd_struct *cmd, int argc, char **argv)
 	ret = do_check_fs_roots(&root_cache);
 	task_stop(g_task_ctx.info);
 	if (found_free_ino_cache)
-		pr_verbose(LOG_DEFAULT,
-			   "deprecated inode cache can be removed by 'btrfs rescue clear-ino-cache'\n");
+		pr_default("deprecated inode cache can be removed by 'btrfs rescue clear-ino-cache'\n");
 	err |= !!ret;
 	if (ret) {
 		error("errors found in fs roots");

@@ -1293,7 +1293,7 @@ int check_running_fs_exclop(int fd, enum exclusive_operation start, bool enqueue
 		ret = 1;
 		goto out;
 	} else {
-		pr_verbose(LOG_DEFAULT, "Waiting for another exclusive operation '%s' to finish ...",
+		pr_default("Waiting for another exclusive operation '%s' to finish ...",
 			get_fs_exclop_name(exclop));
 		fflush(stdout);
 	}
@@ -1343,7 +1343,7 @@ int check_running_fs_exclop(int fd, enum exclusive_operation start, bool enqueue
 				ret = 0;
 		}
 	}
-	pr_verbose(LOG_DEFAULT, " done\n");
+	pr_default(" done\n");
 out:
 	close(sysfs_fd);
 

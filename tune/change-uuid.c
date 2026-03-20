@@ -264,18 +264,18 @@ int change_uuid(struct btrfs_fs_info *fs_info, const char *new_fsid_str)
 
 	memcpy(old_fsid, (const char*)fs_info->fs_devices->fsid, BTRFS_UUID_SIZE);
 	uuid_unparse(old_fsid, uuid_buf);
-	pr_verbose(LOG_DEFAULT, "Current fsid: %s\n", uuid_buf);
+	pr_default("Current fsid: %s\n", uuid_buf);
 
 	uuid_unparse(new_fsid, uuid_buf);
-	pr_verbose(LOG_DEFAULT, "New fsid: %s\n", uuid_buf);
+	pr_default("New fsid: %s\n", uuid_buf);
 	/* Now we can begin fsid change */
-	pr_verbose(LOG_DEFAULT, "Set superblock flag CHANGING_FSID\n");
+	pr_default("Set superblock flag CHANGING_FSID\n");
 	ret = change_fsid_prepare(fs_info, new_fsid);
 	if (ret < 0)
 		goto out;
 
 	/* Change extents first */
-	pr_verbose(LOG_DEFAULT, "Change fsid in extent tree\n");
+	pr_default("Change fsid in extent tree\n");
 	ret = change_extent_tree_uuid(fs_info, new_fsid);
 	if (ret < 0) {
 		error("failed to change UUID of metadata: %d", ret);
@@ -283,7 +283,7 @@ int change_uuid(struct btrfs_fs_info *fs_info, const char *new_fsid_str)
 	}
 
 	/* Then devices */
-	pr_verbose(LOG_DEFAULT, "Change fsid in chunk tree\n");
+	pr_default("Change fsid in chunk tree\n");
 	ret = change_chunk_tree_uuid(fs_info->chunk_root, new_fsid);
 	if (ret < 0) {
 		error("failed to change UUID of devices: %d", ret);
@@ -298,9 +298,9 @@ int change_uuid(struct btrfs_fs_info *fs_info, const char *new_fsid_str)
 		goto out;
 
 	/* Now fsid change is done */
-	pr_verbose(LOG_DEFAULT, "Clear superblock flag CHANGING_FSID\n");
+	pr_default("Clear superblock flag CHANGING_FSID\n");
 	ret = change_fsid_done(fs_info);
-	pr_verbose(LOG_DEFAULT, "Fsid change finished\n");
+	pr_default("Fsid change finished\n");
 out:
 	fs_info->new_chunk_tree_uuid = NULL;
 	return ret;

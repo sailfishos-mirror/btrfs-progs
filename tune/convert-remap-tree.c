@@ -196,7 +196,7 @@ int convert_to_remap_tree(struct btrfs_fs_info *fs_info)
 	if (ret)
 		goto fail;
 
-	pr_verbose(LOG_DEFAULT, "converted filesystem to remap tree feature\n");
+	pr_default("converted filesystem to remap tree feature\n");
 
 	return ret;
 

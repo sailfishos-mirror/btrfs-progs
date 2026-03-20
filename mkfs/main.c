@@ -1755,8 +1755,8 @@ int BOX_MAIN(mkfs)(int argc, char **argv)
 		}
 	}
 
-	pr_verbose(LOG_DEFAULT, "%s\n", PACKAGE_STRING);
-	pr_verbose(LOG_DEFAULT, "See %s for more information.\n\n", PACKAGE_URL);
+	pr_default("%s\n", PACKAGE_STRING);
+	pr_default("See %s for more information.\n\n", PACKAGE_URL);
 
 	if (!sectorsize)
 		sectorsize = (u32)SZ_4K;
@@ -1887,7 +1887,7 @@ int BOX_MAIN(mkfs)(int argc, char **argv)
 			exit(1);
 		}
 	} else if (zoned_model(file) == ZONED_HOST_MANAGED) {
-		pr_verbose(LOG_DEFAULT, "zoned: %s: host-managed device detected, setting zoned feature\n",
+		pr_default("zoned: %s: host-managed device detected, setting zoned feature\n",
 			   file);
 		opt_zoned = true;
 		features.incompat_flags |= BTRFS_FEATURE_INCOMPAT_ZONED;
@@ -2432,7 +2432,7 @@ raid_groups:
 	}
 
 	if (source_dir) {
-		pr_verbose(LOG_DEFAULT, "Rootdir from:       %s\n", source_dir);
+		pr_default("Rootdir from:       %s\n", source_dir);
 
 		trans = btrfs_start_transaction(root, 1);
 		if (IS_ERR(trans)) {
@@ -2441,7 +2441,7 @@ raid_groups:
 			goto out;
 		}
 
-		pr_verbose(LOG_DEFAULT, "  Compress:         %s%s%s\n",
+		pr_default("  Compress:         %s%s%s\n",
 			   compression == BTRFS_COMPRESS_ZSTD ? "zstd" :
 			   compression == BTRFS_COMPRESS_LZO ? "lzo" :
 			   compression == BTRFS_COMPRESS_ZLIB ? "zlib" : "no",
@@ -2452,14 +2452,14 @@ raid_groups:
 
 		/* Print subvolumes now as btrfs_mkfs_fill_dir() deletes the list. */
 		list_for_each_entry(rds, &subvols, list) {
-			pr_verbose(LOG_DEFAULT, "  Subvolume (%s%s):  %s%s\n",
+			pr_default("  Subvolume (%s%s):  %s%s\n",
 				   rds->is_default ? "d" : "",
 				   rds->readonly ? "ro" : "rw",
 				   rds->is_default ? "" : " ",
 				   rds->dir);
 		}
 		list_for_each_entry(rif, &inode_flags_list, list) {
-			pr_verbose(LOG_DEFAULT, "  Inode flags (%s):  %s\n",
+			pr_default("  Inode flags (%s):  %s\n",
 				   rif->nodatacow ? "NODATACOW" : "",
 				   rif->inode_path);
 		}
@@ -2483,7 +2483,7 @@ raid_groups:
 		}
 
 		if (shrink_rootdir) {
-			pr_verbose(LOG_DEFAULT, "  Shrink:           yes\n");
+			pr_default("  Shrink:           yes\n");
 			ret = btrfs_mkfs_shrink_fs(fs_info, &shrink_size,
 						   shrink_rootdir);
 			if (ret < 0) {
@@ -2492,7 +2492,7 @@ raid_groups:
 				goto out;
 			}
 		} else {
-			pr_verbose(LOG_DEFAULT, "  Shrink:           no\n");
+			pr_default("  Shrink:           no\n");
 		}
 	}
 

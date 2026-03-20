@@ -1148,19 +1148,19 @@ static void print_subvolume_column(struct root_info *subv,
 
 	switch (column) {
 	case BTRFS_LIST_OBJECTID:
-		pr_verbose(LOG_DEFAULT, "%llu", subv->root_id);
+		pr_default("%llu", subv->root_id);
 		break;
 	case BTRFS_LIST_GENERATION:
-		pr_verbose(LOG_DEFAULT, "%llu", subv->gen);
+		pr_default("%llu", subv->gen);
 		break;
 	case BTRFS_LIST_OGENERATION:
-		pr_verbose(LOG_DEFAULT, "%llu", subv->ogen);
+		pr_default("%llu", subv->ogen);
 		break;
 	case BTRFS_LIST_PARENT:
-		pr_verbose(LOG_DEFAULT, "%llu", subv->ref_tree);
+		pr_default("%llu", subv->ref_tree);
 		break;
 	case BTRFS_LIST_TOP_LEVEL:
-		pr_verbose(LOG_DEFAULT, "%llu", subv->top_id);
+		pr_default("%llu", subv->top_id);
 		break;
 	case BTRFS_LIST_OTIME:
 		if (subv->otime) {
@@ -1170,32 +1170,32 @@ static void print_subvolume_column(struct root_info *subv,
 			strftime(tstr, 256, "%Y-%m-%d %X", &tm);
 		} else
 			strcpy(tstr, "-");
-		pr_verbose(LOG_DEFAULT, "%s", tstr);
+		pr_default("%s", tstr);
 		break;
 	case BTRFS_LIST_UUID:
 		if (uuid_is_null(subv->uuid))
 			strcpy(uuidparse, "-");
 		else
 			uuid_unparse(subv->uuid, uuidparse);
-		pr_verbose(LOG_DEFAULT, "%-36s", uuidparse);
+		pr_default("%-36s", uuidparse);
 		break;
 	case BTRFS_LIST_PUUID:
 		if (uuid_is_null(subv->puuid))
 			strcpy(uuidparse, "-");
 		else
 			uuid_unparse(subv->puuid, uuidparse);
-		pr_verbose(LOG_DEFAULT, "%-36s", uuidparse);
+		pr_default("%-36s", uuidparse);
 		break;
 	case BTRFS_LIST_RUUID:
 		if (uuid_is_null(subv->ruuid))
 			strcpy(uuidparse, "-");
 		else
 			uuid_unparse(subv->ruuid, uuidparse);
-		pr_verbose(LOG_DEFAULT, "%-36s", uuidparse);
+		pr_default("%-36s", uuidparse);
 		break;
 	case BTRFS_LIST_PATH:
 		BUG_ON(!subv->full_path);
-		pr_verbose(LOG_DEFAULT, "%s", subv->full_path);
+		pr_default("%s", subv->full_path);
 		break;
 	default:
 		break;
@@ -1212,11 +1212,11 @@ static void print_one_subvol_info_raw(struct root_info *subv,
 			continue;
 
 		if (raw_prefix)
-			pr_verbose(LOG_DEFAULT, "%s",raw_prefix);
+			pr_default("%s",raw_prefix);
 
 		print_subvolume_column(subv, i);
 	}
-	pr_verbose(LOG_DEFAULT, "\n");
+	pr_default("\n");
 }
 
 static void print_one_subvol_info_table(struct root_info *subv)
@@ -1230,12 +1230,12 @@ static void print_one_subvol_info_table(struct root_info *subv)
 		print_subvolume_column(subv, i);
 
 		if (i != BTRFS_LIST_PATH)
-			pr_verbose(LOG_DEFAULT, "\t");
+			pr_default("\t");
 
 		if (i == BTRFS_LIST_TOP_LEVEL)
-			pr_verbose(LOG_DEFAULT, "\t");
+			pr_default("\t");
 	}
-	pr_verbose(LOG_DEFAULT, "\n");
+	pr_default("\n");
 }
 
 static void print_one_subvol_info_default(struct root_info *subv)
@@ -1246,13 +1246,13 @@ static void print_one_subvol_info_default(struct root_info *subv)
 		if (!btrfs_list_columns[i].need_print)
 			continue;
 
-		pr_verbose(LOG_DEFAULT, "%s ", btrfs_list_columns[i].name);
+		pr_default("%s ", btrfs_list_columns[i].name);
 		print_subvolume_column(subv, i);
 
 		if (i != BTRFS_LIST_PATH)
-			pr_verbose(LOG_DEFAULT, " ");
+			pr_default(" ");
 	}
-	pr_verbose(LOG_DEFAULT, "\n");
+	pr_default("\n");
 }
 
 static void print_all_subvol_info_tab_head(void)
@@ -1263,10 +1263,10 @@ static void print_all_subvol_info_tab_head(void)
 
 	for (i = 0; i < BTRFS_LIST_ALL; i++) {
 		if (btrfs_list_columns[i].need_print)
-			pr_verbose(LOG_DEFAULT, "%s\t", btrfs_list_columns[i].name);
+			pr_default("%s\t", btrfs_list_columns[i].name);
 
 		if (i == BTRFS_LIST_ALL-1)
-			pr_verbose(LOG_DEFAULT, "\n");
+			pr_default("\n");
 	}
 
 	for (i = 0; i < BTRFS_LIST_ALL; i++) {
@@ -1277,10 +1277,10 @@ static void print_all_subvol_info_tab_head(void)
 			while (len--)
 				strcat(barrier, "-");
 
-			pr_verbose(LOG_DEFAULT, "%s\t", barrier);
+			pr_default("%s\t", barrier);
 		}
 		if (i == BTRFS_LIST_ALL-1)
-			pr_verbose(LOG_DEFAULT, "\n");
+			pr_default("\n");
 	}
 }
 

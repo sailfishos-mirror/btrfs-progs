@@ -217,10 +217,10 @@ static int print_filenames(u64 ino, u64 offset, u64 rootid, void *ctx)
 		goto out;
 	}
 	for (int i = 0; i < ipath->fspath->elem_cnt; i++)
-		pr_verbose(LOG_DEFAULT, "  (subvolume %llu)/%s\n", rootid,
+		pr_default("  (subvolume %llu)/%s\n", rootid,
 			   (char *)ipath->fspath->val[i]);
 	if (ipath->fspath->elem_missed)
-		pr_verbose(LOG_DEFAULT, "  (subvolume %llu) %d files not printed\n",
+		pr_default("  (subvolume %llu) %d files not printed\n",
 			   rootid, ipath->fspath->elem_missed);
 out:
 	free_ipath(ipath);
@@ -279,10 +279,10 @@ again:
 	printed = false;
 	for (int i = 0; i < ACTION_LAST; i++) {
 		if (printed)
-			pr_verbose(LOG_DEFAULT, "/");
+			pr_default("/");
 		/* Mark Ignore as default. */
 		if (i == ACTION_IGNORE) {
-			pr_verbose(LOG_DEFAULT, "<<%c>>%s", toupper(actions[i].string[0]),
+			pr_default("<<%c>>%s", toupper(actions[i].string[0]),
 				   actions[i].string + 1);
 		} else if (i == ACTION_UPDATE_CSUM) {
 			/*
@@ -290,14 +290,14 @@ again:
 			 * so output all valid mirrors numbers instead.
 			 */
 			for (int cur_mirror = 1; cur_mirror <= num_mirrors; cur_mirror++)
-				pr_verbose(LOG_DEFAULT, "<%u>", cur_mirror);
+				pr_default("<%u>", cur_mirror);
 		} else {
-			pr_verbose(LOG_DEFAULT, "<%c>%s", toupper(actions[i].string[0]),
+			pr_default("<%c>%s", toupper(actions[i].string[0]),
 				   actions[i].string + 1);
 		}
 		printed = true;
 	}
-	pr_verbose(LOG_DEFAULT, ":");
+	pr_default(":");
 	fflush(stdout);
 	/* Default to Ignore if no action provided. */
 	if (fgets(buf, sizeof(buf) - 1, stdin) == 0)
@@ -390,7 +390,7 @@ static void report_corrupted_blocks(struct btrfs_fs_info *fs_info,
 	enum fix_data_checksum_action_value action;
 
 	if (list_empty(&corrupted_blocks)) {
-		pr_verbose(LOG_DEFAULT, "no data checksum mismatch found\n");
+		pr_default("no data checksum mismatch found\n");
 		return;
 	}
 
@@ -398,21 +398,21 @@ static void report_corrupted_blocks(struct btrfs_fs_info *fs_info,
 		bool has_printed = false;
 		int ret;
 
-		pr_verbose(LOG_DEFAULT, "logical=%llu corrtuped mirrors=", entry->logical);
+		pr_default("logical=%llu corrtuped mirrors=", entry->logical);
 		/* Open coded bitmap print. */
 		for (int i = 0; i < entry->num_mirrors; i++) {
 			if (test_bit(i, entry->error_mirror_bitmap)) {
 				if (has_printed)
-					pr_verbose(LOG_DEFAULT, ",");
+					pr_default(",");
 				/*
 				 * Bit 0 means mirror 1, thus we need to increase
 				 * the value by 1.
 				 */
-				pr_verbose(LOG_DEFAULT, "%d", i + 1);
+				pr_default("%d", i + 1);
 				has_printed=true;
 			}
 		}
-		pr_verbose(LOG_DEFAULT, " affected files:\n");
+		pr_default(" affected files:\n");
 		ret = iterate_inodes_from_logical(entry->logical, fs_info, &path,
 						  print_filenames, fs_info);
 		if (ret < 0) {

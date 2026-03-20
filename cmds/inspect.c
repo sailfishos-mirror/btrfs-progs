@@ -87,9 +87,9 @@ static int __ino_to_path_fd(u64 inum, int fd, const char *prepend)
 		ptr += fspath->val[i];
 		str = (char *)(unsigned long)ptr;
 		if (prepend)
-			pr_verbose(LOG_DEFAULT, "%s/%s\n", prepend, str);
+			pr_default("%s/%s\n", prepend, str);
 		else
-			pr_verbose(LOG_DEFAULT, "%s\n", str);
+			pr_default("%s\n", str);
 	}
 
 out:
@@ -305,7 +305,7 @@ static int cmd_inspect_logical_resolve(const struct cmd_struct *cmd,
 			if (path_fd != fd)
 				close(path_fd);
 		} else {
-			pr_verbose(LOG_DEFAULT, "inode %llu offset %llu root %llu\n", inum,
+			pr_default("inode %llu offset %llu root %llu\n", inum,
 				offset, root);
 		}
 	}
@@ -351,7 +351,7 @@ static int cmd_inspect_subvolid_resolve(const struct cmd_struct *cmd,
 	}
 
 	path[PATH_MAX - 1] = '\0';
-	pr_verbose(LOG_DEFAULT, "%s\n", path);
+	pr_default("%s\n", path);
 
 out:
 	close(fd);
@@ -390,7 +390,7 @@ static int cmd_inspect_rootid(const struct cmd_struct *cmd,
 		goto out;
 	}
 
-	pr_verbose(LOG_DEFAULT, "%llu\n", rootid);
+	pr_default("%llu\n", rootid);
 out:
 	close(fd);
 
@@ -635,7 +635,7 @@ static int print_min_dev_size(int fd, u64 devid)
 	}
 
 	adjust_dev_min_size(&extents, &holes, &min_size);
-	pr_verbose(LOG_DEFAULT, "%llu bytes (%s)\n", min_size, pretty_size(min_size));
+	pr_default("%llu bytes (%s)\n", min_size, pretty_size(min_size));
 	ret = 0;
 out:
 	free_dev_extent_list(&extents);
@@ -1589,9 +1589,9 @@ static int cmd_inspect_map_swapfile(const struct cmd_struct *cmd,
 		if (resume_offset) {
 			printf("%llu\n", physical_start / page_size);
 		} else {
-			pr_verbose(LOG_DEFAULT, "Physical start: %12llu\n",
+			pr_default("Physical start: %12llu\n",
 					physical_start);
-			pr_verbose(LOG_DEFAULT, "Resume offset:  %12llu\n",
+			pr_default("Resume offset:  %12llu\n",
 					physical_start / page_size);
 		}
 	}

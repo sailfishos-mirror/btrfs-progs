@@ -91,7 +91,7 @@ static int convert_to_fst(struct btrfs_fs_info *fs_info)
 		error("failed to create free space tree: %m");
 		return ret;
 	}
-	pr_verbose(LOG_DEFAULT, "Converted to free space tree feature\n");
+	pr_default("Converted to free space tree feature\n");
 	return ret;
 }
 
@@ -441,13 +441,13 @@ int BOX_MAIN(btrfstune)(int argc, char *argv[])
 				ret = -EINVAL;
 				goto out;
 			} else {
-				pr_verbose(LOG_DEFAULT, "remap tree depends on block-group tree, enabling that also\n");
+				pr_default("remap tree depends on block-group tree, enabling that also\n");
 				to_bg_tree = true;
 			}
 		}
 
 		if (!btrfs_fs_compat_ro(fs_info, FREE_SPACE_TREE_VALID)) {
-			pr_verbose(LOG_DEFAULT, "remap tree depends on free-space tree, enabling that also\n");
+			pr_default("remap tree depends on free-space tree, enabling that also\n");
 			to_fst = true;
 		}
 	}
@@ -547,7 +547,7 @@ int BOX_MAIN(btrfstune)(int argc, char *argv[])
 	}
 
 	if (csum_type != -1) {
-		pr_verbose(LOG_DEFAULT, "Proceed to switch checksums\n");
+		pr_default("Proceed to switch checksums\n");
 		ret = btrfs_change_csum_type(fs_info, csum_type);
 		goto out;
 	}

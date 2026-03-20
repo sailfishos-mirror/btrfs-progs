@@ -107,32 +107,32 @@ static void print_old_roots(struct btrfs_super_block *super)
 
 	for (i = 0; i < BTRFS_NUM_BACKUP_ROOTS; i++) {
 		backup = super->super_roots + i;
-		pr_verbose(LOG_DEFAULT, "btrfs root backup slot %d\n", i);
-		pr_verbose(LOG_DEFAULT, "\ttree root gen %llu block %llu\n",
+		pr_default("btrfs root backup slot %d\n", i);
+		pr_default("\ttree root gen %llu block %llu\n",
 		       btrfs_backup_tree_root_gen(backup),
 		       btrfs_backup_tree_root(backup));
 
-		pr_verbose(LOG_DEFAULT, "\t\t%s gen %llu block %llu\n", extent_tree_str,
+		pr_default("\t\t%s gen %llu block %llu\n", extent_tree_str,
 		       btrfs_backup_extent_root_gen(backup),
 		       btrfs_backup_extent_root(backup));
 
-		pr_verbose(LOG_DEFAULT, "\t\tchunk root gen %llu block %llu\n",
+		pr_default("\t\tchunk root gen %llu block %llu\n",
 		       btrfs_backup_chunk_root_gen(backup),
 		       btrfs_backup_chunk_root(backup));
 
-		pr_verbose(LOG_DEFAULT, "\t\tdevice root gen %llu block %llu\n",
+		pr_default("\t\tdevice root gen %llu block %llu\n",
 		       btrfs_backup_dev_root_gen(backup),
 		       btrfs_backup_dev_root(backup));
 
-		pr_verbose(LOG_DEFAULT, "\t\tcsum root gen %llu block %llu\n",
+		pr_default("\t\tcsum root gen %llu block %llu\n",
 		       btrfs_backup_csum_root_gen(backup),
 		       btrfs_backup_csum_root(backup));
 
-		pr_verbose(LOG_DEFAULT, "\t\tfs root gen %llu block %llu\n",
+		pr_default("\t\tfs root gen %llu block %llu\n",
 		       btrfs_backup_fs_root_gen(backup),
 		       btrfs_backup_fs_root(backup));
 
-		pr_verbose(LOG_DEFAULT, "\t\t%llu used %llu total %llu devices\n",
+		pr_default("\t\t%llu used %llu total %llu devices\n",
 		       btrfs_backup_bytes_used(backup),
 		       btrfs_backup_total_bytes(backup),
 		       btrfs_backup_num_devices(backup));
@@ -406,7 +406,7 @@ static int cmd_inspect_dump_tree(const struct cmd_struct *cmd,
 	if (ret)
 		return ret;
 
-	pr_verbose(LOG_DEFAULT, "%s\n", PACKAGE_STRING);
+	pr_default("%s\n", PACKAGE_STRING);
 
 	oca.filename = argv[optind];
 	info = open_ctree_fs_info(&oca);
@@ -431,32 +431,32 @@ static int cmd_inspect_dump_tree(const struct cmd_struct *cmd,
 
 	if (!(extent_only || uuid_tree_only || tree_id)) {
 		if (roots_only) {
-			pr_verbose(LOG_DEFAULT, "root tree: %llu level %d\n",
+			pr_default("root tree: %llu level %d\n",
 			     info->tree_root->node->start,
 			     btrfs_header_level(info->tree_root->node));
-			pr_verbose(LOG_DEFAULT, "chunk tree: %llu level %d\n",
+			pr_default("chunk tree: %llu level %d\n",
 			     info->chunk_root->node->start,
 			     btrfs_header_level(info->chunk_root->node));
 			if (info->log_root_tree)
-				pr_verbose(LOG_DEFAULT, "log root tree: %llu level %d\n",
+				pr_default("log root tree: %llu level %d\n",
 				       info->log_root_tree->node->start,
 					btrfs_header_level(
 						info->log_root_tree->node));
 		} else {
 			if (info->tree_root->node) {
-				pr_verbose(LOG_DEFAULT, "root tree\n");
+				pr_default("root tree\n");
 				btrfs_print_tree(info->tree_root->node,
 					BTRFS_PRINT_TREE_FOLLOW | print_mode);
 			}
 
 			if (info->chunk_root->node) {
-				pr_verbose(LOG_DEFAULT, "chunk tree\n");
+				pr_default("chunk tree\n");
 				btrfs_print_tree(info->chunk_root->node,
 					BTRFS_PRINT_TREE_FOLLOW | print_mode);
 			}
 
 			if (info->log_root_tree) {
-				pr_verbose(LOG_DEFAULT, "log root tree\n");
+				pr_default("log root tree\n");
 				btrfs_print_tree(info->log_root_tree->node,
 					BTRFS_PRINT_TREE_FOLLOW | print_mode);
 			}
@@ -476,7 +476,7 @@ again:
 			error("cannot print root tree, invalid pointer");
 			goto close_root;
 		}
-		pr_verbose(LOG_DEFAULT, "root tree\n");
+		pr_default("root tree\n");
 		btrfs_print_tree(info->tree_root->node,
 					BTRFS_PRINT_TREE_FOLLOW | print_mode);
 		goto close_root;
@@ -487,7 +487,7 @@ again:
 			error("cannot print chunk tree, invalid pointer");
 			goto close_root;
 		}
-		pr_verbose(LOG_DEFAULT, "chunk tree\n");
+		pr_default("chunk tree\n");
 		btrfs_print_tree(info->chunk_root->node,
 					BTRFS_PRINT_TREE_FOLLOW | print_mode);
 		goto close_root;
@@ -498,7 +498,7 @@ again:
 			error("cannot print log root tree, invalid pointer");
 			goto close_root;
 		}
-		pr_verbose(LOG_DEFAULT, "log root tree\n");
+		pr_default("log root tree\n");
 		btrfs_print_tree(info->log_root_tree->node,
 					BTRFS_PRINT_TREE_FOLLOW | print_mode);
 		goto close_root;
@@ -509,7 +509,7 @@ again:
 			error("cannot print block group tree, invalid pointer");
 			goto close_root;
 		}
-		pr_verbose(LOG_DEFAULT, "block group tree\n");
+		pr_default("block group tree\n");
 		btrfs_print_tree(info->block_group_root->node,
 					BTRFS_PRINT_TREE_FOLLOW | print_mode);
 		goto close_root;
@@ -558,92 +558,92 @@ again:
 			switch (found_key.objectid) {
 			case BTRFS_ROOT_TREE_OBJECTID:
 				if (!skip)
-					pr_verbose(LOG_DEFAULT, "root");
+					pr_default("root");
 				break;
 			case BTRFS_EXTENT_TREE_OBJECTID:
 				if (!device_only && !uuid_tree_only)
 					skip = 0;
 				if (!skip)
-					pr_verbose(LOG_DEFAULT, "extent");
+					pr_default("extent");
 				break;
 			case BTRFS_CHUNK_TREE_OBJECTID:
 				if (!skip) {
-					pr_verbose(LOG_DEFAULT, "chunk");
+					pr_default("chunk");
 				}
 				break;
 			case BTRFS_DEV_TREE_OBJECTID:
 				if (!uuid_tree_only)
 					skip = 0;
 				if (!skip)
-					pr_verbose(LOG_DEFAULT, "device");
+					pr_default("device");
 				break;
 			case BTRFS_FS_TREE_OBJECTID:
 				if (!skip) {
-					pr_verbose(LOG_DEFAULT, "fs");
+					pr_default("fs");
 				}
 				break;
 			case BTRFS_ROOT_TREE_DIR_OBJECTID:
 				skip = 0;
-				pr_verbose(LOG_DEFAULT, "directory");
+				pr_default("directory");
 				break;
 			case BTRFS_CSUM_TREE_OBJECTID:
 				if (!skip) {
-					pr_verbose(LOG_DEFAULT, "checksum");
+					pr_default("checksum");
 				}
 				break;
 			case BTRFS_ORPHAN_OBJECTID:
 				if (!skip) {
-					pr_verbose(LOG_DEFAULT, "orphan");
+					pr_default("orphan");
 				}
 				break;
 			case BTRFS_TREE_LOG_OBJECTID:
 				if (!skip) {
-					pr_verbose(LOG_DEFAULT, "log");
+					pr_default("log");
 				}
 				break;
 			case BTRFS_TREE_LOG_FIXUP_OBJECTID:
 				if (!skip) {
-					pr_verbose(LOG_DEFAULT, "log fixup");
+					pr_default("log fixup");
 				}
 				break;
 			case BTRFS_TREE_RELOC_OBJECTID:
 				if (!skip) {
-					pr_verbose(LOG_DEFAULT, "reloc");
+					pr_default("reloc");
 				}
 				break;
 			case BTRFS_DATA_RELOC_TREE_OBJECTID:
 				if (!skip) {
-					pr_verbose(LOG_DEFAULT, "data reloc");
+					pr_default("data reloc");
 				}
 				break;
 			case BTRFS_EXTENT_CSUM_OBJECTID:
 				if (!skip) {
-					pr_verbose(LOG_DEFAULT, "extent checksum");
+					pr_default("extent checksum");
 				}
 				break;
 			case BTRFS_QUOTA_TREE_OBJECTID:
 				if (!skip) {
-					pr_verbose(LOG_DEFAULT, "quota");
+					pr_default("quota");
 				}
 				break;
 			case BTRFS_UUID_TREE_OBJECTID:
 				if (!extent_only && !device_only)
 					skip = 0;
 				if (!skip)
-					pr_verbose(LOG_DEFAULT, "uuid");
+					pr_default("uuid");
 				break;
 			case BTRFS_FREE_SPACE_TREE_OBJECTID:
 				if (!skip)
-					pr_verbose(LOG_DEFAULT, "free space");
+					pr_default("free space");
 				break;
 			case BTRFS_MULTIPLE_OBJECTIDS:
 				if (!skip) {
-					pr_verbose(LOG_DEFAULT, "multiple");
+					pr_default("multiple");
 				}
 				break;
 			case BTRFS_BLOCK_GROUP_TREE_OBJECTID:
 				if (!skip)
-					pr_verbose(LOG_DEFAULT, "block group");
+					pr_default("block group");
 				break;
 			case BTRFS_RAID_STRIPE_TREE_OBJECTID:
 				if (!skip)
@@ -651,22 +651,22 @@ again:
 				break;
 			default:
 				if (!skip) {
-					pr_verbose(LOG_DEFAULT, "file");
+					pr_default("file");
 				}
 			}
 			if (extent_only && !skip) {
-				pr_verbose(LOG_DEFAULT, " tree ");
+				pr_default(" tree ");
 				btrfs_print_key(&disk_key);
-				pr_verbose(LOG_DEFAULT, "\n");
+				pr_default("\n");
 				print_extents(buf);
 			} else if (!skip) {
-				pr_verbose(LOG_DEFAULT, " tree ");
+				pr_default(" tree ");
 				btrfs_print_key(&disk_key);
 				if (roots_only) {
-					pr_verbose(LOG_DEFAULT, " %llu level %d\n",
+					pr_default(" %llu level %d\n",
 					       buf->start, btrfs_header_level(buf));
 				} else {
-					pr_verbose(LOG_DEFAULT, " \n");
+					pr_default(" \n");
 					btrfs_print_tree(buf,
 						BTRFS_PRINT_TREE_FOLLOW | print_mode);
 				}
@@ -690,13 +690,13 @@ no_node:
 	if (root_backups)
 		print_old_roots(info->super_copy);
 
-	pr_verbose(LOG_DEFAULT, "total bytes %llu\n",
+	pr_default("total bytes %llu\n",
 	       btrfs_super_total_bytes(info->super_copy));
-	pr_verbose(LOG_DEFAULT, "bytes used %llu\n",
+	pr_default("bytes used %llu\n",
 	       btrfs_super_bytes_used(info->super_copy));
 	uuidbuf[BTRFS_UUID_UNPARSED_SIZE - 1] = '\0';
 	uuid_unparse(info->super_copy->fsid, uuidbuf);
-	pr_verbose(LOG_DEFAULT, "uuid %s\n", uuidbuf);
+	pr_default("uuid %s\n", uuidbuf);
 close_root:
 	ret = close_ctree(root);
 out:
