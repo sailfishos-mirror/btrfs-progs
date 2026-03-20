@@ -132,7 +132,7 @@ static int cmd_reflink_clone(const struct cmd_struct *cmd, int argc, char **argv
 			range->same_file = same_file;
 			parse_reflink_range(optarg, &range->from, &range->length, &range->to);
 			list_add_tail(&range->list, &ranges);
-			pr_verbose(LOG_DEBUG, "ADD: %llu:%llu:%llu\n", range->from, range->length, range->to);
+			pr_debug("ADD: %llu:%llu:%llu\n", range->from, range->length, range->to);
 			break;
 		default:
 			usage_unknown_option(cmd, argv);

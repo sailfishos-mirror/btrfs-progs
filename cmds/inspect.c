@@ -74,8 +74,7 @@ static int __ino_to_path_fd(u64 inum, int fd, const char *prepend)
 		goto out;
 	}
 
-	pr_verbose(LOG_DEBUG,
-	"ioctl ret=%d, bytes_left=%lu, bytes_missing=%lu cnt=%d, missed=%d\n",
+	pr_debug("ioctl ret=%d, bytes_left=%lu, bytes_missing=%lu cnt=%d, missed=%d\n",
 		   ret, (unsigned long)fspath->bytes_left,
 		   (unsigned long)fspath->bytes_missing, fspath->elem_cnt,
 		   fspath->elem_missed);
@@ -226,8 +225,7 @@ static int cmd_inspect_logical_resolve(const struct cmd_struct *cmd,
 		goto out;
 	}
 
-	pr_verbose(LOG_DEBUG,
-"ioctl ret=%d, total_size=%llu, bytes_left=%lu, bytes_missing=%lu, cnt=%d, missed=%d\n",
+	pr_debug("ioctl ret=%d, total_size=%llu, bytes_left=%lu, bytes_missing=%lu, cnt=%d, missed=%d\n",
 		   ret, size, (unsigned long)inodes->bytes_left,
 		   (unsigned long)inodes->bytes_missing, inodes->elem_cnt,
 		   inodes->elem_missed);

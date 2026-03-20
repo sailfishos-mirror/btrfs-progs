@@ -131,7 +131,7 @@ static u64 count_unique_bytes(struct rb_root *root, struct shared_extent *n)
 	u64 wstart = n->start;
 	u64 wlast = n->last;
 
-	pr_verbose(LOG_DEBUG, "Count overlaps:");
+	pr_debug("Count overlaps:");
 
 	do {
 		/*
@@ -144,7 +144,7 @@ static u64 count_unique_bytes(struct rb_root *root, struct shared_extent *n)
 		if (wlast < n->last)
 			wlast = n->last;
 
-		pr_verbose(LOG_DEBUG, " (%llu, %llu)", n->start, n->last);
+		pr_debug(" (%llu, %llu)", n->start, n->last);
 
 		tmp = n;
 		n = extent_tree_iter_next(n, wstart, wlast);
@@ -153,7 +153,7 @@ static u64 count_unique_bytes(struct rb_root *root, struct shared_extent *n)
 		free(tmp);
 	} while (n);
 
-	pr_verbose(LOG_DEBUG, "; wstart: %llu wlast: %llu total: %llu\n", wstart,
+	pr_debug("; wstart: %llu wlast: %llu total: %llu\n", wstart,
 		wlast, wlast - wstart + 1);
 
 	return wlast - wstart + 1;

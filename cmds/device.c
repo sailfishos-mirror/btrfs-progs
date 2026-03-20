@@ -723,7 +723,7 @@ static int get_device_stats_offline(struct btrfs_fs_info *fs_info, u64 devid,
 	if (ret < 0)
 		goto out;
 	if (ret > 0) {
-		pr_verbose(LOG_DEBUG, "no device stats found for devid %llu\n", devid);
+		pr_debug("no device stats found for devid %llu\n", devid);
 		ret = 0;
 		goto out;
 	}

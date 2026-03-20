@@ -487,7 +487,7 @@ static int account_one_extent(struct ulist *roots, u64 bytenr, u64 num_bytes)
 				count->info.exclusive_compressed += num_bytes;
 			}
 		}
-		pr_verbose(LOG_DEBUG, "account (%llu, %llu), qgroup %u/%llu, rfer %llu,"
+		pr_debug("account (%llu, %llu), qgroup %u/%llu, rfer %llu,"
 		       " excl %llu, refs %llu, roots %llu\n", bytenr, num_bytes,
 		       btrfs_qgroup_level(count->qgroupid),
 		       btrfs_qgroup_subvolid(count->qgroupid),
