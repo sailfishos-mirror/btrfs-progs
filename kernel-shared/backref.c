@@ -33,8 +33,6 @@
 #include "kernel-shared/uapi/btrfs_tree.h"
 #include "common/internal.h"
 
-#define pr_debug(...) do { } while (0)
-
 struct extent_inode_elem {
 	u64 inum;
 	u64 offset;
