@@ -986,7 +986,7 @@ void bconf_save_param(char *str)
 
 void bconf_set_dry_run(void)
 {
-	pr_verbose(LOG_INFO, "Dry-run requested\n");
+	pr_info("Dry-run requested\n");
 	bconf.dry_run = 1;
 }
 

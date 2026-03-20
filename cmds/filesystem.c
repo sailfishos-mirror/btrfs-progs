@@ -110,11 +110,11 @@ static void print_df_by_type(int fd, unsigned int unit_mode) {
 			if (ret < 0)
 				continue;
 			if (i == 0)
-				pr_verbose(LOG_INFO, "%c%s:\n", toupper(types[ti][0]), types[ti] + 1);
+				pr_info("%c%s:\n", toupper(types[ti][0]), types[ti] + 1);
 			if (strcmp(files[i], "bg_reclaim_threshold") == 0)
-				pr_verbose(LOG_INFO, "  %-24s  %14llu%%\n", files[i], tmp);
+				pr_info("  %-24s  %14llu%%\n", files[i], tmp);
 			else
-				pr_verbose(LOG_INFO, "  %-24s %16s\n", files[i], pretty_size_mode(tmp, unit_mode));
+				pr_info("  %-24s %16s\n", files[i], pretty_size_mode(tmp, unit_mode));
 		}
 	}
 }
@@ -1016,7 +1016,7 @@ static int defrag_callback(const char *fpath, const struct stat *sb,
 	int fd = 0;
 
 	if ((typeflag == FTW_F) && S_ISREG(sb->st_mode)) {
-		pr_verbose(LOG_INFO, "%s\n", fpath);
+		pr_info("%s\n", fpath);
 		fd = open(fpath, defrag_open_mode);
 		if (fd < 0) {
 			goto error;
@@ -1250,7 +1250,7 @@ static int cmd_filesystem_defrag(const struct cmd_struct *cmd,
 			/* errors are handled in the callback */
 			ret = 0;
 		} else {
-			pr_verbose(LOG_INFO, "%s\n", argv[i]);
+			pr_info("%s\n", argv[i]);
 			ret = defrag_range_in_steps(fd, &st);
 			defrag_err = errno;
 			if (ret && defrag_err == ENOTTY) {
@@ -1911,7 +1911,7 @@ static int cmd_filesystem_mkswapfile(const struct cmd_struct *cmd, int argc, cha
 		return 1;
 
 	fname = argv[optind];
-	pr_verbose(LOG_INFO, "create file %s with mode 0600\n", fname);
+	pr_info("create file %s with mode 0600\n", fname);
 	fd = open(fname, O_RDWR | O_CREAT | O_EXCL, 0600);
 	if (fd < 0) {
 		error("cannot create new swapfile: %m");
@@ -1923,7 +1923,7 @@ static int cmd_filesystem_mkswapfile(const struct cmd_struct *cmd, int argc, cha
 		ret = 1;
 		goto out;
 	}
-	pr_verbose(LOG_INFO, "set NOCOW attribute\n");
+	pr_info("set NOCOW attribute\n");
 	flags = FS_NOCOW_FL;
 	ret = ioctl(fd, FS_IOC_SETFLAGS, &flags);
 	if (ret < 0) {
@@ -1945,7 +1945,7 @@ static int cmd_filesystem_mkswapfile(const struct cmd_struct *cmd, int argc, cha
 		goto out;
 	}
 	size = round_down(size, SZ_4K);
-	pr_verbose(LOG_INFO, "fallocate to size %llu, page size %u, %llu pages\n",
+	pr_info("fallocate to size %llu, page size %u, %llu pages\n",
 			size, SZ_4K, page_count);
 	ret = fallocate(fd, 0, 0, size);
 	if (ret < 0) {
@@ -1953,7 +1953,7 @@ static int cmd_filesystem_mkswapfile(const struct cmd_struct *cmd, int argc, cha
 		ret = 1;
 		goto out;
 	}
-	pr_verbose(LOG_INFO, "write swap signature\n");
+	pr_info("write swap signature\n");
 	ret = write_swap_signature(fd, page_count, uuid);
 	if (ret < 0) {
 		error("cannot write swap signature: %m");

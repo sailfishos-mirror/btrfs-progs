@@ -783,7 +783,7 @@ static int overwrite_ok(const char * path)
 			pr_default("Skipping existing file %s\n", path);
 			pr_default("If you wish to overwrite use -o\n");
 		} else {
-			pr_verbose(LOG_INFO, "Skipping existing file %s\n", path);
+			pr_info("Skipping existing file %s\n", path);
 		}
 
 		warn = 1;
@@ -932,16 +932,14 @@ static int search_dir(struct btrfs_root *root, struct btrfs_key *key,
 
 	leaf = path.nodes[0];
 	while (!leaf) {
-		pr_verbose(LOG_INFO,
-			   "No leaf after search, looking for the next leaf\n");
+		pr_info("No leaf after search, looking for the next leaf\n");
 		ret = next_leaf(root, &path);
 		if (ret < 0) {
 			error("search for next leaf failed: %d", ret);
 			goto out;
 		} else if (ret > 0) {
 			/* No more leaves to search */
-			pr_verbose(LOG_INFO,
-		   "Reached the end of the tree looking for the directory\n");
+			pr_info("Reached the end of the tree looking for the directory\n");
 			ret = 0;
 			goto out;
 		}
@@ -957,8 +955,7 @@ static int search_dir(struct btrfs_root *root, struct btrfs_key *key,
 					goto out;
 				} else if (ret > 0) {
 					/* No more leaves to search */
-					pr_verbose(LOG_INFO,
-		"Reached the end of the tree searching the directory\n");
+					pr_info("Reached the end of the tree searching the directory\n");
 					ret = 0;
 					goto out;
 				}
@@ -1002,7 +999,7 @@ static int search_dir(struct btrfs_root *root, struct btrfs_key *key,
 			if (!overwrite_ok(path_name))
 				goto next;
 
-			pr_verbose(LOG_INFO, "Restoring %s\n", path_name);
+			pr_info("Restoring %s\n", path_name);
 			if (dry_run)
 				goto next;
 			fd = open(path_name, O_CREAT|O_WRONLY, 0644);
@@ -1068,7 +1065,7 @@ static int search_dir(struct btrfs_root *root, struct btrfs_key *key,
 				location.objectid = BTRFS_FIRST_FREE_OBJECTID;
 			}
 
-			pr_verbose(LOG_INFO, "Restoring %s\n", path_name);
+			pr_info("Restoring %s\n", path_name);
 
 			errno = 0;
 			if (dry_run)
@@ -1143,7 +1140,7 @@ next:
 		}
 	}
 
-	pr_verbose(LOG_INFO, "Done searching %s\n", in_dir);
+	pr_info("Done searching %s\n", in_dir);
 out:
 	btrfs_release_path(&path);
 	return ret;
