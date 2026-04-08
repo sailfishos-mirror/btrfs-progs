@@ -1985,6 +1985,11 @@ int BOX_MAIN(convert)(int argc, char *argv[])
 				char *orig = strdup(optarg);
 				char *tmp = orig;
 
+				if (!orig) {
+					error_mem(NULL);
+					exit(1);
+				}
+
 				tmp = btrfs_parse_fs_features(tmp, &features);
 				if (tmp) {
 					error("unrecognized filesystem feature: %s",

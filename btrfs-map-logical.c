@@ -262,7 +262,12 @@ int main(int argc, char **argv)
 				bytes = arg_strtou64(optarg);
 				break;
 			case 'o':
+				free(output_file);
 				output_file = strdup(optarg);
+				if (!output_file) {
+					error_mem(NULL);
+					return 1;
+				}
 				break;
 			default:
 				usage(&map_logical_cmd, 1);

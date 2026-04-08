@@ -26,6 +26,7 @@
 #include <byteswap.h>
 #include "crypto/crc32c.h"
 #include "kernel-shared/disk-io.h"
+#include "common/messages.h"
 
 #define BLOCKSIZE (4096)
 static char buf[BLOCKSIZE];
@@ -415,6 +416,11 @@ int main(int argc, char **argv)
 		f = &spec[specidx];
 		specidx++;
 		f->name = strdup(argv[i]);
+		if (!f->name) {
+			ret = 1;
+			error_mem(NULL);
+			goto out;
+		}
 		i++;
 		if (arg_to_op_value(argv[i], &f->fop, &f->value)) {
 			ret = 1;
