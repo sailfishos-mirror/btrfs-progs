@@ -15,6 +15,8 @@ right after the option without a space (this is mandatory getopt syntax), like
 A filter has the following structure: ``filter[=params][,filter=...]``
 
 To combine multiple filters use ``,``, without spaces. Example: ``-dconvert=raid1,soft``
+Note that most filters can only be specified once per block group profile
+(data/metadata/system block groups).
 
 BTRFS can have different profiles on a single device or the same profile on
 multiple device.
@@ -56,14 +58,20 @@ usage=<percent>, usage=<range>
         accept only the single value format.
         The minimum range boundary is inclusive, maximum is exclusive.
 
+        This filter can only be specified once per block group profile.
+
 devid=<id>
         Balances only block groups which have at least one chunk on the given
         device. To list devices with ids use :command:`btrfs filesystem show`.
+
+        This filter can only be specified once per block group profile.
 
 drange=<range>
         Balance only block groups which overlap with the given byte range on any
         device. Use in conjunction with ``devid`` to filter on a specific device. The
         parameter is a range specified as ``start..end``.
+
+        This filter can only be specified once per block group profile.
 
 vrange=<range>
         Balance only block groups which overlap with the given byte range in the
@@ -71,9 +79,13 @@ vrange=<range>
         most reports from btrfs in the kernel log use. The parameter is a range
         specified as ``start..end``.
 
+        This filter can only be specified once per block group profile.
+
 convert=<profile>
         Convert each selected block group to the given profile name identified by
         parameters.
+
+        This filter can only be specified once per block group profile.
 
         .. note::
                 Starting with kernel 4.5, the ``data`` chunks can be converted to/from the
@@ -108,11 +120,15 @@ limit=<number>, limit=<range>
         most N chunks*, equivalent to ``..N`` range syntax. Kernels prior to 4.4 accept
         only the single value format.  The range minimum and maximum are inclusive.
 
+        This filter can only be specified once per block group profile.
+
 stripes=<range>
         Balance only block groups which have the given number of stripes. The parameter
         is a range specified as ``start..end``. Makes sense for block group profiles that
         utilize striping, i.e. RAID0/10/5/6.  The range minimum and maximum are
         inclusive.
+
+        This filter can only be specified once per block group profile.
 
 soft
         Takes no parameters. Only has meaning when converting between profiles, or
@@ -124,6 +140,8 @@ soft
         The soft mode switch is (like every other filter) per-type.
         For example, this means that we can convert metadata chunks the "hard" way
         while converting data chunks selectively with soft switch.
+
+        This filter can only be specified once per block group profile.
 
 Profile names, used in ``profiles`` and ``convert`` are one of:
 

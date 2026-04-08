@@ -90,23 +90,45 @@ static void print_range_u32(u32 start, u32 end)
 		printf("%u", end);
 }
 
-static int parse_one_filter(char *name, char *value, struct btrfs_balance_args *args)
+static int parse_one_filter(char *context, char *name, char *value,
+			    struct btrfs_balance_args *args)
 {
+#define WARN_IF_DUPLICATE_FILTER(bit_flags)				\
+	if (args->flags & (bit_flags)) {				\
+		printf("WARNING:\n");					\
+		printf("Second %s filter provided for %s.\n", name,	\
+		       context);					\
+		printf("Only the last %s filter will have any effect.\n", \
+		       name);						\
+		printf("In the future this will be an error.\n");	\
+	}
+
+#define REQUIRES_ARGUMENT()						\
+	if (!value || !*value) {					\
+		error("the %s filter requires an argument", name);	\
+		return 1;						\
+	}
+
+#define WARN_IF_ARGUMENT()						\
+	if (value) {							\
+		printf("WARNING:\n");					\
+		printf("%s filter provided with an argument for %s.\n",	\
+		       name, context);					\
+		printf("Soft filter ignores its arguments.\n");		\
+		printf("In the future this will be an error.\n");	\
+	}
+
 	if (strcmp(name, "profiles") == 0) {
-		if (!value || !*value) {
-			error("the profiles filter requires an argument");
-			return 1;
-		}
+		REQUIRES_ARGUMENT();
 		if (parse_profiles(value, &args->profiles)) {
 			error("invalid profiles argument");
 			return 1;
 		}
 		args->flags |= BTRFS_BALANCE_ARGS_PROFILES;
 	} else if (strcmp(name, "usage") == 0) {
-		if (!value || !*value) {
-			error("the usage filter requires an argument");
-			return 1;
-		}
+		WARN_IF_DUPLICATE_FILTER(BTRFS_BALANCE_ARGS_USAGE |
+					 BTRFS_BALANCE_ARGS_USAGE_RANGE);
+		REQUIRES_ARGUMENT();
 		if (parse_u64(value, &args->usage)) {
 			if (parse_range_u32(value, &args->usage_min, &args->usage_max)) {
 				error("invalid usage argument: %s", value);
@@ -127,52 +149,45 @@ static int parse_one_filter(char *name, char *value, struct btrfs_balance_args *
 			args->flags |= BTRFS_BALANCE_ARGS_USAGE;
 		}
 	} else if (strcmp(name, "devid") == 0) {
-		if (!value || !*value) {
-			error("the devid filter requires an argument");
-			return 1;
-		}
+		WARN_IF_DUPLICATE_FILTER(BTRFS_BALANCE_ARGS_DEVID);
+		REQUIRES_ARGUMENT();
 		if (parse_u64(value, &args->devid) || args->devid == 0) {
 			error("invalid devid argument: %s", value);
 			return 1;
 		}
 		args->flags |= BTRFS_BALANCE_ARGS_DEVID;
 	} else if (strcmp(name, "drange") == 0) {
-		if (!value || !*value) {
-			error("the drange filter requires an argument");
-			return 1;
-		}
+		WARN_IF_DUPLICATE_FILTER(BTRFS_BALANCE_ARGS_DRANGE);
+		REQUIRES_ARGUMENT();
 		if (parse_range_strict(value, &args->pstart, &args->pend)) {
 			error("invalid drange argument");
 			return 1;
 		}
 		args->flags |= BTRFS_BALANCE_ARGS_DRANGE;
 	} else if (strcmp(name, "vrange") == 0) {
-		if (!value || !*value) {
-			error("the vrange filter requires an argument");
-			return 1;
-		}
+		WARN_IF_DUPLICATE_FILTER(BTRFS_BALANCE_ARGS_VRANGE);
+		REQUIRES_ARGUMENT();
 		if (parse_range_strict(value, &args->vstart, &args->vend)) {
 			error("invalid vrange argument");
 			return 1;
 		}
 		args->flags |= BTRFS_BALANCE_ARGS_VRANGE;
 	} else if (strcmp(name, "convert") == 0) {
-		if (!value || !*value) {
-			error("the convert option requires an argument");
-			return 1;
-		}
+		WARN_IF_DUPLICATE_FILTER(BTRFS_BALANCE_ARGS_CONVERT);
+		REQUIRES_ARGUMENT();
 		if (parse_one_profile(value, &args->target)) {
 			error("invalid convert argument");
 			return 1;
 		}
 		args->flags |= BTRFS_BALANCE_ARGS_CONVERT;
 	} else if (strcmp(name, "soft") == 0) {
+		WARN_IF_DUPLICATE_FILTER(BTRFS_BALANCE_ARGS_SOFT);
+		WARN_IF_ARGUMENT();
 		args->flags |= BTRFS_BALANCE_ARGS_SOFT;
 	} else if (strcmp(name, "limit") == 0) {
-		if (!value || !*value) {
-			error("the limit filter requires an argument");
-			return 1;
-		}
+		WARN_IF_DUPLICATE_FILTER(BTRFS_BALANCE_ARGS_LIMIT |
+					 BTRFS_BALANCE_ARGS_LIMIT_RANGE);
+		REQUIRES_ARGUMENT();
 		if (parse_u64(value, &args->limit)) {
 			if (parse_range_u32(value, &args->limit_min, &args->limit_max)) {
 				error("Invalid limit argument: %s", value);
@@ -185,10 +200,8 @@ static int parse_one_filter(char *name, char *value, struct btrfs_balance_args *
 			args->flags |= BTRFS_BALANCE_ARGS_LIMIT;
 		}
 	} else if (strcmp(name, "stripes") == 0) {
-		if (!value || !*value) {
-			error("the stripes filter requires an argument");
-			return 1;
-		}
+		WARN_IF_DUPLICATE_FILTER(BTRFS_BALANCE_ARGS_STRIPES_RANGE);
+		REQUIRES_ARGUMENT();
 		if (parse_range_u32(value, &args->stripes_min,
 				    &args->stripes_max)) {
 			error("invalid stripes argument");
@@ -196,14 +209,18 @@ static int parse_one_filter(char *name, char *value, struct btrfs_balance_args *
 		}
 		args->flags |= BTRFS_BALANCE_ARGS_STRIPES_RANGE;
 	} else {
-		error("unrecognized balance filter: %s", name);
+		error("unrecognized balance option: %s", name);
 		return 1;
 	}
 
 	return 0;
+
+#undef WARN_IF_DUPLICATE_FILTER
+#undef REQUIRES_ARGUMENT
+#undef WARN_IF_ARGUMENT
 }
 
-static int parse_filters(char *filters, struct btrfs_balance_args *args)
+static int parse_filters(char *context, char *filters, struct btrfs_balance_args *args)
 {
 	char *this_char;
 	char *value;
@@ -218,7 +235,7 @@ static int parse_filters(char *filters, struct btrfs_balance_args *args)
 		if ((value = strchr(this_char, '=')) != NULL)
 			*value++ = 0;
 
-		if (parse_one_filter(this_char, value, args))
+		if (parse_one_filter(context, this_char, value, args))
 			return 1;
 	}
 
@@ -461,21 +478,21 @@ static int cmd_balance_start(const struct cmd_struct *cmd,
 			start_flags |= BALANCE_START_FILTERS;
 			args.flags |= BTRFS_BALANCE_DATA;
 
-			if (parse_filters(optarg, &args.data))
+			if (parse_filters("data", optarg, &args.data))
 				return 1;
 			break;
 		case 's':
 			start_flags |= BALANCE_START_FILTERS;
 			args.flags |= BTRFS_BALANCE_SYSTEM;
 
-			if (parse_filters(optarg, &args.sys))
+			if (parse_filters("system", optarg, &args.sys))
 				return 1;
 			break;
 		case 'm':
 			start_flags |= BALANCE_START_FILTERS;
 			args.flags |= BTRFS_BALANCE_METADATA;
 
-			if (parse_filters(optarg, &args.meta))
+			if (parse_filters("metadata", optarg, &args.meta))
 				return 1;
 			break;
 		case 'f':
