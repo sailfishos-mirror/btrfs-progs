@@ -14,7 +14,7 @@ suitable for all use cases or workloads, for example performance.
 Combination of features can vary in performance, the table does not
 cover all possibilities.
 
-**The table is based on the latest released linux kernel: 6.19**
+**The table is based on the latest released linux kernel: 7.0**
 
 Since kernel version 6.12 there's a config option *CONFIG_BTRFS_EXPERIMENTAL*
 that enables features that are in development and do not have stabilized
@@ -321,6 +321,8 @@ Most commonly used page sizes are 4KiB, 16KiB and 64KiB. All combinations with
 a 4KiB sector size filesystems are supported. Some features are not compatible
 with subpage or require another feature to work. Since btrfs-progs 6.7 the default
 sector size is 4KiB as this allows cross-architecture compatibility.
+On x86_64 the 2KiB *nodesize* is possible under debuggijng config, recommended
+only for testing.
 
 .. list-table::
    :header-rows: 1
@@ -350,6 +352,8 @@ Zoned mode
 Features that completely incompatible with zoned mode are listed below.
 Compatible features may not be listed and are assumed to work as they
 are unaffected by the zoned device constraints.
+Since 7.0, the zone usage statistics are shown in the filesystem entry in
+:file:`/proc/PID/mountstats`.
 
 .. list-table::
    :header-rows: 1
@@ -416,8 +420,8 @@ are unaffected by the zoned device constraints.
      -
 
 
-Details that do not fit the table
----------------------------------
+Details that do not fit the tables
+----------------------------------
 
 Defrag
 ^^^^^^
@@ -488,7 +492,9 @@ the increasing number of such features or functionality this started to conflict
 with regular debugging features. Currently the following is behind
 the experimental option *CONFIG_BTRFS_EXPERIMENTAL*. Use with caution and if
 you find problems or have feedback please report that to the mailing list.
-(`Current list in linux.git <https://elixir.bootlin.com/linux/v6.19-rc5/source/fs/btrfs/Kconfig#L87>`__)
+`Current list in linux.git <https://elixir.bootlin.com/linux/latest/source/fs/btrfs/Kconfig#L87>`__
+may contain other entries not listed below in case they're not considered
+useful for users (e.g. internal).
 
 .. list-table::
    :header-rows: 1
@@ -504,12 +510,6 @@ you find problems or have feedback please report that to the mailing list.
      - ...
      - The fs-verity stream command is implemented. More updates to the
        protocol specification are pending.
-   * - Checksum offload mode
-     - removed in 7.0
-     - Fast devices with a combination of block group profiles benefits from
-       calculating checksums at the time of IO submission, while other
-       combinations benefit from offloading that to the worker threads.
-       A sysfs tunable is exported to switch that.
    * - Read balancing
      - 6.13
      - Spread IO read requests across available devices. A tunable is provided
@@ -523,7 +523,4 @@ you find problems or have feedback please report that to the mailing list.
      -
    * - Shutdown ioctl
      - 6.19
-     -
-   * - Remap tree
-     - 7.0
-     -
+     - Will be available in 7.1
