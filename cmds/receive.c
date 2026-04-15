@@ -1646,13 +1646,13 @@ static const char * const cmd_receive_usage[] = {
 	"After receiving a subvolume, it is immediately set to",
 	"read-only.",
 	"",
-	OPTLINE("-q|--quiet", "suppress all messages, except errors"),
+	OPTLINE("-q, --quiet", "suppress all messages, except errors"),
 	OPTLINE("-f FILE", "read the stream from FILE instead of stdin"),
 	OPTLINE("-e", "terminate after receiving an <end cmd> marker in the stream. "
 		"Without this option the receiver side terminates only in case "
 		"of an error on end of file."),
-	OPTLINE("-C|--chroot", "confine the process to <mount> using chroot"),
-	OPTLINE("-E|--max-errors NERR", "terminate as soon as NERR errors occur while "
+	OPTLINE("-C, --chroot", "confine the process to <mount> using chroot"),
+	OPTLINE("-E, --max-errors NERR", "terminate as soon as NERR errors occur while "
 		"stream processing commands from the stream. "
 		"Default value is 1. A value of 0 means no limit."),
 	OPTLINE("-m ROOTMOUNT", "the root mount point of the destination filesystem. "

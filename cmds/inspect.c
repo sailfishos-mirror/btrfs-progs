@@ -1201,7 +1201,7 @@ static const char * const cmd_inspect_map_swapfile_usage[] = {
 	"Use the value of resume offset for /sys/power/resume_offset, this depends on the",
 	"page size that's detected on this system.",
 	"",
-	OPTLINE("-r|--resume-offset", "print only the value of resume_offset"),
+	OPTLINE("-r, --resume-offset", "print only the value of resume_offset"),
 	NULL
 };
 

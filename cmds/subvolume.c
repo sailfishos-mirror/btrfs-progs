@@ -135,7 +135,7 @@ static const char * const cmd_subvolume_create_usage[] = {
 	"to all created subvolumes.",
 	"",
 	OPTLINE("-i <qgroupid>", "add the newly created subvolume(s) to a qgroup. This option can be given multiple times."),
-	OPTLINE("-p|--parents", "create any missing parent directories for each argument (like mkdir -p)"),
+	OPTLINE("-p, --parents", "create any missing parent directories for each argument (like mkdir -p)"),
 	HELPINFO_INSERT_GLOBALS,
 	HELPINFO_INSERT_QUIET,
 	NULL
@@ -316,12 +316,12 @@ static const char * const cmd_subvolume_delete_usage[] = {
 	"after a crash). Use one of the --commit options to wait until the",
 	"operation is safely stored on the media.",
 	"",
-	OPTLINE("-c|--commit-after", "wait for transaction commit at the end of the operation"),
-	OPTLINE("-C|--commit-each", "wait for transaction commit after deleting each subvolume"),
-	OPTLINE("-i|--subvolid", "subvolume id of the to be removed subvolume"),
-	OPTLINE("-R|--recursive", "delete accessible subvolumes beneath each subvolume recursively, "
+	OPTLINE("-c, --commit-after", "wait for transaction commit at the end of the operation"),
+	OPTLINE("-C, --commit-each", "wait for transaction commit after deleting each subvolume"),
+	OPTLINE("-i, --subvolid", "subvolume id of the to be removed subvolume"),
+	OPTLINE("-R, --recursive", "delete accessible subvolumes beneath each subvolume recursively, "
 		"this is not atomic, may need root to delete subvolumes not accessible by the user"),
-	OPTLINE("-v|--verbose", "deprecated, alias for global -v option"),
+	OPTLINE("-v, --verbose", "deprecated, alias for global -v option"),
 	HELPINFO_INSERT_GLOBALS,
 	HELPINFO_INSERT_VERBOSE,
 	HELPINFO_INSERT_QUIET,
@@ -1486,8 +1486,8 @@ static const char * const cmd_subvolume_show_usage[] = {
 	"The subvolume can be specified by path, or by root id or UUID that are",
 	"looked up relative to the given path",
 	"",
-	OPTLINE("-r|--rootid ID", "root id of the subvolume"),
-	OPTLINE("-u|--uuid UUID", "UUID of the subvolum"),
+	OPTLINE("-r, --rootid ID", "root id of the subvolume"),
+	OPTLINE("-u, --uuid UUID", "UUID of the subvolum"),
 	HELPINFO_UNITS_SHORT_LONG,
 #if EXPERIMENTAL
 	HELPINFO_INSERT_GLOBALS,

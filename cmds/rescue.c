@@ -281,9 +281,9 @@ static const char * const cmd_rescue_fix_data_checksum_usage[] = {
 	"btrfs rescue fix-data-checksum <device>",
 	"Fix data checksum mismatches.",
 	"",
-	OPTLINE("-r|--readonly", "readonly mode, only report errors without repair"),
-	OPTLINE("-i|--interactive", "interactive mode, ignore the error by default."),
-	OPTLINE("-m|--mirror <mirror>", "update csum item using specified mirror"),
+	OPTLINE("-r, --readonly", "readonly mode, only report errors without repair"),
+	OPTLINE("-i, --interactive", "interactive mode, ignore the error by default."),
+	OPTLINE("-m, --mirror <mirror>", "update csum item using specified mirror"),
 	HELPINFO_INSERT_GLOBALS,
 	HELPINFO_INSERT_VERBOSE,
 	NULL

@@ -114,7 +114,7 @@ static const char *const cmd_replace_start_usage[] = {
 		"never allowed to be used as the <targetdev>"),
 	OPTLINE("-B", "do not background"),
 	OPTLINE("--enqueue", "wait if there's another exclusive operation running, otherwise continue"),
-	OPTLINE("-K|--nodiscard", "do not perform whole device TRIM"),
+	OPTLINE("-K, --nodiscard", "do not perform whole device TRIM"),
 	NULL
 };
 

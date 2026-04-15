@@ -2012,9 +2012,9 @@ static const char * const cmd_scrub_limit_usage[] = {
 	"btrfs scrub limit [options] <path>",
 	"Show or set scrub limits on devices of the given filesystem.",
 	"",
-	OPTLINE("-a|--all", "apply the limit to all devices"),
-	OPTLINE("-d|--devid DEVID", "select the device by DEVID to apply the limit"),
-	OPTLINE("-l|--limit SIZE", "set the limit of the device to SIZE (size units with suffix), or 0 to reset to unlimited"),
+	OPTLINE("-a, --all", "apply the limit to all devices"),
+	OPTLINE("-d, --devid DEVID", "select the device by DEVID to apply the limit"),
+	OPTLINE("-l, --limit SIZE", "set the limit of the device to SIZE (size units with suffix), or 0 to reset to unlimited"),
 	HELPINFO_UNITS_LONG,
 	NULL
 };

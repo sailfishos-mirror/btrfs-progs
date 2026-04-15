@@ -486,8 +486,8 @@ static const char * const cmd_send_usage[] = {
 	OPTLINE("--proto N", "use protocol version N, or 0 to use the highest version "
 		"supported by the sending kernel (default: 1)"),
 	OPTLINE("--compressed-data", "send data that is compressed on the filesystem directly without decompressing it"),
-	OPTLINE("-v|--verbose", "deprecated, alias for global -v option"),
-	OPTLINE("-q|--quiet", "deprecated, alias for global -q option"),
+	OPTLINE("-v, --verbose", "deprecated, alias for global -v option"),
+	OPTLINE("-q, --quiet", "deprecated, alias for global -q option"),
 	HELPINFO_INSERT_GLOBALS,
 	HELPINFO_INSERT_VERBOSE,
 	HELPINFO_INSERT_QUIET,
