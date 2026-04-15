@@ -153,7 +153,7 @@ static const char * const cmd_inspect_dump_tree_usage[] = {
 	OPTLINE("-R, --backups", "same as --roots plus print backup root info"),
 	OPTLINE("-u, --uuid", "print only the uuid tree"),
 	OPTLINE("-b, --block <block_num>", "print info from the specified block only can be specified multiple times"),
-	OPTLINE("-t, --tree <tree_id>", "print only tree with the given id (string or number)"),
+	OPTLINE("-t, --tree TREEID", "print only tree with the given id (string or number)"),
 	OPTLINE("--follow", "use with -b, to show all children tree blocks of <block_num>"),
 	OPTLINE("--noscan", "do not scan the devices from the filesystem, use only the listed ones"),
 	OPTLINE("--bfs", "breadth-first traversal of the trees, print nodes, then leaves (default)"),

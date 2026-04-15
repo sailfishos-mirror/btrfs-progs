@@ -1648,7 +1648,7 @@ static const char * const cmd_receive_usage[] = {
 	"",
 	OPTLINE("-q, --quiet", "suppress all messages, except errors"),
 	OPTLINE("-f FILE", "read the stream from FILE instead of stdin"),
-	OPTLINE("-e", "terminate after receiving an <end cmd> marker in the stream. "
+	OPTLINE("-e", "terminate after receiving an \"end cmd\" marker in the stream. "
 		"Without this option the receiver side terminates only in case "
 		"of an error on end of file."),
 	OPTLINE("-C, --chroot", "confine the process to <mount> using chroot"),

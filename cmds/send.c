@@ -475,9 +475,9 @@ static const char * const cmd_send_usage[] = {
 	"clone sources itself.",
 	"",
 	OPTLINE("-e", "if sending multiple subvols at once, use the new format and omit the end-cmd between the subvols"),
-	OPTLINE("-p <parent>", "send an incremental stream from <parent> to <subvol>"),
-	OPTLINE("-c <clone-src>", "Use this snapshot as a clone source for an incremental send (multiple allowed)"),
-	OPTLINE("-f <outfile>", "Output is normally written to stdout. To write to "
+	OPTLINE("-p PARENTID", "send an incremental stream from PARENTID to <subvol>"),
+	OPTLINE("-c CLONEID", "Use this snapshot as a clone source ID for an incremental send (multiple allowed)"),
+	OPTLINE("-f FILE", "Output is normally written to stdout. To write to "
 		"a file, use this option. An alternative would be to use pipes."),
 	OPTLINE("--no-data", "send in NO_FILE_DATA mode, Note: the output stream "
 		"does not contain any file data and thus cannot be used "

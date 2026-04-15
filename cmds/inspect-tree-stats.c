@@ -442,7 +442,7 @@ static const char * const cmd_inspect_tree_stats_usage[] = {
 	"",
 	OPTLINE("-b", "raw numbers in bytes"),
 	HELPINFO_UNITS_LONG,
-	OPTLINE("-t <tree_id>", "print only tree with the given id (string or number)"),
+	OPTLINE("-t TREEID", "print only tree with the given id (string or number)"),
 	NULL
 };
 

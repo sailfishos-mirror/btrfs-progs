@@ -134,7 +134,7 @@ static const char * const cmd_subvolume_create_usage[] = {
 	"subvolume <name> will be created in the current directory. Options apply",
 	"to all created subvolumes.",
 	"",
-	OPTLINE("-i <qgroupid>", "add the newly created subvolume(s) to a qgroup. This option can be given multiple times."),
+	OPTLINE("-i QGROUPID", "add the newly created subvolume(s) to a qgroup. This option can be given multiple times."),
 	OPTLINE("-p, --parents", "create any missing parent directories for each argument (like mkdir -p)"),
 	HELPINFO_INSERT_GLOBALS,
 	HELPINFO_INSERT_QUIET,
@@ -640,7 +640,7 @@ static const char * const cmd_subvolume_snapshot_usage[] = {
 	"When only <subdir> is given, the subvolume will be named the basename of <subvolume>.",
 	"",
 	OPTLINE("-r", "make the new snapshot readonly"),
-	OPTLINE("-i <qgroupid>", "Add the new snapshot to a qgroup (a quota group). This option can be given multiple times."),
+	OPTLINE("-i QGROUPID", "Add the new snapshot to a qgroup (a quota group). This option can be given multiple times."),
 	HELPINFO_INSERT_GLOBALS,
 	HELPINFO_INSERT_QUIET,
 	NULL
@@ -1711,7 +1711,7 @@ static const char * const cmd_subvolume_sync_usage[] = {
 	"are completed, but do not wait for subvolumes deleted meanwhile.",
 	"The status of subvolume ids is checked periodically.",
 	"",
-	OPTLINE("-s <N>", "sleep N seconds between checks (default: 1)"),
+	OPTLINE("-s NUMBER", "sleep N seconds between checks (default: 1)"),
 	NULL
 };
 
