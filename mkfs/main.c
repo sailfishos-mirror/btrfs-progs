@@ -450,26 +450,26 @@ static const char * const mkfs_usage[] = {
 	"Create a BTRFS filesystem on a device or multiple devices",
 	"",
 	"Allocation profiles:",
-	OPTLINE("-d|--data PROFILE", "data profile, raid0, raid1, raid1c3, raid1c4, raid5, raid6, raid10, dup or single"),
-	OPTLINE("-m|--metadata PROFILE", "metadata profile, values like for data profile"),
-	OPTLINE("-M|--mixed","mix metadata and data together"),
+	OPTLINE("-d, --data PROFILE", "data profile, raid0, raid1, raid1c3, raid1c4, raid5, raid6, raid10, dup or single"),
+	OPTLINE("-m, --metadata PROFILE", "metadata profile, values like for data profile"),
+	OPTLINE("-M, --mixed","mix metadata and data together"),
 	"",
 	"Features:",
 	OPTLINE("--csum TYPE", ""),
 	OPTLINE("--checksum TYPE", "checksum algorithm to use, crc32c (default), xxhash, sha256, blake2"),
-	OPTLINE("-n|--nodesize SIZE", "size of btree nodes, 16K (default), 4K, 8K, 32K, 64K"),
-	OPTLINE("-s|--sectorsize SIZE", "data block size (default 4K, may not be mountable by current kernel if CPU page size is different)"),
+	OPTLINE("-n, --nodesize SIZE", "size of btree nodes, 16K (default), 4K, 8K, 32K, 64K"),
+	OPTLINE("-s, --sectorsize SIZE", "data block size (default 4K, may not be mountable by current kernel if CPU page size is different)"),
 #if EXPERIMENTAL
 	OPTLINE("","experimental: 2K (needs experimental subpage support for 2K on x86_64)"),
 #endif
-	OPTLINE("-O|--features LIST", "comma separated list of filesystem features (use '-O list-all' to list features)"),
-	OPTLINE("-L|--label LABEL", "set the filesystem label (maximum length 255)"),
-	OPTLINE("-U|--uuid UUID", "specify the filesystem UUID (must be unique for a filesystem with multiple devices)"),
+	OPTLINE("-O, --features LIST", "comma separated list of filesystem features (use '-O list-all' to list features)"),
+	OPTLINE("-L, --label LABEL", "set the filesystem label (maximum length 255)"),
+	OPTLINE("-U, --uuid UUID", "specify the filesystem UUID (must be unique for a filesystem with multiple devices)"),
 	OPTLINE("--device-uuid UUID", "specify the filesystem device UUID (a.k.a sub-uuid) (for single device filesystem only)"),
 	"",
 	"Creation:",
-	OPTLINE("-b|--byte-count SIZE", "set size of each device to SIZE (filesystem size is sum of all device sizes)"),
-	OPTLINE("-r|--rootdir DIR", "copy files from DIR to the image root directory, can be combined with --subvol"),
+	OPTLINE("-b, --byte-count SIZE", "set size of each device to SIZE (filesystem size is sum of all device sizes)"),
+	OPTLINE("-r, --rootdir DIR", "copy files from DIR to the image root directory, can be combined with --subvol"),
 	OPTLINE("--compress ALGO[:LEVEL]", "compress files by algorithm and level, ALGO can be 'no' (default), zstd, lzo, zlib"),
 	OPTLINE("", "Built-in:"),
 #if COMPRESSION_ZSTD
@@ -483,7 +483,7 @@ static const char * const mkfs_usage[] = {
 	OPTLINE("", "- LZO: no"),
 #endif
 	OPTLINE("", "- ZLIB: yes (levels 1..9)"),
-	OPTLINE("-u|--subvol TYPE:SUBDIR", "create SUBDIR as subvolume rather than normal directory, can be specified multiple times"),
+	OPTLINE("-u, --subvol TYPE:SUBDIR", "create SUBDIR as subvolume rather than normal directory, can be specified multiple times"),
 	OPTLINE("", "TYPE is one of:"),
 	OPTLINE("", "- rw - (default) create a writeable subvolume in SUBDIR"),
 	OPTLINE("", "- ro - create the subvolume as read-only"),
@@ -495,17 +495,17 @@ static const char * const mkfs_usage[] = {
 	OPTLINE("", "- nodatasum - disable data checksum only"),
 	OPTLINE("--reflink", "(with --rootdir) write file data by cloning ranges"),
 	OPTLINE("--shrink", "(with --rootdir) shrink the filled filesystem to minimal size"),
-	OPTLINE("-K|--nodiscard", "do not perform whole device TRIM"),
-	OPTLINE("-f|--force", "force overwrite of existing filesystem"),
+	OPTLINE("-K, --nodiscard", "do not perform whole device TRIM"),
+	OPTLINE("-f, --force", "force overwrite of existing filesystem"),
 	"",
 	"General:",
-	OPTLINE("-q|--quiet", "no messages except errors"),
-	OPTLINE("-v|--verbose", "increase verbosity level, default is 1"),
-	OPTLINE("-V|--version", "print the mkfs.btrfs version, builtin features and exit"),
+	OPTLINE("-q, --quiet", "no messages except errors"),
+	OPTLINE("-v, --verbose", "increase verbosity level, default is 1"),
+	OPTLINE("-V, --version", "print the mkfs.btrfs version, builtin features and exit"),
 	OPTLINE("--help", "print this help and exit"),
 	"",
 	"Deprecated:",
-	OPTLINE("-R|--runtime-features LIST", "removed in 6.3, use -O|--features"),
+	OPTLINE("-R, --runtime-features LIST", "removed in 6.3, use -O, --features"),
 	NULL
 };
 
@@ -1670,7 +1670,7 @@ int BOX_MAIN(mkfs)(int argc, char **argv)
 				char *orig = strdup(optarg);
 				char *tmp = orig;
 
-				warning("runtime features are deprecated, use -O|--features instead");
+				warning("runtime features are deprecated, use -O, --features instead");
 				tmp = btrfs_parse_runtime_features(tmp,
 						&features);
 				if (tmp) {
