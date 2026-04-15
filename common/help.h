@@ -65,8 +65,8 @@ struct cmd_group;
 #define HELPINFO_OPTION			"\x01"
 #define HELPINFO_DESC			"\x02"
 /* Keep the line length below 100 chars. */
-#define HELPINFO_PREFIX_WIDTH		4
-#define HELPINFO_LISTING_WIDTH		8
+#define HELPINFO_PREFIX_WIDTH		0
+#define HELPINFO_LISTING_WIDTH		2
 #define HELPINFO_OPTION_WIDTH		24
 #define HELPINFO_OPTION_MARGIN		2
 #define HELPINFO_DESC_PREFIX		(HELPINFO_PREFIX_WIDTH +	\

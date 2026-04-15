@@ -234,6 +234,7 @@ static int do_usage_one_command(const char * const *usagestr,
 		fputc('\n', outf);
 	while (*usagestr && **usagestr) {
 		hpad(pad, outf);
+		fprintf(outf, "  ");
 		fprintf(outf, "%s\n", *usagestr++);
 	}
 
