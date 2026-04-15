@@ -52,15 +52,15 @@ struct cmd_group;
 	OPTLINE("--tbytes", "show sizes in TiB, or TB with --si")
 
 #define HELPINFO_UNITS_SHORT_LONG					\
-	OPTLINE("-b|--raw", "raw numbers in bytes"),			\
-	OPTLINE("-h|--human-readable", "human friendly numbers, base 1024 (default)"), \
+	OPTLINE("-b, --raw", "raw numbers in bytes"),			\
+	OPTLINE("-h, --human-readable", "human friendly numbers, base 1024 (default)"), \
 	OPTLINE("-H", "human friendly numbers, base 1000"),		\
 	OPTLINE("--iec", "use 1024 as a base (KiB, MiB, GiB, TiB)"),	\
 	OPTLINE("--si", "use 1000 as a base (kB, MB, GB, TB)"),		\
-	OPTLINE("-k|--kbytes", "show sizes in KiB, or kB with --si"),	\
-	OPTLINE("-m|--mbytes", "show sizes in MiB, or MB with --si"),	\
-	OPTLINE("-g|--gbytes", "show sizes in GiB, or GB with --si"),	\
-	OPTLINE("-t|--tbytes", "show sizes in TiB, or TB with --si")
+	OPTLINE("-k, --kbytes", "show sizes in KiB, or kB with --si"),	\
+	OPTLINE("-m, --mbytes", "show sizes in MiB, or MB with --si"),	\
+	OPTLINE("-g, --gbytes", "show sizes in GiB, or GB with --si"),	\
+	OPTLINE("-t, --tbytes", "show sizes in TiB, or TB with --si")
 
 #define HELPINFO_OPTION			"\x01"
 #define HELPINFO_DESC			"\x02"
@@ -85,8 +85,8 @@ struct cmd_group;
 
 #define HELPINFO_INSERT_FORMAT		"--format TYPE"
 #define HELPINFO_INSERT_DRY_RUN OPTLINE("--dry-run", "do not do any active/changing actions")
-#define HELPINFO_INSERT_VERBOSE	OPTLINE("-v|--verbose", "increase output verbosity")
-#define HELPINFO_INSERT_QUIET	OPTLINE("-q|--quiet", "print only errors")
+#define HELPINFO_INSERT_VERBOSE	OPTLINE("-v, --verbose", "increase output verbosity")
+#define HELPINFO_INSERT_QUIET	OPTLINE("-q, --quiet", "print only errors")
 
 /*
  * Descriptor of output format
