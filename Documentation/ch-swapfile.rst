@@ -23,10 +23,11 @@ are on one device but this cannot be affected by user and depends on free space
 fragmentation and available unused space for new chunks.
 
 With active swapfiles, the following whole-filesystem operations will skip
-swapfile extents or may fail:
+some block groups or may fail:
 
 * balance - block groups with extents of any active swapfiles are skipped and
-  reported, the rest will be processed normally
+  reported through dmesg, the rest will be processed normally
+* scrub - ditto
 * resize grow - unaffected
 * resize shrink - works as long as the extents of any active swapfiles are
   outside of the shrunk range
@@ -35,6 +36,21 @@ swapfile extents or may fail:
   afterwards
 * device delete - if the device has been added as above, it can be also deleted
 * device replace - ditto
+
+The above limitations will significantly affect btrfs maintenance routines,
+namely balance and scrub.  Balance and scrub will skip those block groups which
+have extents of an active swapfile on them, and those block groups may also
+contain extents belonging to other files.  This means swapfiles will have an
+amplified impact, much larger than the size of the swapfile itself.
+
+For balance, it means data block groups may not be properly balanced, causing
+unbalanced data/metadata usage, which can lead to early ENOSPC errors.
+
+For scrub, it means data block groups may not be verified, degrading the
+integrity of data.
+
+Users should be aware of the impact when using swapfiles alongside other data.
+This is especially discouraged for root filesystem.
 
 When there are no active swapfiles and a whole-filesystem exclusive operation
 is running (e.g. balance, device delete, shrink), the swapfiles cannot be
