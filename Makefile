@@ -415,11 +415,8 @@ CRYPTO_CFLAGS = -DCRYPTOPROVIDER_BUILTIN=1
 endif
 
 ifeq ($(TARGET_CPU),x86_64)
-# FIXME: linkage is broken on musl for some reason
-ifeq ($(HAVE_GLIBC),1)
 CRYPTO_OBJECTS += crypto/crc32c-pcl-intel-asm_64.o
 ASFLAGS += -fPIC
-endif
 endif
 
 CHECKER_FLAGS += $(btrfs_convert_cflags)
