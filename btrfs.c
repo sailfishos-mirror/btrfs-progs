@@ -305,6 +305,7 @@ static int handle_global_options(int argc, char **argv)
 		{ NULL, 0, NULL, 0}
 	};
 	int shift;
+	int ret;
 
 	if (argc == 0)
 		return 0;
@@ -328,7 +329,11 @@ static int handle_global_options(int argc, char **argv)
 			handle_log_level(optarg);
 			break;
 		case GETOPT_VAL_PARAM:
-			bconf_save_param(optarg);
+			ret = bconf_save_param(optarg);
+			if (ret) {
+				error_mem("config param %s", optarg);
+				exit(1);
+			}
 			break;
 		case GETOPT_VAL_DRY_RUN:
 			bconf_set_dry_run();

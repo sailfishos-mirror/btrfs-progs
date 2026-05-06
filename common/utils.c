@@ -948,27 +948,28 @@ void bconf_be_quiet(void)
 	bconf.verbose = BTRFS_BCONF_QUIET;
 }
 
-void bconf_add_param(const char *key, const char *value)
+int bconf_add_param(const char *key, const char *value)
 {
 	struct config_param *param;
 
 	param = calloc(1, sizeof(*param));
 	if (!param)
-		return;
+		return -ENOMEM;
 	param->key = strdup(key);
 	if (!param->key) {
 		free(param);
-		return;
+		return -ENOMEM;
 	}
 	if (value) {
 		param->value = strdup(value);
 		if (!param->value) {
 			free(param->key);
 			free(param);
-			return;
+			return -ENOMEM;
 		}
 	}
 	list_add(&param->list, &bconf.params);
+	return 0;
 }
 
 const char *bconf_param_value(const char *key)
@@ -982,20 +983,26 @@ const char *bconf_param_value(const char *key)
 	return NULL;
 }
 
-void bconf_save_param(char *str)
+int bconf_save_param(char *str)
 {
 	char *tmp;
+	int ret;
 
 	tmp = strchr(str, '=');
 	if (!tmp) {
-		bconf_add_param(str, NULL);
+		ret = bconf_add_param(str, NULL);
+		if (ret)
+			return ret;
 		printf("Global param: %s\n", str);
 	} else {
 		*tmp = 0;
-		bconf_add_param(str, tmp + 1);
+		ret = bconf_add_param(str, tmp + 1);
+		if (ret)
+			return ret;
 		printf("Global param: %s=%s\n", str, tmp + 1);
 		*tmp = '=';
 	}
+	return 0;
 }
 
 void bconf_set_dry_run(void)

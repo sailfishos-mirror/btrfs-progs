@@ -1744,7 +1744,11 @@ int BOX_MAIN(mkfs)(int argc, char **argv)
 				nr_global_roots = (int)arg_strtou64(optarg);
 				break;
 			case GETOPT_VAL_PARAM:
-				bconf_save_param(optarg);
+				ret = bconf_save_param(optarg);
+				if (ret) {
+					error_mem("config param %s", optarg);
+					goto error;
+				}
 				break;
 			case GETOPT_VAL_REFLINK:
 				do_reflink = true;
