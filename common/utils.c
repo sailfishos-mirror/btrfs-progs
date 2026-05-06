@@ -963,7 +963,7 @@ void bconf_add_param(const char *key, const char *value)
 	if (value) {
 		param->value = strdup(value);
 		if (!param->value) {
-			free((char *)param->key);
+			free(param->key);
 			free(param);
 			return;
 		}

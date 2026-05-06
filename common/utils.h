@@ -110,8 +110,8 @@ extern struct btrfs_config bconf;
 
 struct config_param {
 	struct list_head list;
-	const char *key;
-	const char *value;
+	char *key;
+	char *value;
 };
 
 void btrfs_config_init(void);
