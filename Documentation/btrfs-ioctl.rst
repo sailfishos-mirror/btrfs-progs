@@ -252,6 +252,9 @@ LIST OF IOCTLS
    * - :ref:`BTRFS_IOC_SUBVOL_SYNC_WAIT<BTRFS_IOC_SUBVOL_SYNC_WAIT>`
      - Wait until a deleted subvolume is cleaned or query the state.
      - :ref:`struct btrfs_ioctl_subvol_wait<struct_btrfs_ioctl_subvol_wait>`
+   * - :ref:`BTRFS_IOC_SHUTDOWN<BTRFS_IOC_SHUTDOWN>`
+     - Force filesystem IO shutdown and turn it read-only.
+     - uint64_t
 
 DATA STRUCTURES AND DEFINITIONS
 -------------------------------
@@ -1128,6 +1131,33 @@ Use cases (:ref:`definition of constants<struct_btrfs_ioctl_subvol_wait>`):
      - mode of operation described above
    * - args.count
      - if *mode* is set to *COUNT* the number of subvolumes queued for cleaning
+
+.. _BTRFS_IOC_SHUTDOWN:
+
+BTRFS_IOC_SHUTDOWN
+~~~~~~~~~~~~~~~~~~
+
+*(since 7.1)* Force filesystem IO shutdown and turn it read-only.
+
+.. list-table::
+   :header-rows: 1
+
+   * - Field
+     - Description
+   * - ioctl fd
+     - file descriptor of any file or directory in the filesystem
+   * - ioctl args
+     - uint64_t, mode described below
+
+The argument is an int with modes affecting flushing of pending writes:
+
+- *BTRFS_SHUTDOWN_FLAGS_DEFAULT* (0x0) - choose default (*LOGFLUSH* mode)
+- *BTRFS_SHUTDOWN_FLAGS_LOGFLUSH* (0x1) - flush everything, the filesystem is
+  frozen, shut down and thawn
+- *BTRFS_SHUTDOWN_FLAGS_NOLOGFLUSH* (0x2) - shut down the filesystem right away
+
+Additionally the *fserror* reporting facility is used to notify about the
+event.
 
 AVAILABILITY
 ------------
