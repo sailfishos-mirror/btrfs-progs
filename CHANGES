@@ -1,3 +1,19 @@
+btrfs-progs-7.0 (2026-05-09)
+----------------------------
+   * btrfstune: add ability to do offline conversion to the remap tree
+     (experimental feature)
+   * mkfs: add hole detection when precalculating size for --rootdir
+   * fixes: recognize fs-verity tree items in various tools (check)
+   * enable PCLMUL implementation on Musl (previously using SSE 4.2 at best)
+   * help format changed to be in line with common packages like util-linux
+   * reject writes to filesystem during check/btrfstune in case there's pending
+     state of device replace or balance
+   * other:
+      * build ARM64 static binaries (attached to GH release) backward
+         compatibility level is 'archv8-a'
+      * CI updates
+      * documentation updates
+
 btrfs-progs-6.19 (2025-02-13)
 -----------------------------
    * mkfs:
