@@ -292,7 +292,7 @@ features see :doc:`Status<Status>` page.
 
 6.17 - send (v2 protocol) uses fallocate for hole punching
         File holes, ranges not representing data, were emulated by a zero
-        filled data. This is less efficient than puching holes.
+        filled data. This is less efficient than punching holes.
 
 6.18 - *move rev-verify feature under CONFIG_BTRFS_DEBUG*
         Config option CONFIG_BTRFS_FS_REF_VERIFY has been removed and the

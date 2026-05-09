@@ -46,7 +46,7 @@ start [options] <srcdev>|<devid> <targetdev> <path>
 		The running device replace will be cancelled after such interruption, and
 		the end user needs to restart the device replace from the beginning.
 
-		Thus it's recommended to inhibit suspend/hiberate before executing the
+		Thus it's recommended to inhibit suspend/hibernate before executing the
 		device replace operation.
 
         ``Options``

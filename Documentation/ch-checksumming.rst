@@ -82,7 +82,7 @@ them. You can check in :file:`/sys/fs/btrfs/FSID/checksum` which one is used. If
 see *sha256-generic*, then you may want to unmount and mount the filesystem
 again. Changing that on a mounted filesystem is not possible.
 
-Since kernel v6.16 the accelereated implementation is always used if available.
+Since kernel v6.16 the accelerated implementation is always used if available.
 
 Check the file :file:`/proc/crypto`, when the implementation is built-in, you'd find:
 

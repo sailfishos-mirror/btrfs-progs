@@ -33,7 +33,7 @@ Experimental features:
   we've switched to offload to thread for everything we don't need it anymore
 
 - initial support for remap-tree feature, a translation layer of logical block
-  addresses that allow changes without moving/rewriting blocks to do eg.
+  addresses that allow changes without moving/rewriting blocks to do e.g.
   relocation, or other changes that require COW
 
 Notable fixes:
@@ -113,7 +113,7 @@ Pull requests:
   - new commands:
 
     - ability write larger data chunks than 64K
-    - send raw compressed extents (uses the encoded data ioctls), ie. no
+    - send raw compressed extents (uses the encoded data ioctls), i.e. no
       decompression on send side, no compression needed on receive side
       if supported
     - send 'otime' (inode creation time) among other timestamps
@@ -615,7 +615,7 @@ Core changes:
      recovery
    - the new logic that splits mount to two phases slightly changes
      timing of device scanning for multi-device filesystems
-   - LSM options will now work (like for selinux)
+   - LSM options will now work (like for SELinux)
 
 - convert delayed nodes radix tree to xarray, preserving the
   preload-like logic that still allows to allocate with GFP_NOFS
@@ -2081,7 +2081,7 @@ Fixes:
 - fix incorrect number report in stat::t_blocks under certain conditions
 - raid56 fixes:
 
-  - enable auto-repair during read (ie. similar to what raid1 and raid10 do)
+  - enable auto-repair during read (i.e. similar to what raid1 and raid10 do)
   - fix potential crash with concurrent scrub and dev-replace
   - fix potential crash when cancelling dev-replace
   - fix false reports during scrub when it's possible to do repair
@@ -2101,7 +2101,7 @@ Fixes:
 - more sanity checks (for dir_item)
 - compression will be skipped if there's no improvement (at least one block)
 - fix invalid extent maps due to hole punching
-- fix: sgid not cleared when changing acls
+- fix: sgid not cleared when changing ACLs
 - some enospc corner case fixes
 - send fixes
 - other cleanups
@@ -2160,7 +2160,7 @@ Internal changes:
 - let raid56 try harder to rebuild damaged data, reading from all stripes if necessary
 - fix scrub to repair raid56 in a similar way as in the case above
 - cleanups: device freeing, removed some call indirections, redundant
-  bio_put/_get, unused parameters, refactorings and renames
+  bio_put/_get, unused parameters, refactoring and renames
 - RCU list traversal fixups
 - simplify mount callchain, remove recursing back when mounting a subvolume
 - plug for fsync, may improve bio merging on multiple devices
@@ -2577,7 +2577,7 @@ ACLs are implemented and enabled by default.
 
 Lost file prevention (Josef Bacik)
 
-The VFS and posix APIs force filesystems allow files to be unlinked from a
+The VFS and POSIX APIs force filesystems allow files to be unlinked from a
 directory before they are deleted from the FS. If the system crashes between
 the unlink and the deletion, the file is still consuming space on disk, but not
 listed in any directory.
