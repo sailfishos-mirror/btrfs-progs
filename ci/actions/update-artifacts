@@ -23,9 +23,28 @@ for asset in btrfs.box.static btrfs.static; do
 	gh run -R "$repo" download "$id" -n "$asset"
 	chmod 755 "$asset"
 	gh release -R "$repo" upload "$tag" "$asset"
+	rm "$asset"
 done
 
 for asset in btrfs.box.static.sha256 btrfs.static.sha256; do
 	gh run -R "$repo" download "$id" -n "$asset"
 	gh release -R "$repo" upload "$tag" "$asset"
+	rm "$asset"
+done
+
+for asset in btrfs.box.static-arm btrfs.static-arm; do
+	gh run -R "$repo" download "$id" -n "$asset"
+	mv btrfs.box.static btrfs.box.static-arm || true
+	mv btrfs.static btrfs.static-arm || true
+	chmod 755 "$asset"
+	gh release -R "$repo" upload "$tag" "$asset"
+	rm "$asset"
+done
+
+for asset in btrfs.box.static-arm.sha256 btrfs.static-arm.sha256; do
+	gh run -R "$repo" download "$id" -n "$asset"
+	mv btrfs.box.static.sha256 btrfs.box.static-arm.sha256 || true
+	mv btrfs.static.sha256 btrfs.static-arm.sha256 || true
+	gh release -R "$repo" upload "$tag" "$asset"
+	rm "$asset"
 done
