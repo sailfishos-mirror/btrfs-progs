@@ -689,12 +689,14 @@ static int check_space_cache(struct btrfs_root *root, struct task_ctx *task_ctx)
 	struct btrfs_block_group *cache;
 	u64 start = BTRFS_SUPER_INFO_OFFSET + BTRFS_SUPER_INFO_SIZE;
 	int ret;
-	int error = 0;
+	unsigned int errors = 0;
 
 	extent_io_tree_init(fs_info, &used, 0);
 	ret = btrfs_mark_used_blocks(fs_info, &used);
-	if (ret)
-		return ret;
+	if (ret) {
+		errors++;
+		goto out;
+	}
 
 	while (1) {
 		task_ctx->item_count++;
@@ -706,7 +708,7 @@ static int check_space_cache(struct btrfs_root *root, struct task_ctx *task_ctx)
 		if (!cache->free_space_ctl) {
 			if (btrfs_init_free_space_ctl(cache,
 						fs_info->sectorsize)) {
-				ret = -ENOMEM;
+				errors++;
 				break;
 			}
 		} else {
@@ -719,7 +721,7 @@ static int check_space_cache(struct btrfs_root *root, struct task_ctx *task_ctx)
 				errno = -ret;
 				fprintf(stderr,
 					"could not exclude super stripes: %m\n");
-				error++;
+				errors++;
 				continue;
 			}
 			ret = load_free_space_tree(fs_info, cache);
@@ -728,7 +730,7 @@ static int check_space_cache(struct btrfs_root *root, struct task_ctx *task_ctx)
 			if (ret == 0 && cache->flags & BTRFS_BLOCK_GROUP_REMAPPED) {
 				fprintf(stderr,
 					"free space entries found in remapped block group\n");
-				error++;
+				errors++;
 				continue;
 			}
 
@@ -739,14 +741,14 @@ static int check_space_cache(struct btrfs_root *root, struct task_ctx *task_ctx)
 				errno = -ret;
 				fprintf(stderr,
 					"could not load free space tree: %m\n");
-				error++;
+				errors++;
 				continue;
 			}
-			error += ret;
+			errors += ret;
 		} else {
 			ret = load_free_space_cache(fs_info, cache);
 			if (ret < 0)
-				error++;
+				errors++;
 			if (ret <= 0)
 				continue;
 		}
@@ -755,11 +757,12 @@ static int check_space_cache(struct btrfs_root *root, struct task_ctx *task_ctx)
 		if (ret) {
 			fprintf(stderr, "cache appears valid but isn't %llu\n",
 				cache->start);
-			error++;
+			errors++;
 		}
 	}
+out:
 	extent_io_tree_release(&used);
-	return error ? -EINVAL : 0;
+	return errors ? -EINVAL : 0;
 }
 
 
