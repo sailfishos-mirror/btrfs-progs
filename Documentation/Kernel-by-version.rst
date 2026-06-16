@@ -7,14 +7,14 @@ Summary of kernel changes for each version.
 --------------
 
 Pull requests:
-`v6.0-rc2 <https://git.kernel.org/linus/8912c2fd5830e976c0deaeb0b2a458ce6b4718c7>`__,
-`v6.0-rc2 <https://git.kernel.org/linus/b3f1da2a4d851b8e1ccf932e52c6772fe2253a47>`__,
-`v6.0-rc3 <https://git.kernel.org/linus/c44db6c820140ffbc0e293a34c6a6de4b363422b>`__,
-`v6.0-rc4 <https://git.kernel.org/linus/e0b38d286eef4633d231859e47679772db07db07>`__,
-`v6.0-rc5 <https://git.kernel.org/linus/2d1373e4246da3b58e1df058374ed6b101804e07>`__,
-`v6.0-rc5 <https://git.kernel.org/linus/8991448e56cb2118b561eeda193af53b4ff6b632>`__,
-`v6.0-rc6 <https://git.kernel.org/linus/b51ad67773fbe9a03945843215b2cabffafa4084>`__,
-`v6.0-rc7 <https://git.kernel.org/linus/5619b098e2fbf3a23bf13d91897056a1fe238c6d>`__
+`v7.0-rc1 <https://git.kernel.org/linus/8912c2fd5830e976c0deaeb0b2a458ce6b4718c7>`__,
+`v7.0-rc1 <https://git.kernel.org/linus/b3f1da2a4d851b8e1ccf932e52c6772fe2253a47>`__,
+`v7.0-rc3 <https://git.kernel.org/linus/c44db6c820140ffbc0e293a34c6a6de4b363422b>`__,
+`v7.0-rc4 <https://git.kernel.org/linus/e0b38d286eef4633d231859e47679772db07db07>`__,
+`v7.0-rc5 <https://git.kernel.org/linus/2d1373e4246da3b58e1df058374ed6b101804e07>`__,
+`v7.0-rc5 <https://git.kernel.org/linus/8991448e56cb2118b561eeda193af53b4ff6b632>`__,
+`v7.0-rc6 <https://git.kernel.org/linus/b51ad67773fbe9a03945843215b2cabffafa4084>`__,
+`v7.0-rc7 <https://git.kernel.org/linus/5619b098e2fbf3a23bf13d91897056a1fe238c6d>`__
 
 User visible changes, feature updates:
 
