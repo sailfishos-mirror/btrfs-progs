@@ -302,6 +302,9 @@ features see :doc:`Status<Status>` page.
         File holes, ranges not representing data, were emulated by a zero
         filled data. This is less efficient than punching holes.
 
+6.18 (stable)
+-------------
+
 6.18 - *move ref-verify feature under CONFIG_BTRFS_DEBUG*
         Config option CONFIG_BTRFS_FS_REF_VERIFY has been removed and the
         debugging functionality of *ref-verify* moved under CONFIG_BTRFS_DEBUG.
@@ -309,9 +312,6 @@ features see :doc:`Status<Status>` page.
 6.18 - *new mount option ref_tracker for reference tracking*
         A debugging feature to track references (now implemented for delayed
         refs) and report leaks eventually.
-
-6.18 (stable)
--------------
 
 6.18 - *(experimental)* enable block size > page size support
         Initial support for *bs > ps* with limitations (no direct IO, raid56,

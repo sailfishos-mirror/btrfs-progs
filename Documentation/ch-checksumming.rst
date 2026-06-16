@@ -74,6 +74,9 @@ BLAKE2b          14500        31  kcapi
 BLAKE2b          14500        34  builtin, reference impl.
 ========  ============   =======  ================================
 
+.. note::
+   Since kernel v6.16 the accelerated implementation is always used if available.
+
 Many kernels are configured with SHA256 as built-in and not as a module.
 Up to kernel v6.15 the accelerated versions are however provided by the
 modules and must be loaded
@@ -81,8 +84,6 @@ explicitly (:command:`modprobe sha256`) before mounting the filesystem to make u
 them. You can check in :file:`/sys/fs/btrfs/FSID/checksum` which one is used. If you
 see *sha256-generic*, then you may want to unmount and mount the filesystem
 again. Changing that on a mounted filesystem is not possible.
-
-Since kernel v6.16 the accelerated implementation is always used if available.
 
 Check the file :file:`/proc/crypto`, when the implementation is built-in, you'd find:
 
