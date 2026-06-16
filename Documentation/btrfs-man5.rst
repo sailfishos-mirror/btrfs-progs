@@ -68,10 +68,10 @@ List of features (see also :doc:`mkfs.btrfs` section
 :ref:`FILESYSTEM FEATURES<man-mkfs-filesystem-features>`):
 
 big_metadata
-        (since: 3.4)
+        (since: 3.4, not shown since: 6.0)
 
         the filesystem uses *nodesize* for metadata blocks, this can be bigger than the
-        page size
+        page size,
 
 block_group_tree
         (since: 6.1)
@@ -144,7 +144,7 @@ raid1c34
         extended RAID1 mode with copies on 3 or 4 devices respectively
 
 raid_stripe_tree
-        (since: 6.7)
+        (since: 6.7, CONFIG_BTRFS_EXPERIMENTAL)
 
         a separate tree for tracking file extents on RAID profiles
 
@@ -152,6 +152,11 @@ RAID56
         (since: 3.9)
 
         the filesystem contains or contained a RAID56 profile of block groups
+
+remap_tree
+        (since: 7.0, experimental)
+
+        tree with virtual-to-virtual block address mapping
 
 rmdir_subvol
         (since: 4.18)
@@ -167,7 +172,8 @@ skinny_metadata
 send_stream_version
         (since: 5.10)
 
-        number of the highest supported send stream version
+        number of the highest supported send stream version, experimental features
+        depend on CONFIG_BTRFS_EXPERIMENTAL
 
 simple_quota
         (since: 6.7)
@@ -193,8 +199,14 @@ supported_rescue_options
         list of values for the mount option *rescue* that are supported by the running
         kernel, see :doc:`btrfs-man5`
 
+vefity
+        (since: 5.15, CONFIG_FS_VERITY)
+
+        the fs-verity read-only file-based authenticity protection can be
+        enabled filesystems
+
 zoned
-        (since: 5.12)
+        (since: 5.12, CONFIG_BLK_DEV_ZONED)
 
         zoned mode is allocation/write friendly to host-managed zoned devices,
         allocation space is partitioned into fixed-size zones that must be updated

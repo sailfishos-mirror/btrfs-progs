@@ -6,22 +6,25 @@ The top level path is :file:`/sys/fs/btrfs/`, and the main directory layout is t
 Relative Path                  Description                          Version
 =============================  ===================================  ========
 features/                      All supported features               3.14
-<UUID>/                        Mounted fs UUID                      3.14
-<UUID>/allocation/             Space allocation info                3.14
-<UUID>/bdi/                    Backing device info (writeback)      5.9
-<UUID>/devices/<DEVID>/        Symlink to each block device sysfs   5.6
-<UUID>/devinfo/<DEVID>/        Btrfs specific info for each device  5.6
-<UUID>/discard/                Discard stats and tunables           6.1
-<UUID>/features/               Features of the filesystem           3.14
-<UUID>/qgroups/                Global qgroup info                   5.9
-<UUID>/qgroups/<LEVEL>_<ID>/   Info for each qgroup                 5.9
+UUID/                          Mounted fs UUID                      3.14
+UUID/allocation/               Space allocation info                3.14
+UUID/bdi/                      Backing device info (writeback)      5.9
+UUID/debug/                    Debugging information (optional)     5.6
+UUID/devices/NODE/             Symlink to each block device sysfs   5.6
+UUID/devinfo/DEVID/            Btrfs specific info for each device  5.6
+UUID/discard/                  Discard stats and tunables           6.1
+UUID/features/                 Features of the filesystem           3.14
+UUID/qgroups/                  Global qgroup info                   5.9
+UUID/qgroups/LEVEL_ID/         Info for each qgroup                 5.9
 =============================  ===================================  ========
 
 For :file:`/sys/fs/btrfs/features/` directory, each file means a supported feature
 of the current kernel. Most files have value 0. Otherwise it depends on the file,
 value *1* typically means the feature can be turned on a mounted filesystem.
+Some directories may depend on a feature (*qgroups*) or a build config option
+(*debug* and *CONFIG_BTRFS_DEBUG*).
 
-For :file:`/sys/fs/btrfs/<UUID>/features/` directory, each file means an enabled
+For :file:`/sys/fs/btrfs/UUID/features/` directory, each file means an enabled
 feature on the mounted filesystem.
 
 The features share the same name in section
@@ -30,7 +33,7 @@ The features share the same name in section
 UUID
 ^^^^
 
-Files in :file:`/sys/fs/btrfs/<UUID>/` directory are:
+Files in :file:`/sys/fs/btrfs/UUID/` directory are:
 
 bg_reclaim_threshold
         (RW, since: 5.19)
@@ -44,7 +47,12 @@ checksum
         The checksum used for the mounted filesystem.
         This includes both the checksum type (see section
         :ref:`CHECKSUM ALGORITHMS<man-btrfs5-checksum-algorithms>`)
-        and the implemented driver (mostly shows if it's hardware accelerated).
+        and the selected implementation (depends on kerrnel, it used to be type
+        of harware acceleration):
+
+        .. code-block:: none
+
+                crc32c (crc32c-lib)
 
 clone_alignment
         (RO, since: 3.16)
@@ -55,7 +63,7 @@ commit_stats
         (RW, since: 6.0)
 
         The performance statistics for btrfs transaction commit since the first
-        mount. Mostly for debugging purposes.
+        mount. For debugging or monitoring purposes.
 
         Writing into this file will reset the maximum commit duration
         (*max_commit_ms*) to 0. The file looks like:
@@ -75,7 +83,7 @@ commit_stats
 exclusive_operation
         (RO, since: 5.10)
 
-        Shows the running exclusive operation.
+        Show the running exclusive operation.
         Check section
         :ref:`FILESYSTEM EXCLUSIVE OPERATIONS<man-btrfs5-filesystem-exclusive-operations>`
         for details.
@@ -88,12 +96,13 @@ generation
 label
         (RW, since: 3.14)
 
-        Show the current label of the mounted filesystem.
+        Show the current label of the mounted filesystem, followed by a newline
+        (which is otherwise trimmed from the label).
 
 metadata_uuid
         (RO, since: 5.0)
 
-        Shows the metadata UUID of the mounted filesystem.
+        Show the metadata UUID of the mounted filesystem.
         Check `metadata_uuid` feature for more details.
 
 nodesize
@@ -104,22 +113,23 @@ nodesize
 quota_override
         (RW, since: 4.13)
 
-        Shows the current quota override status.
-        0 means no quota override.
-        1 means quota override, quota can ignore the existing limit settings.
+        Show the current quota override status:
+
+        * 0 no quota override.
+        * 1 quota override, writes will ignore the existing limit settings
 
 read_policy
         (RW, since: 5.11)
 
-        Shows the current balance policy for reads.
+        Show the current policy for balancing reads from devices.
         Currently only ``pid`` (balance using the process id (pid) value) is
         supported. More balancing policies are available in experimental
-        build, namely round-robin.
+        build, namely *round-robin*.
 
 sectorsize
         (RO, since: 3.14)
 
-        Shows the sectorsize of the mounted filesystem.
+        Show the sectorsize of the mounted filesystem.
 
 temp_fsid
         (RO, since 6.7)
@@ -130,7 +140,7 @@ temp_fsid
 UUID/allocations
 ^^^^^^^^^^^^^^^^
 
-Files and directories in :file:`/sys/fs/btrfs/<UUID>/allocations` directory are:
+Files and directories in :file:`/sys/fs/btrfs/UUID/allocations` directory are:
 
 global_rsv_reserved
         (RO, since: 3.14)
@@ -150,7 +160,7 @@ global_rsv_size
 UUID/allocations/{data,metadata,system}
 """""""""""""""""""""""""""""""""""""""
 
-Files in :file:`/sys/fs/btrfs/<UUID>/allocations/{data,metadata,system}` directory are:
+Files in :file:`/sys/fs/btrfs/UUID/allocations/{data,metadata,system}` directory are:
 
 bg_reclaim_threshold
         (RW, since: 5.19)
@@ -172,16 +182,63 @@ bytes_*
 chunk_size
         (RW, since: 6.0)
 
-        Shows the chunk size. Can be changed for data and metadata (independently)
+        Show the chunk size. Can be changed for data and metadata (independently)
         and cannot be set for system block group type.
         Cannot be set for zoned devices as it depends on the fixed device zone size.
         Upper bound is 10% of the filesystem size, the value must be multiple of 256MiB
         and greater than 0.
 
+disk_total
+        (RO, since: 3.14)
+
+        Total number of bytes on devices occupied by this block group type.
+
+disk_used
+        (RO, since: 3.14)
+
+        Portion of *disk_total* in bytes which is used by this block group type.
+
+dynamic_reclaim
+        (RW, since: 6.11)
+
+        Enable or disable dynamic block group reclaim. Use a calculated threshold
+        instead of fixed valude in *bg_reclaim_threshold*.
+
+flags
+        (RO, since: 6.11)
+
+        Raw decimal value of block group flags.
+
+force_chunk_alloc
+        (RW, since: 6.0, CONFIG_BTRFS_DEBUG)
+
+        (Privileged write.) Force allocation of a new chunk of this block group
+        type. Note his can cause *ENOSPC*, users should know what they're doing.
+
+periodic_reclaim
+        (RW, since: 6.11)
+
+        Enable or disable periodic block group reclaim based on *bg_reclaim_threshold*.
+
+reclaim_bytes
+        (RO, since: 6.11)
+
+        Monotonically increasing counter of reclaimed bytes.
+
+reclaim_count
+        (RO, since: 6.11)
+
+        Monotonically increasing counter of block group reclaim attempts.
+
+reclaim_errors
+        (RO, since: 6.11)
+
+        Monotonically increasing counter of reclaim errors.
+
 size_classes
         (RO, since: 6.3)
 
-        Numbers of block groups of a given classes based on heuristics that
+        Numbers of block groups of a given class based on heuristics that
         measure extent length, age and fragmentation.
 
         .. code-block:: none
@@ -190,6 +247,11 @@ size_classes
                 small 374
                 medium 282
                 large 93
+
+total_bytes
+        (RO, since: 3.14)
+
+        Total bytes.
 
 UUID/bdi
 ^^^^^^^^
@@ -200,8 +262,9 @@ related to writeback process and infrastructure.
 UUID/devices
 ^^^^^^^^^^^^
 
-Files in :file:`/sys/fs/btrfs/<UUID>/devices` directory are symlinks named
-after device nodes (e.g. sda, dm-0) and pointing to their sysfs directory.
+Files in :file:`/sys/fs/btrfs/UUID/devices` directory are symlinks named
+after device nodes (e.g. :file:`sda`, :file:`dm-0`) and pointing to their sysfs
+directory.
 
 UUID/devinfo
 ^^^^^^^^^^^^
@@ -212,12 +275,12 @@ subdirectory has information about the device of the given *devid*.
 UUID/devinfo/DEVID
 """"""""""""""""""
 
-Files in :file:`/sys/fs/btrfs/<UUID>/devinfo/<DEVID>` directory are:
+Files in :file:`/sys/fs/btrfs/UUID/devinfo/DEVID` directory are:
 
-error_stats:
+error_stats
         (RO, since: 5.14)
 
-        Shows device stats of this device, same as :command:`btrfs device stats` (:doc:`btrfs-device`).
+        Show device stats of this device, same as :command:`btrfs device stats` (:doc:`btrfs-device`).
 
         .. code-block:: none
 
@@ -227,35 +290,36 @@ error_stats:
                 corruption_errs 0
                 generation_errs 0
 
-fsid:
+fsid
         (RO, since: 5.17)
 
-        Shows the fsid which the device belongs to.
+        Show the fsid which the device belongs to.
         It can be different than the ``UUID`` if it's a seed device.
 
 in_fs_metadata
         (RO, since: 5.6)
 
-        Shows whether we have found the device.
+        Show whether we have found the device.
         Should always be 1, as if this turns to 0, the :file:`DEVID` directory
         would get removed automatically.
 
 missing
         (RO, since: 5.6)
 
-        Shows whether the device is considered missing by the kernel module.
+        Show whether the device is considered missing by the kernel module.
 
 replace_target
         (RO, since: 5.6)
 
-        Shows whether the device is the replace target.
+        Show whether the device is the replace target.
         If no device replace is running, this value is 0.
 
 scrub_speed_max
         (RW, since: 5.14)
 
-        Shows the scrub speed limit for this device. The unit is Bytes/s.
-        0 means no limit. The value can be set but is not persistent.
+        Show the scrub speed limit for this device. The unit is Bytes/s.
+        0 means no limit. The value can be set but is not persistent and not
+        preserved beyond mount.
 
 writeable
         (RO, since: 5.6)
@@ -265,25 +329,12 @@ writeable
 UUID/qgroups
 ^^^^^^^^^^^^
 
-Files in :file:`/sys/fs/btrfs/<UUID>/qgroups/` directory are:
-
-enabled
-        (RO, since: 6.1)
-
-        Shows if qgroup is enabled.
-        Also, if qgroup is disabled, the :file:`qgroups` directory will
-        be removed automatically.
-
-inconsistent
-        (RO, since: 6.1)
-
-        Shows if the qgroup numbers are inconsistent.
-        If 1, it's recommended to do a qgroup rescan.
+Files in :file:`/sys/fs/btrfs/UUID/qgroups/` directory are:
 
 drop_subtree_threshold
         (RW, since: 6.1)
 
-        Shows the subtree drop threshold to automatically mark qgroup inconsistent.
+        Show the subtree drop threshold to automatically mark qgroup inconsistent.
 
         When dropping large subvolumes with qgroup enabled, there would be a huge
         load for qgroup accounting.
@@ -298,83 +349,102 @@ drop_subtree_threshold
         Lower value can reduce qgroup workload, at the cost of extra qgroup rescan
         to re-calculate the numbers.
 
+enabled
+        (RO, since: 6.1)
+
+        Show if qgroup is enabled.
+        Also, if qgroup is disabled, the :file:`qgroups` directory will
+        be removed automatically.
+
+inconsistent
+        (RO, since: 6.1)
+
+        Show if the qgroup numbers are inconsistent.
+        If 1, it's recommended to do a qgroup rescan.
+
+mode
+        (RO, since: 6.7)
+
+        Show which quota mode is enabled, can be *qgroup* for full accounting
+        or *squota* for simplified accounting.
+
 UUID/qgroups/LEVEL_ID
 """""""""""""""""""""
 
-Files in each :file:`/sys/fs/btrfs/<UUID>/qgroups/<LEVEL>_<ID>/` directory are:
+Files in each :file:`/sys/fs/btrfs/UUID/qgroups/LEVEL_ID/` directory are:
 
 exclusive
         (RO, since: 5.9)
 
-        Shows the exclusively owned bytes of the qgroup.
+        Show the exclusively owned bytes of the qgroup.
 
 limit_flags
         (RO, since: 5.9)
 
-        Shows the numeric value of the limit flags.
+        Show the numeric value of the limit flags.
         If 0, means no limit implied.
 
 max_exclusive
         (RO, since: 5.9)
 
-        Shows the limits on exclusively owned bytes.
+        Show the limits on exclusively owned bytes.
 
 max_referenced
         (RO, since: 5.9)
 
-        Shows the limits on referenced bytes.
+        Show the limits on referenced bytes.
 
 referenced
         (RO, since: 5.9)
 
-        Shows the referenced bytes of the qgroup.
+        Show the referenced bytes of the qgroup.
 
 rsv_data
         (RO, since: 5.9)
 
-        Shows the reserved bytes for data.
+        Show the reserved bytes for data.
 
 rsv_meta_pertrans
         (RO, since: 5.9)
 
-        Shows the reserved bytes for per transaction metadata.
+        Show the reserved bytes for per transaction metadata.
 
 rsv_meta_prealloc
         (RO, since: 5.9)
 
-        Shows the reserved bytes for preallocated metadata.
+        Show the reserved bytes for preallocated metadata.
 
 UUID/discard
 ^^^^^^^^^^^^
 
-Files in :file:`/sys/fs/btrfs/<UUID>/discard/` directory are:
+Files in :file:`/sys/fs/btrfs/UUID/discard/` directory are:
 
 discardable_bytes
         (RO, since: 6.1)
 
-        Shows amount of bytes that can be discarded in the async discard and
+        Show amount of bytes that can be discarded in the async discard and
         nodiscard mode.
 
 discardable_extents
         (RO, since: 6.1)
 
-        Shows number of extents to be discarded in the async discard and
+        Show number of extents to be discarded in the async discard and
         nodiscard mode.
 
 discard_bitmap_bytes
         (RO, since: 6.1)
 
-        Shows amount of discarded bytes from data tracked as bitmaps.
+        Show amount of discarded bytes from data tracked as bitmaps.
 
 discard_extent_bytes
         (RO, since: 6.1)
 
-        Shows amount of discarded extents from data tracked as bitmaps.
+        Show amount of discarded extents from data tracked as bitmaps.
 
 discard_bytes_saved
         (RO, since: 6.1)
 
-        Shows the amount of bytes that were reallocated without being discarded.
+        Show the amount of bytes that were reallocated without being discarded.
 
 kbps_limit
         (RW, since: 6.1)
