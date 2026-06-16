@@ -4,6 +4,10 @@
 
 * audit error handling of `pwrite/pread`, transaction commits and general error propagation
 
+* verify strings used for paths only using path_* API, no strcpy/strcat/sprintf and the n-variants
+
+* size should use unsigned/size_t
+
 ## Core
 
 * finish search API
@@ -23,6 +27,8 @@
 * FUSE module, read-only first, read-write optional
 
 * add more injection points, use that in tests for specific critical points
+
+* provide/decide low level API infrastructure for error messages and assertions, e.g. array is checking for NULL but this could silently fail for legitimate use (#1128)
 
 ## User interface
 
@@ -60,8 +66,6 @@
 
 * replace with a smaller device (needs kernel support)
 
-
-
 ## mkfs.btrfs
 
 * add options for more fine grained device specification, like size, slack
@@ -86,7 +90,7 @@
 
 ## Developer documentation
 
-* internal APIs
+* internal APIs, describe puprose and scope, decide: docs/headers/auto-sync
 
 * image dump format, v1, v2
 
