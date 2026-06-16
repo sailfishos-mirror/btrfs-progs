@@ -8,12 +8,11 @@ list, please have a look to the git history for complete list.
 Sorted by amount of contributions:
 
 * SUSE
-* Facebook
+* Meta/Facebook
 * Western Digital
-* Oracle
 
-The following contributed in the past (sorted alphabetically):
-Fujitsu, Fusion-IO, Intel, Linux Foundation, Red Hat, STRATO AG.
+The following companies contributed in the past (sorted alphabetically):
+Fujitsu, Fusion-IO, Intel, Oracle, Red Hat, STRATO AG, Synology.
 
 .. list-table::
    :header-rows: 0
