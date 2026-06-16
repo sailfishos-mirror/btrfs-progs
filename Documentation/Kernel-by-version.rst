@@ -3,6 +3,69 @@ Changes (kernel/version)
 
 Summary of kernel changes for each version.
 
+7.1 (Jun 2026)
+--------------
+Pull requests:
+`v7.1-rc1 <https://git.kernel.org/linus/c92b4d3dd59f9f71ac34b42d4603d2323a499ab0>`__,
+`v7.1-rc2 <https://git.kernel.org/linus/73082fbdb10aba317e8469f51e3411814f2e65b4>`__,
+`v7.1-rc4 <https://git.kernel.org/linus/a8b0b72255d09bb12ada5620cd6ced91adde5ac8>`__,
+`v7.1-rc5 <https://git.kernel.org/linus/400544639d2a11a9c1e276a912a9dff8fe4107dc>`__
+
+User visible changes:
+
+- move shutdown ioctl support out of experimental features, a forced
+  stop of filesystem operation until the next unmount; additionally
+  there's a super block operation to forcibly remove a device from
+  under the filesystem that could lead to a shutdown or not if the
+  redundancy allows that
+- report filesystem shutdown using fserror mechanism
+
+- tree-checker updates:
+
+  - verify free space info, extent and bitmap items
+  - verify remap-tree items and related data in block group items
+
+Performance improvements:
+
+- speed up clearing first extent in the tracked range (+10%
+  throughput on sample workload)
+
+- reduce COW rewrites of extent buffers during the same transaction
+
+- avoid taking big device lock to update device stats during
+  transaction commit
+
+- fix unnecessary flush on close when truncating empty files
+  (observed in practice on a backup application)
+
+- prevent direct reclaim during compressed readahead to avoid stalls
+  under memory pressure
+
+- faster check of NOCOW files on currently snapshotted root
+
+Notable fixes:
+
+- fix chunk allocation strategy on RAID1-like block groups with
+  disproportionate device sizes, this could lead to ENOSPC due to
+  skewed reservation estimates
+
+- adjust metadata reservation overcommit ratio to be less aggressive
+  and also try to flush if possible, this avoids ENOSPC and potential
+  transaction aborts in some edge cases (that are otherwise hard to
+  reproduce)
+
+- fix silent IO error in encoded writes and ordered extent split in
+  zoned mode, the error was not correctly propagated to the address
+  space and could lead to zeroed ranges
+
+- don't mark inline files NOCOMPRESS unexpectedly, the intent was to
+  do that for single block writes of regular files
+
+- fix deadlock between reflink and transaction commit when using
+  flushoncommit
+
+- fix overly strict item check of a running dev-replace operation
+
 7.0 (Apr 2026)
 --------------
 
