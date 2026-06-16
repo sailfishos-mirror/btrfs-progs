@@ -14,7 +14,7 @@ suitable for all use cases or workloads, for example performance.
 Combination of features can vary in performance, the table does not
 cover all possibilities.
 
-**The table is based on the latest released linux kernel: 7.0**
+**The table is based on the latest released linux kernel: 7.1**
 
 Since kernel version 6.12 there's a config option *CONFIG_BTRFS_EXPERIMENTAL*
 that enables features that are in development and do not have stabilized
@@ -35,7 +35,7 @@ in following ways:
 -  **Unstable**: do not use for other then testing purposes, known
    severe problems, missing implementation of some core parts
 
-Please open a `github issue <https://github.com/kdave/btrfs-progs/issues` if:
+Please open a `github issue <https://github.com/kdave/btrfs-progs/issues>`__ if:
 
 -  there's a known missing entry
 -  a particular feature combination that has a different status and is
@@ -172,6 +172,10 @@ Please open a `github issue <https://github.com/kdave/btrfs-progs/issues` if:
      - :statusok:`OK`
      - OK
      - Also see :ref:`table below<status-subpage-block-size>` for compatibility.
+   * - :ref:`Verity <interop-fsverity>`
+     - :statusok:`OK`
+     - OK
+     - Integration with fs-verity file authentication.
    * - :doc:`Zoned mode<Zoned-mode>`
      - :statusmok:`mostly OK`
      - mostly OK
@@ -258,12 +262,12 @@ converted later).
    * - :ref:`Block group tree<mkfs-feature-block-group-tree>`
      - :statusok:`OK`
      - OK
-     -
+     - mkfs.btrfs default since 6.19
    * - :ref:`Raid stripe tree<mkfs-feature-raid-stripe-tree>`
      - :statusmok:`mostly OK`
      - OK
      - not all profiles are supported and RST is behind
-       CONFIG_BTRFS_DEBUG/CONFIG_BTRFS_EXPERIMENTAL build option
+       CONFIG_BTRFS_EXPERIMENTAL build option
    * - :doc:`Squota<Qgroups>`
      - :statusok:`OK`
      - OK
@@ -287,23 +291,31 @@ Integration with other Linux features or external systems.
      - Stability
      - Performance
      - Notes
-   * - :ref:`NFS<interop-nfs>`
-     - :statusok:`OK`
-     - OK
-     -
    * - :ref:`cgroups<interop-cgroups>`
      - :statusok:`OK`
      - OK
      - IO controller
+   * - :ref:`fs-verity<interop-fsverity>`
+     - :statusok:`OK`
+     - OK
+     -
+   * - folios (large)
+     - :statusok:`OK`
+     - OK
+     - default since 7.1, file data are tracked as *folios*, contiguous page blocks
+   * - folios (huge)
+     - experimental
+     - experimental
+     - support folios up to size 2MiB
    * - :ref:`io_uring<interop-io-uring>`
      - :statusok:`OK`
      - OK
      - Can be combined with *Encoded read/write ioctls*.
-   * - :ref:`fsverity<interop-fsverity>`
+   * - :ref:`idmapped mount<interop-idmapped>`
      - :statusok:`OK`
      - OK
      -
-   * - :ref:`idmapped mount<interop-idmapped>`
+   * - :ref:`NFS<interop-nfs>`
      - :statusok:`OK`
      - OK
      -
@@ -321,8 +333,6 @@ Most commonly used page sizes are 4KiB, 16KiB and 64KiB. All combinations with
 a 4KiB sector size filesystems are supported. Some features are not compatible
 with subpage or require another feature to work. Since btrfs-progs 6.7 the default
 sector size is 4KiB as this allows cross-architecture compatibility.
-On x86_64 the 2KiB *nodesize* is possible under debuggijng config, recommended
-only for testing.
 
 .. list-table::
    :header-rows: 1
