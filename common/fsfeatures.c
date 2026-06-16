@@ -708,15 +708,11 @@ int btrfs_tree_search_ioctl(int fd, struct btrfs_tree_search_args *sa)
 {
 	/* On first use check the supported status and save it. */
 	if (!tree_search_v2_initialized) {
-#if 0
-		/*
-		 * Keep using v1 until v2 is fully tested, in some cases it
-		 * does not return properly formatted results in the buffer.
-		 */
+#ifdef EXPERIMENTAL
 		if (btrfs_tree_search2_ioctl_supported(fd) == 1)
 			tree_search_v2_supported = true;
-#endif
 		tree_search_v2_initialized = true;
+#endif
 	}
 	sa->use_v2 = tree_search_v2_supported;
 
