@@ -255,6 +255,9 @@ LIST OF IOCTLS
    * - :ref:`BTRFS_IOC_SHUTDOWN<BTRFS_IOC_SHUTDOWN>`
      - Force filesystem IO shutdown and turn it read-only.
      - uint64_t
+   * - BTRFS_IOC_GET_CSUMS
+     - read raw checksums from file range
+     -
 
 DATA STRUCTURES AND DEFINITIONS
 -------------------------------
