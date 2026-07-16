@@ -1741,7 +1741,7 @@ struct btrfs_fs_info *open_ctree_fs_info(struct open_ctree_args *oca)
 	if (!(oca->flags & OPEN_CTREE_WRITES))
 		oflags = O_RDONLY;
 
-	if ((oflags & O_RDWR) && zoned_model(oca->filename) == ZONED_HOST_MANAGED)
+	if (zoned_model(oca->filename) == ZONED_HOST_MANAGED)
 		oflags |= O_DIRECT;
 
 	fp = open(oca->filename, oflags);
