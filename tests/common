@@ -235,7 +235,7 @@ run_check()
 	"${cmd_array[@]}" >> "$RESULTS" 2>&1
 	if [ "$?" -ne 0 ]; then
 		if echo "${cmd_array[@]}" | grep -q mount; then
-			dmesg | tail -n 15 >> "$RESULTS"
+			$SUDO_HELPER dmesg | tail -n 15 >> "$RESULTS"
 		fi
 		_fail "failed: ${cmd_array[@]}"
 	fi
