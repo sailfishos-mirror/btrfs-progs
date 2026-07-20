@@ -16,7 +16,6 @@ check_global_prereq lsattr
 setup_root_helper
 prepare_test_dev
 
-fail=0
 default_mkfs="mkreiserfs -b 4096"
 convert_test_preamble '' 'common inode flags test' 16k "$default_mkfs"
 convert_test_prep_fs reiserfs $default_mkfs

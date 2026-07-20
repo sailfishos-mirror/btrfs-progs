@@ -12,7 +12,6 @@ check_global_prereq chattr
 setup_root_helper
 prepare_test_dev
 
-fail=0
 default_mke2fs="mke2fs -t ext4 -b 4096"
 convert_test_preamble '' 'common inode flags test' 16k "$default_mke2fs"
 convert_test_prep_fs ext4 $default_mke2fs

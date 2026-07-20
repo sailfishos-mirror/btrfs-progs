@@ -197,7 +197,6 @@ failure_recovery_progs() {
 	local image2
 	local loop1
 	local loop2
-	local devcount
 
 	image1=$(extract_image "$1")
 	image2=$(extract_image "$2")

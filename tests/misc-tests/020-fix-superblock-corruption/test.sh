@@ -14,13 +14,11 @@ FIRST_SUPERBLOCK_OFFSET=65536
 
 test_superblock_restore()
 {
-	local seek
-
 	run_check_mkfs_test_dev
 
 	# Corrupt superblock checksum
 	run_check $SUDO_HELPER dd if=/dev/zero of="$TEST_DEV" \
-	seek="$FIRST_SUPERBLOCK_OFFSET" bs=1 count=4 conv=notrunc
+		seek="$FIRST_SUPERBLOCK_OFFSET" bs=1 count=4 conv=notrunc
 
 	# Run btrfs check to detect corruption
 	run_mayfail "$TOP/btrfs" check "$TEST_DEV" && \
