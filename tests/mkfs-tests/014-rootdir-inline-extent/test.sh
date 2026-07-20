@@ -16,7 +16,7 @@ create_file()
 {
 	local size=$1
 	# Reuse size as filename
-	eval printf "%0.sx" {1..$size} > "$tmp/$size"
+	printf "%0${size}d" 1 > "$tmp/$size"
 }
 
 test_mkfs_rootdir()
