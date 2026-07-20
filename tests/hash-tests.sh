@@ -2,7 +2,7 @@
 # Test all supported hash algorithms on all backends on the sample test vectors
 # This requires all crypto backends available for full coverage.
 
-make=make
+make='make'
 opts="-j16 $@"
 verdict=
 

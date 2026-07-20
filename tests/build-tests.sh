@@ -84,15 +84,16 @@ fi
 
 if [ "$1" = "--ccache" ]; then
 	shift
-	ccache=true
-	export CCACHE_DIR=`pwd`/.ccache
+	export CCACHE_DIR
+
+	CCACHE_DIR=$(pwd)/.ccache
 	mkdir -p -- "$CCACHE_DIR"
 	PATH="/usr/lib64/ccache:$PATH"
 	echo "Enable ccache at CCACHE_DIR=$CCACHE_DIR"
 	ccache -s
 fi
 
-make=make
+make='make'
 jobs=16
 opts="-j${jobs} $@"
 verdict=

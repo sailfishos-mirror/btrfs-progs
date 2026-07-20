@@ -11,11 +11,11 @@ set -e
 TESTSUITE_TAR="btrfs-progs-tests.tar.gz"
 rm -f "$TESTSUITE_TAR"
 
-TIMESTAMP=`date -u "+%Y-%m-%d %T %Z"`
+TIMESTAMP=$(date -u "+%Y-%m-%d %T %Z")
 
 {
-	echo "VERSION=`cat ../VERSION`"
-	echo "GIT_VERSION=`git describe`"
+	echo "VERSION=$(cat ../VERSION)"
+	echo "GIT_VERSION=$(git describe)"
 	echo "TIMESTAMP='$TIMESTAMP'"
 } > testsuite-id
 
@@ -33,7 +33,7 @@ while read t f; do
 	case "$t" in
 		F) echo "$f";;
 		G)
-			here=`pwd`
+			here=$(pwd)
 			cd ..
 			git ls-tree -r --name-only --full-name HEAD "$f" |
 				sed -e 's#^tests/##' |
@@ -45,11 +45,12 @@ done < testsuite-files > testsuite-files-all
 
 echo "create tar: $TESTSUITE_TAR"
 tar cz --sparse -f "$TESTSUITE_TAR" -T testsuite-files-all
-if [ $? -eq 0 ]; then
+ret=$?
+if [ $ret -eq 0 ]; then
 	echo "tar created successfully"
 	cat testsuite-id
 	rm -f testsuite-files-all
 	rm -f testsuite-id
 else
-	exit $?
+	exit $ret
 fi

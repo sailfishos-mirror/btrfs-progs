@@ -16,10 +16,10 @@ source common.convert
 setup_root_helper
 
 echo "Eval loop in test environment (log: $RESULTS)"
-echo -e " ---------------------\nStarting session, `date`" >> "$RESULTS"
-echo -n "`pwd`> "
+echo -e " ---------------------\nStarting session, $(date)" >> "$RESULTS"
+echo -n "$(pwd)> "
 while read x; do
 	echo "COMMAND: $x" >> "$RESULTS"
 	{ eval $x; } 2>&1 | tee -a "$RESULTS"
-	echo -n "`pwd`> "
+	echo -n "$(pwd)> "
 done
