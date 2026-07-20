@@ -646,9 +646,8 @@ check_kernel_support_acl()
 prepare_test_dev()
 {
 	# num[K/M/G/T...]
-	local size="$1"
+	local size="${1:-2G}"
 
-	[[ "$size" ]] || size='2G'
 	# Still truncate it to new size
 	if [ -n "$TEST_DEV" ]; then
 		truncate -s 0 "$TEST_DEV"
