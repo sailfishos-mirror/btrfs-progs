@@ -39,7 +39,7 @@ if [ "$time" != "$mtime" ]; then
 	_fail "mtime on converted inoded does not match"
 fi
 time=$(run_check_stdout stat --format=%z "$TEST_MNT/file")
-if [ "$time" != "$mtime" ]; then
+if [ "$time" != "$ctime" ]; then
 	_fail "ctime on converted inoded does not match"
 fi
 run_check_umount_test_dev
