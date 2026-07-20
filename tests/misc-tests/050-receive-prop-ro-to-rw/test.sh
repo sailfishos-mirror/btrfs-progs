@@ -11,12 +11,12 @@ run_check_mount_test_dev
 
 run_check $SUDO_HELPER mkdir "$TEST_MNT/src" "$TEST_MNT/dst"
 run_check $SUDO_HELPER "$TOP/btrfs" subvolume create "$TEST_MNT/src/subvol1"
-for i in `seq 10`; do
+for i in {1..10}; do
 	run_check $SUDO_HELPER dd if=/dev/zero of="$TEST_MNT/file$1" bs=10K count=1
 done
 run_check $SUDO_HELPER "$TOP/btrfs" subvolume snapshot -r "$TEST_MNT/src/subvol1" "$TEST_MNT/src/snap1"
 
-for i in `seq 10`; do
+for i in {1..10}; do
 	run_check $SUDO_HELPER dd if=/dev/zero of="$TEST_MNT/file-new$1" bs=1K count=1
 done
 run_check $SUDO_HELPER "$TOP/btrfs" subvolume snapshot -r "$TEST_MNT/src/subvol1" "$TEST_MNT/src/snap2"

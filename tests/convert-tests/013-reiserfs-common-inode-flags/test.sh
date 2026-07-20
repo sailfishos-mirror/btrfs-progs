@@ -32,7 +32,7 @@ run_check_mount_test_dev
 # Log the status
 run_check lsattr "$TEST_MNT/flag_test"
 # Above flags should be copied to btrfs flags, and lsattr should get them
-run_check_stdout lsattr "$TEST_MNT/flag_test" | cut -f1 -d\ | grep "[aAdiS]" -q
+run_check_stdout lsattr "$TEST_MNT/flag_test" | cut -f1 -d\  | grep "[aAdiS]" -q
 if [ $? -ne 0 ]; then
 	rm tmp_output
 	_fail "no common inode flags are copied after convert"

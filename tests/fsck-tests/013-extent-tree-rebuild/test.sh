@@ -16,15 +16,15 @@ test_extent_tree_rebuild()
 	run_check_mount_test_dev
 	generate_dataset small
 
-	for i in `seq 1 100`;do
+	for i in {1..100}; do
 		run_check $SUDO_HELPER "$TOP/btrfs" sub snapshot "$TEST_MNT" \
 			"$TEST_MNT/snapaaaaaaa_$i"
 	done
 	run_check_umount_test_dev
 
 	# get extent root bytenr
-	extent_root_bytenr=`$SUDO_HELPER "$TOP/btrfs" inspect-internal dump-tree -r "$TEST_DEV" | \
-			    grep extent | awk '{print $7}'`
+	extent_root_bytenr=$($SUDO_HELPER "$TOP/btrfs" inspect-internal dump-tree -r "$TEST_DEV" | \
+		grep extent | awk '{print $7}')
 	if [ -z "$extent_root_bytenr" ];then
 		_fail "fail to get extent root bytenr"
 	fi

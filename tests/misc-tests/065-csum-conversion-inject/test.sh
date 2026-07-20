@@ -17,7 +17,7 @@ test_resume_data_csum_generation()
 	# Error at the end of the data csum generation.
 	export INJECT="0x4de02239"
 	run_mustfail_stdout "error injection not working" \
-		"$TOP/btrfstune" --csum "$new_csum" "$TEST_DEV" &> $tmp
+		"$TOP/btrfstune" --csum "$new_csum" "$TEST_DEV" &> "$tmp"
 	cat "$tmp" >> "$RESULTS"
 	if ! grep -q "$INJECT" "$tmp"; then
 		rm -f -- "$tmp"

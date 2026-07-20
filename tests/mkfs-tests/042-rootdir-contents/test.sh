@@ -38,12 +38,12 @@ fi
 run_check $SUDO_HELPER dd if=/dev/urandom of="$tmp/rootdir/large" bs=1M count=32
 run_check $SUDO_HELPER truncate -s 512M "$tmp/rootdir/sparse"
 run_check $SUDO_HELPER dd if=/dev/urandom of="$tmp/rootdir/sparse" bs=1M count=1 conv=notrunc seek=128
-run_check $SUDO_HELPER $fsstress_prog -w -n 256 -d "$tmp/rootdir/"
-run_check $SUDO_HELPER $fssum_prog -n -d -f -w "$tmp/fssum" "$tmp/rootdir"
+run_check $SUDO_HELPER "$fsstress_prog" -w -n 256 -d "$tmp/rootdir/"
+run_check $SUDO_HELPER "$fssum_prog" -n -d -f -w "$tmp/fssum" "$tmp/rootdir"
 
 workload()
 {
-	run_check_mkfs_test_dev -s $blocksize --rootdir "$tmp/rootdir" $@
+	run_check_mkfs_test_dev -s "$blocksize" --rootdir "$tmp/rootdir" "$@"
 	run_check $SUDO_HELPER "$TOP/btrfs" check "$TEST_DEV"
 	run_check_mount_test_dev
 

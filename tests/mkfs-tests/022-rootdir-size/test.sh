@@ -13,7 +13,7 @@ prepare_test_dev
 
 tmp=$(_mktemp_dir mkfs-rootdir)
 
-fallocate -l 128M $tmp/large_file
+fallocate -l 128M "$tmp/large_file"
 
 # We should be able to create the fs with size limit to 2 * (128 + 32 + 8)
 # which is 336M. Here we round it up to 350M.

@@ -15,7 +15,7 @@ run_check_mount_test_dev
 run_check $SUDO_HELPER "$TOP/btrfs" subvolume create "$TEST_MNT/subv1"
 # Generate 2.7G of data to send, should be slow enough to let the subvolume
 # deletion catch send in progress
-for i in `seq 10`; do
+for i in {1..10}; do
 	run_check $SUDO_HELPER dd if=/dev/zero of="$TEST_MNT/subv1/file$i" bs=50M count="$i"
 done
 run_check $SUDO_HELPER "$TOP/btrfs" subvolume snapshot -r "$TEST_MNT/subv1" "$TEST_MNT/snap1"

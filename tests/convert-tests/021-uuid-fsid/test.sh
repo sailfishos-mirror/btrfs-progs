@@ -6,12 +6,13 @@ source "$TEST_TOP/common.convert" || exit
 
 check_prereq btrfs-convert
 check_global_prereq mke2fs
+check_global_prereq uuidgen
 
 setup_root_helper
 setup_loopdevs 1
 prepare_loopdevs
 # Convert helpers need the backing file, can't pass ${loopdevs[1]}
-TEST_DEV=${loopdev_prefix}1
+TEST_DEV="${loopdev_prefix}1"
 
 convert_test_prep_fs ext4 mke2fs -t ext4 -b 4096
 run_check_umount_test_dev
@@ -33,11 +34,11 @@ uuid=$(read_ext2_fsid)
 is_valid_uuid "$uuid"
 
 run_check "$TOP/btrfs-convert" "$TEST_DEV"
-is_valid_uuid $(read_btrfs_fsid)
+is_valid_uuid "$(read_btrfs_fsid)"
 run_check "$TOP/btrfs-convert" --rollback "$TEST_DEV"
 
 run_check "$TOP/btrfs-convert" --uuid new "$TEST_DEV"
-is_valid_uuid $(read_btrfs_fsid)
+is_valid_uuid "$(read_btrfs_fsid)"
 run_check "$TOP/btrfs-convert" --rollback "$TEST_DEV"
 
 run_check "$TOP/btrfs-convert" --uuid copy "$TEST_DEV"

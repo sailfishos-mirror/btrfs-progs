@@ -13,7 +13,7 @@ run_check_mkfs_test_dev
 run_check_mount_test_dev
 default=$(run_check_stdout $SUDO_HELPER "$TOP/btrfs" subvolume get-default "$TEST_MNT")
 
-for i in `seq 10`; do
+for i in {1..10}; do
 	run_check $SUDO_HELPER "$TOP/btrfs" subvolume create "$TEST_MNT/subv$i"
 done
 rootid=$(run_check_stdout $SUDO_HELPER "$TOP/btrfs" inspect-internal rootid "$TEST_MNT/subv5")

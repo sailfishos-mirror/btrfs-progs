@@ -37,7 +37,7 @@ if [ -z "$found" ]; then
 	_fail "Unable to find a backup slot with generation $backup_gen"
 fi
 
-slot_num=$(echo $found | cut -f1 -d:)
+slot_num=$(echo "$found" | cut -f1 -d:)
 # To follow the dump-super output, where backup slot starts at 0.
 slot_num=$(($slot_num - 1))
 

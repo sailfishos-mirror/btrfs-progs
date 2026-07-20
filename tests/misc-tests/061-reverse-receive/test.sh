@@ -23,7 +23,7 @@ setup_root_helper
 mkdir -p "${roots[@]}"
 setup_loopdevs 3
 prepare_loopdevs
-for i in `seq 3`; do
+for i in {1..3}; do
 	TEST_DEV="${loopdevs[$i]}"
 	TEST_MNT="${roots[$i]}"
 	run_check_mkfs_test_dev

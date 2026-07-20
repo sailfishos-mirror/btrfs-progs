@@ -17,7 +17,7 @@ if ! [ -f "/sys/fs/btrfs/features/send_stream_version" ] ||
 	exit
 fi
 
-here=`pwd`
+here=$(pwd)
 
 # assumes the filesystem exists, and does mount, write, snapshot, send, unmount
 # for the specified encoding option

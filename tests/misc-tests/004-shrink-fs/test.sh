@@ -38,7 +38,7 @@ run_check $SUDO_HELPER mount -o nodiscard "$IMAGE" "$TEST_MNT"
 run_check $SUDO_HELPER chmod a+rw "$TEST_MNT"
 
 # Create 7 data block groups, each with a size of 1Gb.
-for ((i = 1; i <= 7; i++)); do
+for i in {1..7}; do
 	run_check fallocate -l 1G "$TEST_MNT/foo$i"
 done
 
@@ -66,7 +66,7 @@ run_check "$TOP/btrfs" filesystem sync "$TEST_MNT"
 # Now attempt to get the minimum size we can resize the filesystem to and verify
 # the resize operation succeeds. This size closely matches the sum of the size
 # of all the allocated device extents.
-for ((i = 1; i <= 3; i++)); do
+for i in {1..3}; do
 	shrink_test
 done
 
@@ -74,7 +74,7 @@ done
 # still able to get a correct minimum size and shrink to that size.
 run_check $SUDO_HELPER "$TOP/btrfs" balance start -mconvert=single \
 	-sconvert=single -f "$TEST_MNT"
-for ((i = 1; i <= 3; i++)); do
+for i in {1..3}; do
 	shrink_test 1
 done
 

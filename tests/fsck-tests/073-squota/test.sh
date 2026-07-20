@@ -20,7 +20,7 @@ run_check_mount_test_dev
 run_check $SUDO_HELPER "$TOP/btrfs" subvolume create "$TEST_MNT/subv1"
 run_check $SUDO_HELPER dd if=/dev/zero bs=1M count=1 of="$TEST_MNT/subv1/regular"
 run_check $SUDO_HELPER fallocate -l 8m "$TEST_MNT/subv1/preallocated"
-for ((i = 0; i < 64; i++)); do
+for i in {0..63}; do
 	run_check $SUDO_HELPER dd if=/dev/urandom bs=1K count=1 of="$TEST_MNT/subv1/inline_$i"
 done
 

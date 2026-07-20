@@ -9,6 +9,7 @@ source "$TEST_TOP/common" || exit
 check_prereq btrfs-image
 check_prereq mkfs.btrfs
 check_prereq btrfs
+check_global_prereq wipefs
 
 setup_root_helper
 

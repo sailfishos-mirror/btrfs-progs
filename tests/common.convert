@@ -122,7 +122,7 @@ convert_test_perm() {
 	run_check_stdout $SUDO_HELPER find "$TEST_MNT" -type f ! -name 'image' -fprint "$FILES_LIST"
 	# Fix directory entries order
 	$SUDO_HELPER sort "$FILES_LIST" -o "$FILES_LIST"
-	for file in `$SUDO_HELPER cat "$FILES_LIST"` ;do
+	for file in $($SUDO_HELPER cat "$FILES_LIST"); do
 		run_check_stdout $SUDO_HELPER getfacl --absolute-names "$file" >> "$PERMTMP"
 	done
 	$SUDO_HELPER rm -- "$FILES_LIST"
@@ -137,7 +137,7 @@ convert_test_acl() {
 	run_check_stdout $SUDO_HELPER find "$TEST_MNT/acls" -type f -fprint "$FILES_LIST"
 	# Fix directory entries order
 	$SUDO_HELPER sort "$FILES_LIST" -o "$FILES_LIST"
-	for file in `$SUDO_HELPER cat "$FILES_LIST"`;do
+	for file in $($SUDO_HELPER cat "$FILES_LIST"); do
 		run_check_stdout $SUDO_HELPER getfattr --absolute-names -d "$file" >> "$ACLTMP"
 	done
 	$SUDO_HELPER rm -- "$FILES_LIST"
@@ -171,13 +171,13 @@ convert_test_post_check_permissions() {
 	BTRFS_PERMTMP=$(mktemp --tmpdir btrfs-progs-convert-perms.XXXXXX)
 	convert_test_perm "$BTRFS_PERMTMP"
 
-	btrfs_perm=`md5sum "$BTRFS_PERMTMP" | cut -f1 -d' '`
-	ext_perm=`md5sum "$EXT_PERMTMP" | cut -f1 -d' '`
+	btrfs_perm=$(md5sum "$BTRFS_PERMTMP" | cut -f1 -d' ')
+	ext_perm=$(md5sum "$EXT_PERMTMP" | cut -f1 -d' ')
 
 	if [ "$btrfs_perm" != "$ext_perm" ];
 	then
-		btrfs_perm_file=`md5sum "$BTRFS_PERMTMP" | cut -f2 -d' '`
-		ext_perm_file=`md5sum "$EXT_PERMTMP" | cut -f2 -d' '`
+		btrfs_perm_file=$(md5sum "$BTRFS_PERMTMP" | cut -f2 -d' ')
+		ext_perm_file=$(md5sum "$EXT_PERMTMP" | cut -f2 -d' ')
 		_fail "file permission failed. Mismatched BTRFS:$btrfs_perm_file:$btrfs_perm EXT:$ext_perm_file:$ext_perm"
 	fi
 
@@ -194,13 +194,13 @@ convert_test_post_check_acl() {
 	BTRFS_ACLTMP=$(mktemp --tmpdir btrfs-progs-convert-acls.XXXXXXX)
 	convert_test_acl "$BTRFS_ACLTMP"
 
-	btrfs_acl=`md5sum "$BTRFS_ACLTMP" | cut -f1 -d' '`
-	ext_acl=`md5sum "$EXT_ACLTMP" | cut -f1 -d' '`
+	btrfs_acl=$(md5sum "$BTRFS_ACLTMP" | cut -f1 -d' ')
+	ext_acl=$(md5sum "$EXT_ACLTMP" | cut -f1 -d' ')
 
 	if [ "$btrfs_acl" != "$ext_acl" ]
 	then
-		btrfs_acl_file=`md5sum "$BTRFS_ACLTMP" | cut -f2 -d' '`
-		ext_acl_file=`md5sum "$EXT_ACLTMP" | cut -f2 -d' '`
+		btrfs_acl_file=$(md5sum "$BTRFS_ACLTMP" | cut -f2 -d' ')
+		ext_acl_file=$(md5sum "$EXT_ACLTMP" | cut -f2 -d' ')
 		_fail "file acl failed. Mismatched BTRFS:$btrfs_acl_file:$btrfs_acl EXT:$ext_acl_file:$ext_acl"
 	fi
 

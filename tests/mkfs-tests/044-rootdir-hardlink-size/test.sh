@@ -15,7 +15,7 @@ check_glolbal_prereq awk
 # Create the rootdir with one 10 MB file and 100 hardlinks to it.
 rootdir="$(_mktemp_dir mkfs-rootdir-hardlink-size)"
 run_check fallocate -l 10M "${rootdir}/bigfile"
-for i in $(seq 1 100); do
+for i in {1..100}; do
 	run_check ln "${rootdir}/bigfile" "${rootdir}/hardlink-$i"
 done
 

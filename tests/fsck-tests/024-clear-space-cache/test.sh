@@ -15,7 +15,7 @@ run_check_mount_test_dev
 # Create files that takes at least 3 data chunks, while
 # can still be removed to create free space inside one chunk.
 
-for i in $(seq 0 6); do
+for i in {0..6}; do
 	run_check $SUDO_HELPER dd if=/dev/zero of="$TEST_MNT/file_${i}" bs=1M \
 		count=64 > /dev/null 2>&1
 done

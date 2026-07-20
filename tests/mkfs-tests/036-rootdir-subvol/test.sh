@@ -96,7 +96,7 @@ split_by_subvolume_hardlinks()
 	run_check ln "$tmp/hl1" "$tmp/subv/hl3"
 
 	if [ "$1" != "" ]; then
-		run_check_mkfs_test_dev --rootdir "$tmp" --subvol $1:subv
+		run_check_mkfs_test_dev --rootdir "$tmp" --subvol "$1:subv"
 	else
 		run_check_mkfs_test_dev --rootdir "$tmp" --subvol subv
 	fi

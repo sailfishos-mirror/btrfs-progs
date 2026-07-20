@@ -35,7 +35,7 @@ if ! $support; then
 fi
 
 # Set the limits by command
-here=`pwd`
+here=$(pwd)
 cd "$sysfs/devinfo" || _fail "Cannot cd to $sysfs/devinfo"
 for i in *; do
 	run_check $SUDO_HELPER "$TOP/btrfs" scrub limit -d "$i" -l 20m "$TEST_MNT"

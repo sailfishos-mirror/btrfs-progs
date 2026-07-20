@@ -52,7 +52,7 @@ test_mkfs_single()
 }
 test_mkfs_multi()
 {
-	test_do_mkfs "$@" ${loopdevs[@]}
+	test_do_mkfs "$@" "${loopdevs[@]}"
 	test_get_info
 }
 
@@ -87,8 +87,8 @@ if [ -f "/sys/fs/btrfs/features/raid1c34" ]; then
 	test_mkfs_multi   -d  raid1c4 -m  raid1c4 --mixed
 else
 	_log "skip mount test, missing support for raid1c34"
-	test_do_mkfs -d raid1c3 -m raid1c3 ${loopdevs[@]}
-	test_do_mkfs -d raid1c4 -m raid1c4 ${loopdevs[@]}
+	test_do_mkfs -d raid1c3 -m raid1c3 "${loopdevs[@]}"
+	test_do_mkfs -d raid1c4 -m raid1c4 "${loopdevs[@]}"
 fi
 
 # Non-standard profile/device combinations

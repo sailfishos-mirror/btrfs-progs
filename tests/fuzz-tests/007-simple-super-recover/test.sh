@@ -12,7 +12,7 @@ check_image() {
 
 	image=$1
 	run_check cp "$image" "$image".scratch
-	run_mayfail $TOP/btrfs rescue super-recover -y -v "$image".scratch
+	run_mayfail "$TOP/btrfs" rescue super-recover -y -v "$image".scratch
 	rm -- "$image".scratch
 }
 

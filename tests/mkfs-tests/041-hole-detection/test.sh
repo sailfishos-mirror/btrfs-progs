@@ -33,15 +33,15 @@ fi
 
 run_check truncate -s 1M "$tmp/full_hole"
 full_hole_before=$(run_check_stdout md5sum "$tmp/full_hole" | awk '{print $1}')
-run_check dd if=/dev/urandom of="$tmp/middle_data" bs=$blocksize seek=16 count=1
+run_check dd if=/dev/urandom of="$tmp/middle_data" bs="$blocksize" seek=16 count=1
 run_check truncate -s $(($blocksize * 32)) "$tmp/middle_data"
 middle_data_before=$(run_check_stdout md5sum "$tmp/middle_data" | awk '{print $1}')
-run_check dd if=/dev/urandom of="$tmp/middle_hole" bs=$blocksize count=1
-run_check dd if=/dev/urandom of="$tmp/middle_hole" bs=$blocksize count=1 seek=16
+run_check dd if=/dev/urandom of="$tmp/middle_hole" bs="$blocksize" count=1
+run_check dd if=/dev/urandom of="$tmp/middle_hole" bs="$blocksize" count=1 seek=16
 middle_hole_before=$(run_check_stdout md5sum "$tmp/middle_hole" | awk '{print $1}')
 
 workload() {
-	run_check_mkfs_test_dev -s "$blocksize" --rootdir "$tmp" $@
+	run_check_mkfs_test_dev -s "$blocksize" --rootdir "$tmp" "$@"
 	run_check $SUDO_HELPER "$TOP/btrfs" check "$TEST_DEV"
 	run_check_mount_test_dev
 

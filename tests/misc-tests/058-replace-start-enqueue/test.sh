@@ -21,7 +21,7 @@ run_check_mount_test_dev
 run_check $SUDO_HELPER "$TOP/btrfs" device remove "$REPLACE1" "$TEST_MNT"
 run_check $SUDO_HELPER "$TOP/btrfs" device remove "$REPLACE2" "$TEST_MNT"
 
-for i in `seq 16`; do
+for i in {1..16}; do
 	run_check $SUDO_HELPER dd if=/dev/zero of="$TEST_MNT/file$i" bs=1M count=128 status=noxfer
 done
 # Sync so replace start does not block in unwritten IO

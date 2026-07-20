@@ -10,7 +10,7 @@ setup_root_helper
 
 test_do_mkfs()
 {
-	run_check $SUDO_HELPER "$TOP/mkfs.btrfs" -f "$@" ${loopdevs[@]}
+	run_check $SUDO_HELPER "$TOP/mkfs.btrfs" -f "$@" "${loopdevs[@]}"
 	run_check $SUDO_HELPER "$TOP/btrfs" inspect-internal dump-super "$dev1"
 	run_check $SUDO_HELPER "$TOP/btrfs" check "$dev1"
 	run_check $SUDO_HELPER "$TOP/btrfs" filesystem show
@@ -20,7 +20,7 @@ test_wipefs()
 {
 	run_check $SUDO_HELPER wipefs -a "$devtodel"
 	run_check $SUDO_HELPER losetup -d "$devtodel"
-	unset loopdevs[3]
+	unset 'loopdevs[3]'
 	run_check $SUDO_HELPER losetup --all
 	run_check "$TOP/btrfs" filesystem show
 }

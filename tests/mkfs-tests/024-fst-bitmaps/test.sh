@@ -20,7 +20,7 @@ test_do_mkfs()
 	fi
 }
 
-test_do_mkfs -m raid1 -d raid0 ${loopdevs[@]}
+test_do_mkfs -m raid1 -d raid0 "${loopdevs[@]}"
 
 run_check_stdout $SUDO_HELPER "$TOP/btrfs" inspect-internal dump-tree \
 	-t free_space "$dev1" > "$tmp.dump-tree"

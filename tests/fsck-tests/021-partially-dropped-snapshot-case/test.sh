@@ -15,7 +15,7 @@ check_image()
 		grep -q "Errors found in extent allocation tree or chunk allocation"
 	if [ $? -eq 0 ]; then
 		rm -f "$image"
-		_fail "unexpected error occurred when checking $img"
+		_fail "unexpected error occurred when checking $image"
 	fi
 }
 

@@ -15,13 +15,13 @@ prepare_test_dev 1G
 convert_test_prep_fs ext4 mke2fs -t ext4 -b 4096
 
 # Use up 800MiB first
-for i in $(seq 1 4); do
+for i in {1..4}; do
 	run_check $SUDO_HELPER fallocate -l 200M "$TEST_MNT/file$i"
 done
 
 # Then add 5MiB for above files. These 5 MiB will be allocated near the very
 # end of the fs, to confuse btrfs-convert
-for i in $(seq 1 4); do
+for i in {1..4}; do
 	run_check $SUDO_HELPER fallocate -l 205M "$TEST_MNT/file$i"
 done
 

@@ -21,7 +21,7 @@ dmdev="/dev/mapper/$dmname"
 
 _mktemp_local img 2g
 
-loopdev=`run_check_stdout $SUDO_HELPER losetup --find --show img`
+loopdev=$(run_check_stdout $SUDO_HELPER losetup --find --show img)
 run_check $SUDO_HELPER dmsetup create "$dmname" --table "0 1048576 linear $loopdev 0"
 
 # Setting up the device may need some time to appear
@@ -30,7 +30,7 @@ if ! [ -b "$dmdev" ]; then
 	_not_run "dm device created but not visible in /dev/mapper"
 fi
 
-dmraw=`readlink -f "$dmdev"`
+dmraw=$(readlink -f "$dmdev")
 
 # test
 run_check $SUDO_HELPER "$TOP/mkfs.btrfs" -f "$@" "$dmdev"

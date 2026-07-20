@@ -848,7 +848,7 @@ generate_dataset() {
 			;;
 
 		slow_symlink)
-			long_filename=`date +%s | sha256sum | cut -f1 -d ' '`
+			long_filename=$(date +%s | sha256sum | cut -f1 -d ' ')
 			run_check $SUDO_HELPER touch "$dirpath/$long_filename"
 			for num in $(seq 1 "$DATASET_SIZE"); do
 				run_check $SUDO_HELPER ln -s "$dirpath/$long_filename" "$dirpath/slow_slink.$num"
@@ -881,13 +881,13 @@ setup_loopdevs()
 # create all loop devices from a given loopdev environment
 prepare_loopdevs()
 {
-	for i in `seq "$nloopdevs"`; do
+	for i in $(seq "$nloopdevs"); do
 		touch "$loopdev_prefix$i"
 		chmod a+rw "$loopdev_prefix$i"
 		truncate -s0 "$loopdev_prefix$i"
 		truncate -s2g "$loopdev_prefix$i"
 		run_check sync "$loopdev_prefix$i"
-		loopdevs[$i]=`run_check_stdout $SUDO_HELPER losetup --find --show "$loopdev_prefix$i"`
+		loopdevs[$i]=$(run_check_stdout $SUDO_HELPER losetup --find --show "$loopdev_prefix$i")
 	done
 }
 
@@ -897,7 +897,7 @@ cleanup_loopdevs()
 	for dev in ${loopdevs[@]}; do
 		run_check $SUDO_HELPER losetup -d "$dev"
 	done
-	for i in `seq $nloopdevs`; do
+	for i in $(seq "$nloopdevs"); do
 		truncate -s0 "$loopdev_prefix$i"
 		rm -- "$loopdev_prefix$i"
 	done
@@ -959,7 +959,7 @@ prepare_nullbdevs()
 	# Record any other pre-existing devices in case creation fails
 	run_check $SUDO_HELPER "$nullb" ls
 
-	for i in `seq "$nullb_count"`; do
+	for i in $(seq "$nullb_count"); do
 		# Last line has the name of the device node path
 		out=$(run_check_stdout $SUDO_HELPER "$nullb" create -s "$nullb_size" -z "$nullb_zone_size")
 		if [ $? != 0 ]; then

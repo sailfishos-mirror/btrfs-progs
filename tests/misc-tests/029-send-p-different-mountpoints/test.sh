@@ -11,7 +11,7 @@ setup_root_helper
 prepare_test_dev
 
 # we need two mount points, cannot nest the subvolume under TEST_MNT
-SUBVOL_MNT="`pwd`/subvol_mnt"
+SUBVOL_MNT="$(pwd)/subvol_mnt"
 # the 2nd mount directory is created here, add a fallback in case we're on NFS
 run_mayfail $SUDO_HELPER mkdir -p "$SUBVOL_MNT" ||
 	run_check mkdir -p "$SUBVOL_MNT"

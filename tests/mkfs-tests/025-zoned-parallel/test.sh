@@ -16,8 +16,6 @@ nullb="$TEST_TOP/nullb"
 # Create 128M devices with 4M zones, 32 of them
 size=128
 zone=4
-# More than 10 may fail
-count=10
 
 declare -a devices
 declare -a names
@@ -30,7 +28,8 @@ fi
 # Record any other pre-existing devices in case creation fails
 run_check $SUDO_HELPER "$nullb" ls
 
-for i in `seq $count`; do
+# More than 10 may fail
+for i in {1..10}; do
 	# Last line has the name of the device node path
 	out=$(run_check_stdout $SUDO_HELPER "$nullb" create -s "$size" -z "$zone")
 	if [ $? != 0 ]; then
@@ -50,6 +49,6 @@ run_check $SUDO_HELPER dd if=/dev/zero of="$TEST_MNT"/file bs=1M count=1
 run_check $SUDO_HELPER "$TOP/btrfs" filesystem usage -T "$TEST_MNT"
 run_check_umount_test_dev
 
-for i in `seq $count`; do
+for i in {1..10}; do
 	run_check $SUDO_HELPER "$nullb" rm "${names[$i]}"
 done

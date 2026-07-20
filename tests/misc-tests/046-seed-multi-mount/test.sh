@@ -21,7 +21,7 @@ seeddev=${loopdevs[1]}
 run_check_mkfs_test_dev -L BTRFS-TESTS-SEED
 run_check_mount_test_dev
 
-for i in `seq 6`; do
+for i in {1..6}; do
 	run_check $SUDO_HELPER dd if=/dev/zero of="$TEST_MNT/file$i" bs=1M count=1 status=none
 	# Something to distinguish the contents
 	run_check md5sum "$TEST_MNT/file$i"
@@ -46,7 +46,7 @@ nextdevice() {
 	TEST_MNT="$mnt"
 	run_check_mount_test_dev
 	run_mustfail "writable file despite read-only mount" \
-		$SUDO_HELPER dd if=/dev/zero of="$TEST_MNT/file$nextdevice" bs=1M count=1 status=none
+		$SUDO_HELPER dd if=/dev/zero of="$TEST_MNT/file$nextdev" bs=1M count=1 status=none
 	run_check $SUDO_HELPER "$TOP/btrfs" device add ${loopdevs[$nextdev]} "$TEST_MNT"
 	# Although seed sprout would make the fs RW, explicitly remount it RW
 	# just in case of future behavior change.

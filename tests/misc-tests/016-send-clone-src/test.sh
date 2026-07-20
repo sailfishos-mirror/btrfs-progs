@@ -14,7 +14,7 @@ prepare_test_dev
 run_check_mkfs_test_dev
 run_check_mount_test_dev
 
-here=`pwd`
+here=$(pwd)
 cd "$TEST_MNT" || _fail "cannot chdir to TEST_MNT"
 
 run_check $SUDO_HELPER "$TOP/btrfs" subvolume create subv-parent1
@@ -34,8 +34,8 @@ run_check $SUDO_HELPER "$TOP/btrfs" send -f "$here"/send-stream.img \
 	-c subv-snap1_1 -c subv-snap2_1 subv-snap1_[23] subv-snap2_[23]
 
 image=$(extract_image "$here"/multi-clone-src-v4.8.2.stream.xz)
-old_stream_size=`stat --format=%s "$image"`
-stream_size=`stat --format=%s "$here"/send-stream.img`
+old_stream_size=$(stat --format=%s "$image")
+stream_size=$(stat --format=%s "$here"/send-stream.img)
 
 if [ "$old_stream_size" -lt "$stream_size" ]; then
 	run_check ls -l "$image" "$here"/send-stream.img

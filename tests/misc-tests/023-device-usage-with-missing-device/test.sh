@@ -23,7 +23,7 @@ test_run()
 
 	run_mayfail wipefs -a "$dev2"
 	run_check $SUDO_HELPER losetup -d "$dev2"
-	unset loopdevs[2]
+	unset 'loopdevs[2]'
 
 	run_check_mount_test_dev -o degraded,ro
 	run_check $SUDO_HELPER "$TOP/btrfs" filesystem usage "$TEST_MNT"

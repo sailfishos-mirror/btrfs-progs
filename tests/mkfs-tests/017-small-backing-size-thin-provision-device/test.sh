@@ -57,7 +57,7 @@ total_data_dev_size=$(($meta_dev_offset + $meta_dev_size + $data_dev_size))
 _mktemp_local img
 run_check truncate -s"$(($total_data_dev_size * $sector_size))" img
 
-dm_backing_dev=`run_check_stdout $SUDO_HELPER losetup --find --show img`
+dm_backing_dev=$(run_check_stdout $SUDO_HELPER losetup --find --show img)
 
 if ! [ -b "$dm_backing_dev" ]; then
 	_fail "cannot create backing device"
