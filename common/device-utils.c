@@ -329,10 +329,8 @@ static int device_get_partition_size_sysfs(const char *dev, u64 *size_ret)
 	int ret;
 	char path[PATH_MAX] = {};
 	char sysfs[PATH_MAX] = {};
-	char sizebuf[128] = {};
 	const char *name = NULL;
-	int sysfd;
-	unsigned long long size = 0;
+	u64 size = 0;
 
 	name = realpath(dev, path);
 	if (!name)
@@ -342,17 +340,11 @@ static int device_get_partition_size_sysfs(const char *dev, u64 *size_ret)
 	ret = path_cat3_out(sysfs, "/sys/class/block", name, "size");
 	if (ret < 0)
 		return ret;
-	sysfd = open(sysfs, O_RDONLY);
-	if (sysfd < 0)
-		return -errno;
-	ret = sysfs_read_file(sysfd, sizebuf, sizeof(sizebuf));
-	close(sysfd);
+
+	ret = sysfs_read_file_u64(sysfs, &size);
 	if (ret < 0)
 		return ret;
-	errno = 0;
-	size = strtoull(sizebuf, NULL, 10);
-	if (size == ULLONG_MAX && errno == ERANGE)
-		return -ERANGE;
+
 	/* Extra overflow check. */
 	if (size > ULLONG_MAX >> SECTOR_SHIFT)
 		return -ERANGE;
