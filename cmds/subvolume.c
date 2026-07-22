@@ -331,7 +331,7 @@ static const char * const cmd_subvolume_delete_usage[] = {
 
 static int cmd_subvolume_delete(const struct cmd_struct *cmd, int argc, char **argv)
 {
-	int res, ret = 0;
+	int ret = 0;
 	int cnt;
 	int fd = -1;
 	char	*dname, *cpath;
@@ -570,19 +570,16 @@ again:
 	}
 
 	if (commit_mode == COMMIT_EACH) {
-		res = wait_for_commit(fd);
-		if (res < 0) {
+		ret = wait_for_commit(fd);
+		if (ret < 0)
 			error("unable to wait for commit after '%s': %m", path);
-			ret = 1;
-		}
 	} else if (commit_mode == COMMIT_AFTER) {
-		res = get_fsid(dname, fsid, 0);
-		if (res < 0) {
-			errno = -res;
+		ret = get_fsid(dname, fsid, 0);
+		if (ret < 0) {
+			errno = -ret;
 			error("unable to get fsid for '%s': %m", path);
 			error(
 			"delete succeeded but commit may not be done in the end");
-			ret = 1;
 			goto out;
 		}
 
@@ -622,13 +619,12 @@ keep_fd:
 			struct seen_fsid *seen = seen_fsid_hash[slot];
 
 			while (seen) {
-				res = wait_for_commit(seen->fd);
-				if (res < 0) {
+				ret = wait_for_commit(seen->fd);
+				if (ret < 0) {
 					uuid_unparse(seen->fsid, uuidbuf);
 					error(
 			"unable to do final sync after deletion: %m, fsid: %s",
 						uuidbuf);
-					ret = 1;
 				} else {
 					uuid_unparse(seen->fsid, uuidbuf);
 					pr_info("final sync is done for fsid: %s\n",
