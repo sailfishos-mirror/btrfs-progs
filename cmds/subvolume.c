@@ -234,9 +234,9 @@ static int qgroup_inherit_add_group(struct btrfs_util_qgroup_inherit **inherit,
 
 static int cmd_subvolume_create(const struct cmd_struct *cmd, int argc, char **argv)
 {
-	int retval, ret;
+	int ret;
 	struct btrfs_util_qgroup_inherit *inherit = NULL;
-	bool has_error = false;
+	bool has_error;
 	bool create_parents = false;
 
 	optind = 0;
@@ -254,10 +254,8 @@ static int cmd_subvolume_create(const struct cmd_struct *cmd, int argc, char **a
 		switch (c) {
 		case 'i':
 			ret = qgroup_inherit_add_group(&inherit, optarg);
-			if (ret) {
-				retval = ret;
+			if (ret)
 				goto out;
-			}
 			break;
 		case 'p':
 			create_parents = true;
@@ -267,24 +265,21 @@ static int cmd_subvolume_create(const struct cmd_struct *cmd, int argc, char **a
 		}
 	}
 
-	if (check_argc_min(argc - optind, 1)) {
-		retval = 1;
+	if (check_argc_min(argc - optind, 1))
 		goto out;
-	}
 
-	retval = 1;
-
+	has_error = false;
 	for (int i = optind; i < argc; i++) {
 		ret = create_one_subvolume(argv[i], inherit, create_parents);
 		if (ret < 0)
 			has_error = true;
 	}
-	if (!has_error)
-		retval = 0;
+	if (has_error)
+		ret = 1;
 out:
 	btrfs_util_qgroup_inherit_destroy(inherit);
 
-	return retval;
+	return !!ret;
 }
 static DEFINE_SIMPLE_COMMAND(subvolume_create, "create");
 
