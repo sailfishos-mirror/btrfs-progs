@@ -664,7 +664,6 @@ static const char * const cmd_subvolume_snapshot_usage[] = {
 static int cmd_subvolume_snapshot(const struct cmd_struct *cmd, int argc, char **argv)
 {
 	char	*subvol, *dst;
-	int	res, retval;
 	int ret;
 	char dest_dir[PATH_MAX];
 	enum btrfs_util_error err;
@@ -679,11 +678,9 @@ static int cmd_subvolume_snapshot(const struct cmd_struct *cmd, int argc, char *
 
 		switch (c) {
 		case 'i':
-			res = qgroup_inherit_add_group(&inherit, optarg);
-			if (res) {
-				retval = res;
+			ret = qgroup_inherit_add_group(&inherit, optarg);
+			if (ret)
 				goto out;
-			}
 			break;
 		case 'r':
 			flags |= BTRFS_UTIL_CREATE_SNAPSHOT_READ_ONLY;
@@ -694,32 +691,33 @@ static int cmd_subvolume_snapshot(const struct cmd_struct *cmd, int argc, char *
 	}
 
 	if (check_argc_exact(argc - optind, 2)) {
-		retval = 1;
+		ret = 1;
 		goto out;
 	}
 
 	subvol = argv[optind];
 	dst = argv[optind + 1];
 
-	retval = 1;	/* failure */
 	err = btrfs_util_subvolume_is_valid(subvol);
 	if (err) {
 		error_btrfs_util(err);
+		ret = 1;
 		goto out;
 	}
 
-	res = path_is_dir(dst);
-	if (res < 0 && res != -ENOENT) {
-		errno = -res;
+	ret = path_is_dir(dst);
+	if (ret < 0 && ret != -ENOENT) {
+		errno = -ret;
 		error("cannot access %s: %m", dst);
 		goto out;
 	}
-	if (res == 0) {
+	if (ret == 0) {
 		error("'%s' exists and it is not a directory", dst);
+		ret = 1;
 		goto out;
 	}
 
-	if (res > 0) {
+	if (ret > 0) {
 		char *dupname;
 		const char *newname;
 
@@ -744,10 +742,9 @@ static int cmd_subvolume_snapshot(const struct cmd_struct *cmd, int argc, char *
 	err = btrfs_util_subvolume_snapshot(subvol, dest_dir, flags, NULL, inherit);
 	if (err) {
 		error_btrfs_util(err);
+		ret = 1;
 		goto out;
 	}
-
-	retval = 0;	/* success */
 
 	if (flags & BTRFS_UTIL_CREATE_SNAPSHOT_READ_ONLY)
 		pr_default("Create readonly snapshot of '%s' in '%s'\n", subvol, dest_dir);
@@ -757,7 +754,7 @@ static int cmd_subvolume_snapshot(const struct cmd_struct *cmd, int argc, char *
 out:
 	btrfs_util_qgroup_inherit_destroy(inherit);
 
-	return retval;
+	return !!ret;
 }
 static DEFINE_SIMPLE_COMMAND(subvolume_snapshot, "snapshot");
 
