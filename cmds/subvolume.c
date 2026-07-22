@@ -663,7 +663,7 @@ static const char * const cmd_subvolume_snapshot_usage[] = {
 
 static int cmd_subvolume_snapshot(const struct cmd_struct *cmd, int argc, char **argv)
 {
-	char	*subvol, *dst;
+	char *opt_source, *opt_dest;
 	int ret;
 	char dest_dir[PATH_MAX];
 	enum btrfs_util_error err;
@@ -695,24 +695,24 @@ static int cmd_subvolume_snapshot(const struct cmd_struct *cmd, int argc, char *
 		goto out;
 	}
 
-	subvol = argv[optind];
-	dst = argv[optind + 1];
+	opt_source = argv[optind];
+	opt_dest = argv[optind + 1];
 
-	err = btrfs_util_subvolume_is_valid(subvol);
+	err = btrfs_util_subvolume_is_valid(opt_source);
 	if (err) {
 		error_btrfs_util(err);
 		ret = 1;
 		goto out;
 	}
 
-	ret = path_is_dir(dst);
+	ret = path_is_dir(opt_dest);
 	if (ret < 0 && ret != -ENOENT) {
 		errno = -ret;
-		error("cannot access %s: %m", dst);
+		error("cannot access %s: %m", opt_dest);
 		goto out;
 	}
 	if (ret == 0) {
-		error("'%s' exists and it is not a directory", dst);
+		error("'%s' exists and it is not a directory", opt_dest);
 		ret = 1;
 		goto out;
 	}
@@ -721,14 +721,14 @@ static int cmd_subvolume_snapshot(const struct cmd_struct *cmd, int argc, char *
 		char *dupname;
 		const char *newname;
 
-		dupname = strdup(subvol);
+		dupname = strdup(opt_source);
 		if (!dupname) {
 			error_mem("duplicate subvolume");
 			goto out;
 		}
 		newname = path_basename(dupname);
 
-		ret = path_cat_out(dest_dir, dst, newname);
+		ret = path_cat_out(dest_dir, opt_dest, newname);
 		if (ret < 0) {
 			error("path too long");
 			goto out;
@@ -736,10 +736,10 @@ static int cmd_subvolume_snapshot(const struct cmd_struct *cmd, int argc, char *
 
 		free(dupname);
 	} else {
-		strncpy_null(dest_dir, dst, PATH_MAX);
+		strncpy_null(dest_dir, opt_dest, PATH_MAX);
 	}
 
-	err = btrfs_util_subvolume_snapshot(subvol, dest_dir, flags, NULL, inherit);
+	err = btrfs_util_subvolume_snapshot(opt_source, dest_dir, flags, NULL, inherit);
 	if (err) {
 		error_btrfs_util(err);
 		ret = 1;
@@ -747,9 +747,9 @@ static int cmd_subvolume_snapshot(const struct cmd_struct *cmd, int argc, char *
 	}
 
 	if (flags & BTRFS_UTIL_CREATE_SNAPSHOT_READ_ONLY)
-		pr_default("Create readonly snapshot of '%s' in '%s'\n", subvol, dest_dir);
+		pr_default("Create readonly snapshot of '%s' in '%s'\n", opt_source, dest_dir);
 	else
-		pr_default("Create snapshot of '%s' in '%s'\n", subvol, dest_dir);
+		pr_default("Create snapshot of '%s' in '%s'\n", opt_source, dest_dir);
 
 out:
 	btrfs_util_qgroup_inherit_destroy(inherit);
